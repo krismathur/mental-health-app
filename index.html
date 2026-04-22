@@ -20,23 +20,25 @@
             <h3>Create New Profile</h3> <!-- Section heading for the form. -->
             <form> <!-- Starts a form for collecting user inputs. -->
                 <label>Name:</label> <!-- Label text for the name input. -->
-                <input type="text"> <!-- Text input where the user types their name. -->
+                <input id="name" type="text"> <!-- Text input where the user types their name. -->
 
                 <br><br> <!-- Adds two line breaks for vertical spacing. -->
 
-                <lable>Age:</lable> <!-- Label text for the age input (note: tag name is misspelled). -->
-                <input type="number"> <!-- Number input where the user types their age. -->
+                <label>Age:</label> <!-- Label text for the age input (note: tag name is misspelled). -->
+                <input id="age" type="number"> <!-- Number input where the user types their age. -->
 
                 <br><br> <!-- Adds two line breaks for vertical spacing. -->
 
                 <label>Sport:</label> <!-- Label text for the sport input. -->
-                <input type="text"> <!-- Text input where the user types their sport. -->
+                <input id="sport" type="text"> <!-- Text input where the user types their sport. -->
 
                 <br><br> <!-- Adds two line breaks for vertical spacing. -->
 
-                <button type="submit">Get Started</button> <!-- Submit button that sends the form. -->
+                <button id="submitBtn" type="submit">Get Started</button><!-- Submit button that sends the form. -->
             </form> <!-- Ends the form. -->
+            <p id="output"></p> 
         </div> <!-- Ends the profile form section container. -->
-
+        <!-- Loading JS File -->
+        <script src="script.js"></script>
     </body> <!-- Ends the body section. -->
 </html> <!-- Ends the root HTML element. -->
