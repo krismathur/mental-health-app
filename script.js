@@ -15,7 +15,7 @@ button.addEventListener("click", function (event){
     }
 
     localStorage.setItem("mindzone_name", name);
-    localStorage.setItem("minzone_sport", sport);
+    localStorage.setItem("mindzone_sport", sport);
     localStorage.setItem("mindzone_motivation", extra);
     window.location.href = "welcome.html";
     });
