@@ -14,14 +14,8 @@ button.addEventListener("click", function (event){
         extra = "Stay confident, and calm at the plate."
     }
 
-    // add more sports
-
-    const line1 = "Welcome to MindZone " + name + "!";
-    //  finish line 2 
-    const line2 = "MindZone is a website personalized to you and your sport through so many fun features.";
-    const line3 = extra;
-    document.getElementById("output").innerText = line1 + " " + line2 + " " + line3;
     localStorage.setItem("mindzone_name", name);
     localStorage.setItem("minzone_sport", sport);
-
+    localStorage.setItem("mindzone_motivation", extra);
+    window.location.href = "welcome.html";
     });

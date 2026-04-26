@@ -70,3 +70,12 @@ button { /* Styles the submit button. */
 button:hover { /* Styles the button when the mouse is over it. */
     background-color: #1f4f82; /* Makes the button a little darker on hover. */
 } /* Ends the hover styles. */
+
+.motivation-box {
+    border: 2px solid #2b6cb0;
+    background-color: rgba(237, 242, 247, .95);
+}
+
+header h1{
+    text-align: center;
+}
