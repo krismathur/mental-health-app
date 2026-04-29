@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign Up / Login - MindZone</title>
+        <link rel="stylesheet" href="css/auth.css">
+    </head>
+    <body>
+
+        <div class="auth-wrapper">
+            <a class="logo" href="index.html">MindZone</a>
+            <p class="tagline">Your mental performance starts here.</p>
+
+            <div class="auth-card">
+                <div class="tabs">
+                    <button class="tab active" id="tabSignup" onclick="showTab('signup')">Sign Up</button>
+                    <button class="tab" id="tabLogin" onclick="showTab('login')">Log In</button>
+                </div>
+
+                <!-- Sign Up Form -->
+                <form id="signupForm" class="auth-form">
+                    <label>Name</label>
+                    <input id="signupName" type="text" placeholder="Your name" required>
+
+                    <label>Email</label>
+                    <input id="signupEmail" type="email" placeholder="you@email.com" required>
+
+                    <label>Password</label>
+                    <input id="signupPassword" type="password" placeholder="At least 6 characters" required>
+
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form hidden">
+                    <label>Email</label>
+                    <input id="loginEmail" type="email" placeholder="you@email.com" required>
+
+                    <label>Password</label>
+                    <input id="loginPassword" type="password" placeholder="Your password" required>
+
+                    <button type="submit" class="submit-btn">Log In</button>
+                </form>
+
+                <p id="message"></p>
+            </div>
+        </div>
+
+        <script>
+            function showTab(tab) {
+                const signup = document.getElementById("signupForm");
+                const login = document.getElementById("loginForm");
+                const tabSignup = document.getElementById("tabSignup");
+                const tabLogin = document.getElementById("tabLogin");
+                const message = document.getElementById("message");
+
+                message.textContent = "";
+
+                if (tab === "signup") {
+                    signup.classList.remove("hidden");
+                    login.classList.add("hidden");
+                    tabSignup.classList.add("active");
+                    tabLogin.classList.remove("active");
+                } else {
+                    login.classList.remove("hidden");
+                    signup.classList.add("hidden");
+                    tabLogin.classList.add("active");
+                    tabSignup.classList.remove("active");
+                }
+            }
+        </script>
+        <script src="js/auth.js"></script>
+    </body>
+</html>
