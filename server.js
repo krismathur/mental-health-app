@@ -43,11 +43,10 @@ app.use(session({
 }));
 
 app.post("/api/signup", async function (req, res) {
-    const name = (req.body.name || "").trim();
     const email = (req.body.email || "").trim().toLowerCase();
     const password = req.body.password || "";
 
-    if (!name || !email || !password) {
+    if (!email || !password) {
         return res.status(400).json({ message: "Please fill out every field." });
     }
 
@@ -59,14 +58,13 @@ app.post("/api/signup", async function (req, res) {
 
     db.run(
         "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
-        [name, email, passwordHash],
+        ["", email, passwordHash],
         function (error) {
             if (error) {
                 return res.status(400).json({ message: "That email is already signed up." });
             }
 
             req.session.userId = this.lastID;
-            req.session.name = name;
             res.json({ message: "Signup worked." });
         }
     );

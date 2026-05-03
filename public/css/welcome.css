@@ -1,15 +1,50 @@
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-image: url("../images/background.jpg");
+    background-size: cover;
+    background-position: center;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #edf2f7;
-    color: #1f2d3d;
 }
 
-#generatePlanButton{
+/* Dark overlay */
+main {
+    background-color: rgba(0, 0, 0, 0.55);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+h1 {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+#planText {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+#generatePlanButton {
     margin-top: 16px;
-    padding: 12px 50px;
+    padding: 13px 48px;
+    background-color: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    cursor: pointer;
+}
+
+#generatePlanButton:hover {
+    background-color: #245a9a;
 }

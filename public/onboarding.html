@@ -5,45 +5,40 @@
         <link rel="stylesheet" href="css/onboarding.css">
     </head>
     <body>
-        <h1>MindZone</h1>
-        <h2>Mental Strength</h2>
 
-        <p>You have to train your mind to be good at your sport.</p>
+        <nav>
+            <a class="nav-logo" href="index.html">MindZone</a>
+        </nav>
 
-        <div>
-            <h3>Description of the App</h3>
-            <p>MindZone helps young athletes build confidence, focus, and mental strength.</p>
-        </div>
+        <div class="page">
 
-        <div>
-            <h3>Create New Profile</h3>
-            <form>
-                <label>Name:</label>
-                <input id="name" type="text" required>
+            <h1>MindZone</h1>
+            <p class="tagline">Train your mind. Elevate your game.</p>
 
-                <br><br>
+            <div class="card">
+                <h2>Create Your Profile</h2>
+                <p class="subtitle">Tell us about yourself to get started.</p>
 
-                <label>Age:</label>
-                <input id="age" type="number" required>
+                <form>
+                    <label for="name">Name <span class="req">*</span></label>
+                    <input id="name" type="text" placeholder="Your name" required>
 
-                <br><br>
+                    <label for="age">Age <span class="req">*</span></label>
+                    <input id="age" type="number" placeholder="Your age" required>
 
-                <label>Sport:</label>
-                <input id="sport" type="text" required>
+                    <label for="sport">Sport <span class="req">*</span></label>
+                    <input id="sport" type="text" placeholder="e.g. Soccer, Basketball" required>
 
-                <br><br>
+                    <label for="goal">Main Goal <span class="req">*</span></label>
+                    <input id="goal" type="text" placeholder="What do you want to improve?" required>
 
-                <label>Main Goal</label>
-                <input id="goal" type="text" required>
+                    <label for="challenge">Biggest Challenge <span class="req">*</span></label>
+                    <input id="challenge" type="text" placeholder="What holds you back?" required>
 
-                <br><br>
+                    <button id="submitBtn" type="submit">Get Started →</button>
+                </form>
+            </div>
 
-                <label>Biggest Challenge:</label>
-                <input id="challenge" type="text" required>
-
-
-                <button id="submitBtn" type="submit">Continue</button>
-            </form>
         </div>
 
         <script src="js/onboarding.js"></script>

@@ -9,7 +9,6 @@ function showMessage(text) {
 signupForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const name = document.getElementById("signupName").value.trim();
     const email = document.getElementById("signupEmail").value.trim();
     const password = document.getElementById("signupPassword").value;
 
@@ -18,7 +17,7 @@ signupForm.addEventListener("submit", async function (event) {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ email, password })
     });
 
     const result = await response.json();

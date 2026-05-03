@@ -6,8 +6,15 @@
     </head>
     <body>
 
+        <nav>
+            <a class="nav-logo" href="index.html">MindZone</a>
+            <div class="nav-links">
+                <a class="nav-btn" id="navLogin" href="#" onclick="showTab('login'); return false;">Log In</a>
+                <a class="nav-btn" id="navSignup" href="#" onclick="showTab('signup'); return false;">Sign Up</a>
+            </div>
+        </nav>
+
         <div class="auth-wrapper">
-            <a class="logo" href="index.html">MindZone</a>
             <p class="tagline">Your mental performance starts here.</p>
 
             <div class="auth-card">
@@ -18,13 +25,10 @@
 
                 <!-- Sign Up Form -->
                 <form id="signupForm" class="auth-form">
-                    <label>Name</label>
-                    <input id="signupName" type="text" placeholder="Your name" required>
-
-                    <label>Email</label>
+                    <label>Email <span class="req">*</span></label>
                     <input id="signupEmail" type="email" placeholder="you@email.com" required>
 
-                    <label>Password</label>
+                    <label>Password <span class="req">*</span></label>
                     <input id="signupPassword" type="password" placeholder="At least 6 characters" required>
 
                     <button type="submit" class="submit-btn">Create Account</button>
@@ -32,10 +36,10 @@
 
                 <!-- Login Form -->
                 <form id="loginForm" class="auth-form hidden">
-                    <label>Email</label>
+                    <label>Email <span class="req">*</span></label>
                     <input id="loginEmail" type="email" placeholder="you@email.com" required>
 
-                    <label>Password</label>
+                    <label>Password <span class="req">*</span></label>
                     <input id="loginPassword" type="password" placeholder="Your password" required>
 
                     <button type="submit" class="submit-btn">Log In</button>
@@ -51,6 +55,8 @@
                 const login = document.getElementById("loginForm");
                 const tabSignup = document.getElementById("tabSignup");
                 const tabLogin = document.getElementById("tabLogin");
+                const navSignup = document.getElementById("navSignup");
+                const navLogin = document.getElementById("navLogin");
                 const message = document.getElementById("message");
 
                 message.textContent = "";
@@ -60,12 +66,22 @@
                     login.classList.add("hidden");
                     tabSignup.classList.add("active");
                     tabLogin.classList.remove("active");
+                    navSignup.classList.add("active");
+                    navLogin.classList.remove("active");
                 } else {
                     login.classList.remove("hidden");
                     signup.classList.add("hidden");
                     tabLogin.classList.add("active");
                     tabSignup.classList.remove("active");
+                    navLogin.classList.add("active");
+                    navSignup.classList.remove("active");
                 }
+            }
+
+            // Open the right tab if coming from home page
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("tab") === "login") {
+                showTab("login");
             }
         </script>
         <script src="js/auth.js"></script>
