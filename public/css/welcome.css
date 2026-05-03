@@ -8,3 +8,8 @@ body {
     background-color: #edf2f7;
     color: #1f2d3d;
 }
+
+#generatePlanButton{
+    margin-top: 16px;
+    padding: 12px 50px;
+}
