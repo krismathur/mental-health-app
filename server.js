@@ -116,6 +116,26 @@ app.post("/api/logout", function (req, res) {
     });
 });
 
+
+app.post("/api/generate-plan", async function (req, res) {
+    const { name, age, sport, goal, challenge} = req.body;
+
+    const prompt = `You are a mental health coach for athletes. Write a short daily mental wellness plan for this athlete: Name: ${name}, Age: ${age}, Sport: ${sport}, Goal: ${goal}, Challenge: ${challenge}. Give 3-4 bullet points, keep it simple and encouraging.`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    });
+
+    const data = await response.json();
+    const plan = data.candidates[0].content.part[0].text;
+
+    res.json({plan});
+
+});
+
 app.listen(PORT, function () {
     console.log(`MindZone is running at http://localhost:${PORT}`);
 });

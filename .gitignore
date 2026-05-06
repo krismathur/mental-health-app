@@ -4,3 +4,4 @@ database.db
 database.db-*
 data/database.db
 data/database.db-*
+.env
