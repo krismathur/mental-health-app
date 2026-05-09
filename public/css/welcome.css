@@ -1,40 +1,80 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Arial, sans-serif;
+    color: #1f2d3d;
+    min-height: 100vh;
     background-image: url("../images/background.jpg");
     background-size: cover;
     background-position: center;
-    min-height: 100vh;
+    background-attachment: fixed;
 }
 
-/* Dark overlay */
-main {
-    background-color: rgba(0, 0, 0, 0.55);
-    min-height: 100vh;
+nav {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding: 18px 40px;
+    background-color: #fff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.nav-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2b6cb0;
+    text-decoration: none;
+}
+
+.page {
+    padding: 60px 20px;
     text-align: center;
-    padding: 40px 20px;
 }
 
 h1 {
-    color: white;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     font-weight: 800;
-    margin-bottom: 12px;
+    color: white;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
 }
 
-#planText {
-    color: rgba(255, 255, 255, 0.85);
+.tagline {
+    color: white;
     font-size: 1.1rem;
-    margin-bottom: 8px;
+    margin-bottom: 36px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 36px 40px;
+    max-width: 500px;
+    margin: 0 auto 32px;
+    text-align: left;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.card h2 {
+    color: #2b6cb0;
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
 }
 
 #generatePlanButton {
-    margin-top: 16px;
-    padding: 13px 48px;
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px;
     background-color: #2b6cb0;
     color: white;
     border: none;
@@ -47,4 +87,75 @@ h1 {
 
 #generatePlanButton:hover {
     background-color: #245a9a;
+}
+
+#generatePlanButton:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+}
+
+.card.compact {
+    max-width: 360px;
+    padding: 16px 22px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.card.compact h2,
+.card.compact .subtitle {
+    display: none;
+}
+
+.card.compact #generatePlanButton {
+    margin-top: 0;
+    padding: 10px;
+    font-size: 0.95rem;
+}
+
+.plan-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 8px;
+}
+
+.plan-grid.two-col {
+    grid-template-columns: 1fr 1fr;
+    max-width: 980px;
+}
+
+.plan-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    text-align: left;
+}
+
+.plan-day {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2b6cb0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: 2px solid #e2e8f0;
+    padding-right: 14px;
+}
+
+.plan-rec {
+    color: #4a5568;
+    font-size: 0.97rem;
+    line-height: 1.55;
+    padding-left: 16px;
+}
+
+@media (max-width: 640px) {
+    .plan-grid.two-col {
+        grid-template-columns: 1fr;
+    }
 }

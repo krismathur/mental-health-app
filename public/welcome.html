@@ -5,11 +5,26 @@
         <link rel="stylesheet" href="css/welcome.css">
     </head>
     <body>
-        <main>
-            <h1>Welcome to MindZone</h1>
-            <p id = "planText">Press the button to get a simple daily plan!</p>
-            <button id = "generatePlanButton" type="button">Generate Button</button>
-        </main>
+
+        <nav>
+            <a class="nav-logo" href="index.html">MindZone</a>
+        </nav>
+
+        <div class="page">
+            <h1>Your Mental Wellness Plan</h1>
+            <p class="tagline">A personalized day-by-day plan, built for you.</p>
+
+            <div class="card">
+                <h2>Ready when you are</h2>
+                <p class="subtitle" id="planText">
+                    Press the button below to generate your daily plan.
+                </p>
+                <button id="generatePlanButton" type="button">Generate Plan →</button>
+            </div>
+
+            <div id="planGrid" class="plan-grid" hidden></div>
+        </div>
+
         <script src="js/welcome.js"></script>
     </body>
 </html>
