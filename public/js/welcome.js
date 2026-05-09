@@ -7,13 +7,14 @@ button.addEventListener("click", async function () {
     const sport = localStorage.getItem("mindzone_sport");
     const goal = localStorage.getItem("mindzone_goal");
     const challenge = localStorage.getItem("mindzone_challenge");
+    const days = localStorage.getItem("mindzone_days");
 
     planText.textContent = "Generating your plan...";
 
     const response = await fetch("/api/generate-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, age, sport, goal, challenge }); 
+        body: JSON.stringify({ name, age, sport, goal, challenge, days }) 
     });
 
     const data = await response.json();

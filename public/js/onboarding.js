@@ -22,9 +22,10 @@ button.addEventListener("click", function (event) {
     const sport = document.getElementById("sport").value.trim();
     const goal = document.getElementById("goal").value.trim();
     const challenge = document.getElementById("challenge").value.trim();
+    const days = document.getElementById("days").value.trim();
     
 
-    if (!name || !age || !sport) {
+    if (!name || !age || !sport || !goal || !challenge || !days ) {
         return;
     }
 
@@ -44,6 +45,7 @@ button.addEventListener("click", function (event) {
     localStorage.setItem("mindzone_sport", sport);
     localStorage.setItem("mindzone_goal", goal);
     localStorage.setItem("mindzone_challenge", challenge);
+    localStorage.setItem("mindzone_days", days);
     localStorage.setItem("mindzone_motivation", extra);
 
     window.location.href = "welcome.html";

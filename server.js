@@ -1,3 +1,4 @@
+require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
 const express = require("express");
@@ -118,9 +119,10 @@ app.post("/api/logout", function (req, res) {
 
 
 app.post("/api/generate-plan", async function (req, res) {
-    const { name, age, sport, goal, challenge} = req.body;
+    const { name, age, sport, goal, challenge, days } = req.body;
 
-    const prompt = `You are a mental health coach for athletes. Write a short daily mental wellness plan for this athlete: Name: ${name}, Age: ${age}, Sport: ${sport}, Goal: ${goal}, Challenge: ${challenge}. Give 3-4 bullet points, keep it simple and encouraging.`;
+    const prompt = `You are a mental health coach for athletes. Make a ${days} day mental wellness plan for this athlete: Name: ${name}, Age: ${age}, Sport: ${goal}, Challenge: ${challenge}. Format the answer exactly like this, one line per day: “Day 1: <one short thing to do that helps the user based on what they put in>” then “Day 2: <one short thing to do that helps the user based on what they put in>” up to Day ${days}. Keep each day to one complex thing, and do not add any extra text before or after.`;
+
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
     const response = await fetch(url, {
@@ -130,7 +132,7 @@ app.post("/api/generate-plan", async function (req, res) {
     });
 
     const data = await response.json();
-    const plan = data.candidates[0].content.part[0].text;
+    const plan = data.candidates[0].content.parts[0].text;
 
     res.json({plan});
 
@@ -138,4 +140,5 @@ app.post("/api/generate-plan", async function (req, res) {
 
 app.listen(PORT, function () {
     console.log(`MindZone is running at http://localhost:${PORT}`);
+
 });
