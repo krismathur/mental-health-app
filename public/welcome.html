@@ -8,6 +8,7 @@
 
         <nav>
             <a class="nav-logo" href="index.html">MindZone</a>
+            <button type="button" id="settingsBtn" class="settings-btn">Settings</button>
         </nav>
 
         <!-- Blue banner at the top (same style as index page) -->
@@ -17,7 +18,7 @@
         </section>
 
         <div class="page">
-            <div class="card">
+            <div class="card" id="mainCard">
                 <h2>Ready when you are</h2>
                 <p class="subtitle" id="planText">
                     Press the button below to generate your daily plan.
@@ -26,6 +27,90 @@
             </div>
 
             <div id="planGrid" class="plan-grid" hidden></div>
+        </div>
+
+        <!-- Settings overlay (hidden until Settings is clicked) -->
+        <div id="settingsOverlay" class="overlay overlay-hidden">
+            <div class="overlay-backdrop" id="overlayBackdrop"></div>
+            <div class="settings-panel">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                    <button type="button" id="closeSettingsBtn" class="close-btn">&times;</button>
+                </div>
+
+                <form id="settingsForm">
+                    <label for="settingsName">Name</label>
+                    <input id="settingsName" type="text" placeholder="Your name">
+
+                    <label for="settingsAge">Age</label>
+                    <input id="settingsAge" type="number" placeholder="Your age">
+
+                    <label for="settingsSport">Sport</label>
+                    <input id="settingsSport" type="text" placeholder="e.g. Soccer, Basketball">
+
+                    <label for="settingsGoal">Main Goal</label>
+                    <input id="settingsGoal" type="text" placeholder="What do you want to improve?">
+
+                    <label for="settingsChallenge">Biggest Challenge</label>
+                    <input id="settingsChallenge" type="text" placeholder="What holds you back?">
+
+                    <label for="settingsDays">Plan Length (days)</label>
+                    <input id="settingsDays" type="number" min="1" max="20" placeholder="e.g. 7">
+
+                    <div class="star-section">
+                        <h3>Quick Check-In</h3>
+                        <p class="star-hint">1 = low · 5 = high</p>
+
+                        <div class="star-row">
+                            <p class="star-question">How confident do you feel before games or practice?</p>
+                            <div class="stars">
+                                <label><input type="radio" name="confidence" value="1"> 1</label>
+                                <label><input type="radio" name="confidence" value="2"> 2</label>
+                                <label><input type="radio" name="confidence" value="3"> 3</label>
+                                <label><input type="radio" name="confidence" value="4"> 4</label>
+                                <label><input type="radio" name="confidence" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="star-row">
+                            <p class="star-question">How stressed do you get under pressure?</p>
+                            <p class="star-scale">1 = calm · 5 = very stressed</p>
+                            <div class="stars">
+                                <label><input type="radio" name="stress" value="1"> 1</label>
+                                <label><input type="radio" name="stress" value="2"> 2</label>
+                                <label><input type="radio" name="stress" value="3"> 3</label>
+                                <label><input type="radio" name="stress" value="4"> 4</label>
+                                <label><input type="radio" name="stress" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="star-row">
+                            <p class="star-question">How well can you focus during practice or games?</p>
+                            <div class="stars">
+                                <label><input type="radio" name="focus" value="1"> 1</label>
+                                <label><input type="radio" name="focus" value="2"> 2</label>
+                                <label><input type="radio" name="focus" value="3"> 3</label>
+                                <label><input type="radio" name="focus" value="4"> 4</label>
+                                <label><input type="radio" name="focus" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="star-row">
+                            <p class="star-question">How quickly do you bounce back after a bad game or mistake?</p>
+                            <div class="stars">
+                                <label><input type="radio" name="bounce" value="1"> 1</label>
+                                <label><input type="radio" name="bounce" value="2"> 2</label>
+                                <label><input type="radio" name="bounce" value="3"> 3</label>
+                                <label><input type="radio" name="bounce" value="4"> 4</label>
+                                <label><input type="radio" name="bounce" value="5"> 5</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="saveSettingsBtn" class="settings-action-btn">Save Changes</button>
+                    <button type="button" id="regenerateBtn" class="settings-action-btn secondary">Regenerate Plan</button>
+                </form>
+            </div>
         </div>
 
         <script src="js/welcome.js"></script>

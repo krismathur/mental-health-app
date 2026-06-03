@@ -119,9 +119,12 @@ app.post("/api/logout", function (req, res) {
 
 
 app.post("/api/generate-plan", async function (req, res) {
-    const { name, age, sport, goal, challenge, days } = req.body;
+    const { name, age, sport, goal, challenge, days, confidence, stress, focus, bounce } = req.body;
 
-    const prompt = `You are a mental health coach for athletes. Make a ${days} day mental wellness plan for this athlete: Name: ${name}, Age: ${age}, Sport: ${goal}, Challenge: ${challenge}. Format the answer exactly like this, one line per day: “Day 1: <one short thing to do that helps the user based on what they put in>” then “Day 2: <one short thing to do that helps the user based on what they put in>” up to Day ${days}. Keep each day to one complex thing, and do not add any extra text before or after.`;
+    const prompt = `You are a mental health coach for athletes. Make a ${days} day mental wellness plan for this athlete:
+Name: ${name}, Age: ${age}, Sport: ${sport}, Goal: ${goal}, Challenge: ${challenge}.
+Self-ratings (1-5): Confidence before games: ${confidence}, Stress under pressure: ${stress}, Focus during practice/games: ${focus}, Bounce back after mistakes: ${bounce}.
+Use lower scores to focus more on that area. Format the answer exactly like this, one line per day: "Day 1: <one short thing to do>" then "Day 2: <one short thing to do>" up to Day ${days}. Keep each day to one short activity. Do not add any extra text before or after.`;
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 

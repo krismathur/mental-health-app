@@ -23,9 +23,14 @@ button.addEventListener("click", function (event) {
     const goal = document.getElementById("goal").value.trim();
     const challenge = document.getElementById("challenge").value.trim();
     const days = document.getElementById("days").value.trim();
-    
 
-    if (!name || !age || !sport || !goal || !challenge || !days ) {
+    // Read the selected star rating for each question (1–5)
+    const confidence = document.querySelector('input[name="confidence"]:checked');
+    const stress = document.querySelector('input[name="stress"]:checked');
+    const focus = document.querySelector('input[name="focus"]:checked');
+    const bounce = document.querySelector('input[name="bounce"]:checked');
+
+    if (!name || !age || !sport || !goal || !challenge || !days || !confidence || !stress || !focus || !bounce) {
         return;
     }
 
@@ -46,6 +51,10 @@ button.addEventListener("click", function (event) {
     localStorage.setItem("mindzone_goal", goal);
     localStorage.setItem("mindzone_challenge", challenge);
     localStorage.setItem("mindzone_days", days);
+    localStorage.setItem("mindzone_confidence", confidence.value);
+    localStorage.setItem("mindzone_stress", stress.value);
+    localStorage.setItem("mindzone_focus", focus.value);
+    localStorage.setItem("mindzone_bounce", bounce.value);
     localStorage.setItem("mindzone_motivation", extra);
 
     window.location.href = "welcome.html";

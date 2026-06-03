@@ -122,3 +122,75 @@ button {
 button:hover {
     background-color: #245a9a;
 }
+
+/* Star rating questions (1–5) */
+.star-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.star-section h3 {
+    color: #2b6cb0;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.star-hint {
+    color: #718096;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.star-row {
+    margin-top: 18px;
+}
+
+.star-question {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.star-scale {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 8px;
+}
+
+.stars {
+    display: flex;
+    gap: 8px;
+}
+
+/* Hide the radio circle; user clicks the number box instead */
+.stars input {
+    display: none;
+}
+
+.stars label {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    padding: 8px 0;
+    flex: 1;
+    text-align: center;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4a5568;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Highlight the selected number */
+.stars label:has(input:checked) {
+    background-color: #2b6cb0;
+    border-color: #2b6cb0;
+    color: white;
+}
