@@ -23,10 +23,16 @@ button.addEventListener("click", async function () {
     });
 
     const data = await response.json();
+    if (data.message && !data.plan) {
+        planText.textContent = data.message;
+        button.disabled = false;
+        return;
+    }
+
     const entries = parsePlan(data.plan);
 
     if (entries.length === 0) {
-        planText.textContent = data.plan;
+        planText.textContent = data.plan || "Could not parse the plan.";
         button.disabled = false;
         return;
     }
