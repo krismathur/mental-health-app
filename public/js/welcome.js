@@ -10,12 +10,14 @@ const overlayBackdrop = document.getElementById("overlayBackdrop");
 const closeSettingsBtn = document.getElementById("closeSettingsBtn");
 const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 const regenerateBtn = document.getElementById("regenerateBtn");
+let currentPlanStatus = "none";
 
-loadProfileFromServer();
+loadProfileFromServer().then(loadCurrentPlan);
 
 // Open settings and load saved profile data into the form
 settingsBtn.addEventListener("click", function () {
     loadSettingsIntoForm();
+    updateRegenerateButton();
     settingsOverlay.classList.remove("overlay-hidden");
 });
 
@@ -40,13 +42,15 @@ async function loadProfileFromServer() {
 
         if (!response.ok) {
             window.location.href = "onboarding.html";
-            return;
+            return false;
         }
 
         const data = await response.json();
         saveProfileToLocalStorage(data.profile);
+        return true;
     } catch (error) {
         window.location.href = "onboarding.html";
+        return false;
     }
 }
 
@@ -155,19 +159,75 @@ saveSettingsBtn.addEventListener("click", async function () {
 });
 
 regenerateBtn.addEventListener("click", async function () {
+    if (currentPlanStatus !== "approved") {
+        alert("You can regenerate after your first plan is approved.");
+        return;
+    }
+
     if (!await saveSettingsFromForm()) {
         return;
     }
     closeSettings();
-    await generatePlan();
+    await generatePlan("Regenerating your plan...");
 });
 
 generateButton.addEventListener("click", async function () {
-    await generatePlan();
+    await generatePlan("Generating your plan...");
 });
 
-// Generate plan from localStorage data and show it on the page
-async function generatePlan() {
+async function loadCurrentPlan(profileLoaded) {
+    if (!profileLoaded) {
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/my-plan");
+        const data = await response.json();
+
+        if (!response.ok) {
+            showPlanMessage(data.message || "Could not load your plan.", "none");
+            return;
+        }
+
+        currentPlanStatus = data.status;
+
+        if (data.status === "approved") {
+            renderPlan(data.plan);
+        } else if (data.status === "pending") {
+            showPlanMessage(data.message, "pending");
+        } else if (data.status === "rejected") {
+            showPlanMessage(data.message, "rejected");
+        } else {
+            showPlanMessage("Press the button below to generate your daily plan.", "none");
+        }
+    } catch (error) {
+        showPlanMessage("Could not load your plan right now.", "none");
+    }
+}
+
+function showPlanMessage(message, status) {
+    currentPlanStatus = status;
+    const waitingForApproval = status === "pending";
+
+    mainCard.classList.remove("hidden");
+    planGrid.hidden = true;
+    planGrid.innerHTML = "";
+    planText.textContent = message;
+    generateButton.hidden = false;
+    generateButton.disabled = waitingForApproval;
+    generateButton.textContent = waitingForApproval ? "Waiting for Approval" : "Generate Plan →";
+    updateRegenerateButton();
+}
+
+function updateRegenerateButton() {
+    const canRegenerate = currentPlanStatus === "approved";
+    regenerateBtn.hidden = !canRegenerate;
+    regenerateBtn.disabled = !canRegenerate;
+    regenerateBtn.textContent = "Regenerate Plan";
+}
+
+// Generate plan from localStorage data and wait for admin approval
+async function generatePlan(loadingMessage) {
     const name = localStorage.getItem("mindzone_name");
     const age = localStorage.getItem("mindzone_age");
     const sport = localStorage.getItem("mindzone_sport");
@@ -179,10 +239,18 @@ async function generatePlan() {
     const focus = localStorage.getItem("mindzone_focus");
     const bounce = localStorage.getItem("mindzone_bounce");
 
-    planText.textContent = "Generating your plan...";
+    if (currentPlanStatus === "pending") {
+        showPlanMessage("Your plan is already waiting for admin approval. You will have it within 24 hours or sooner.", "pending");
+        return;
+    }
+
+    mainCard.classList.remove("hidden");
+    planText.textContent = loadingMessage || "Generating your plan...";
     planGrid.hidden = true;
     planGrid.innerHTML = "";
+    generateButton.hidden = false;
     generateButton.disabled = true;
+    generateButton.textContent = "Generating...";
     regenerateBtn.disabled = true;
 
     const response = await fetch("/api/generate-plan", {
@@ -193,24 +261,31 @@ async function generatePlan() {
 
     const data = await response.json();
 
-    if (data.message && !data.plan) {
-        planText.textContent = data.message;
-        generateButton.disabled = false;
-        regenerateBtn.disabled = false;
+    if (data.status === "pending") {
+        showPlanMessage(data.message, "pending");
         return;
     }
 
-    const entries = parsePlan(data.plan);
+    if (data.message) {
+        showPlanMessage(data.message, currentPlanStatus);
+        return;
+    }
+
+    showPlanMessage("Could not generate your plan.", currentPlanStatus);
+}
+
+function renderPlan(plan) {
+    const entries = parsePlan(plan);
 
     if (entries.length === 0) {
-        planText.textContent = data.plan || "Could not parse the plan.";
-        generateButton.disabled = false;
-        regenerateBtn.disabled = false;
+        showPlanMessage(plan || "Could not parse the plan.", "approved");
         return;
     }
 
     // Hide the main card once a plan is ready
+    currentPlanStatus = "approved";
     mainCard.classList.add("hidden");
+    planGrid.innerHTML = "";
 
     planGrid.classList.toggle("two-col", entries.length > 10);
 
@@ -233,7 +308,7 @@ async function generatePlan() {
 
     planGrid.hidden = false;
     generateButton.disabled = false;
-    regenerateBtn.disabled = false;
+    updateRegenerateButton();
 }
 
 function parsePlan(raw) {

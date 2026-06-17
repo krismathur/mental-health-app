@@ -1,0 +1,220 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f4f8;
+    color: #1f2d3d;
+    min-height: 100vh;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 40px;
+    background-color: #fff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.nav-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2b6cb0;
+    text-decoration: none;
+}
+
+.nav-btn,
+.secondary-btn {
+    padding: 8px 18px;
+    border: 2px solid #2b6cb0;
+    border-radius: 6px;
+    background: white;
+    color: #2b6cb0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    cursor: pointer;
+}
+
+.nav-btn:hover,
+.secondary-btn:hover {
+    background-color: #2b6cb0;
+    color: white;
+}
+
+.page {
+    max-width: 980px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.card,
+.plan-card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.card {
+    max-width: 430px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #2b6cb0;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    margin-top: 16px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f8fafc;
+}
+
+textarea {
+    min-height: 220px;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #2b6cb0;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.15);
+}
+
+.primary-btn,
+.approve-btn,
+.reject-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    cursor: pointer;
+}
+
+.primary-btn {
+    display: block;
+    width: 100%;
+    margin-top: 22px;
+    background-color: #2b6cb0;
+}
+
+.primary-btn:hover,
+.approve-btn:hover {
+    background-color: #245a9a;
+}
+
+.message {
+    margin-top: 14px;
+    color: #c53030;
+    font-size: 0.9rem;
+}
+
+.admin-panel {
+    width: 100%;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.plans-list {
+    display: grid;
+    gap: 18px;
+}
+
+.plan-card h2 {
+    color: #2b6cb0;
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 18px;
+    margin: 16px 0;
+    color: #4a5568;
+    font-size: 0.92rem;
+}
+
+.plan-editor {
+    white-space: pre-wrap;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+    color: #1f2d3d;
+    line-height: 1.55;
+    margin: 16px 0;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.approve-btn {
+    background-color: #2b6cb0;
+}
+
+.reject-btn {
+    background-color: #c53030;
+}
+
+.reject-btn:hover {
+    background-color: #9b2c2c;
+}
+
+@media (max-width: 700px) {
+    .panel-header,
+    .actions {
+        flex-direction: column;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}

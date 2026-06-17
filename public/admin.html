@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Admin - MindZone</title>
+        <link rel="stylesheet" href="css/admin.css">
+    </head>
+    <body>
+        <nav>
+            <a class="nav-logo" href="index.html">MindZone Admin</a>
+            <button type="button" id="adminLogoutBtn" class="nav-btn" hidden>Log Out</button>
+        </nav>
+
+        <main class="page">
+            <section id="loginCard" class="card">
+                <h1>Admin Login</h1>
+                <p class="subtitle">Review generated plans before athletes can see them.</p>
+
+                <form id="adminLoginForm">
+                    <label for="adminEmail">Email</label>
+                    <input id="adminEmail" type="email" required>
+
+                    <label for="adminPassword">Password</label>
+                    <input id="adminPassword" type="password" required>
+
+                    <button type="submit" class="primary-btn">Log In</button>
+                </form>
+
+                <p id="loginMessage" class="message"></p>
+            </section>
+
+            <section id="adminPanel" class="admin-panel" hidden>
+                <div class="panel-header">
+                    <div>
+                        <h1>Pending Plans</h1>
+                        <p class="subtitle">Approve plans that are ready for users to view.</p>
+                    </div>
+                    <button type="button" id="refreshBtn" class="secondary-btn">Refresh</button>
+                </div>
+
+                <p id="panelMessage" class="message"></p>
+                <div id="plansList" class="plans-list"></div>
+            </section>
+        </main>
+
+        <script src="js/admin.js"></script>
+    </body>
+</html>

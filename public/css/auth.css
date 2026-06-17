@@ -182,3 +182,18 @@ input:focus {
     color: #c53030;
     text-align: center;
 }
+
+.admin-link {
+    margin-top: 18px;
+    font-size: 0.9rem;
+}
+
+.admin-link a {
+    color: #2b6cb0;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.admin-link a:hover {
+    text-decoration: underline;
+}

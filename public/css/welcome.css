@@ -309,6 +309,13 @@ nav {
     cursor: not-allowed;
 }
 
+.settings-action-btn.secondary:disabled,
+.settings-action-btn.secondary:disabled:hover {
+    background-color: #a0aec0;
+    border-color: #a0aec0;
+    color: white;
+}
+
 /* Star rating questions in settings */
 .settings-panel .star-section {
     margin-top: 24px;

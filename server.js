@@ -5,6 +5,8 @@ const express = require("express");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const sqlite3 = require("sqlite3").verbose();
+const createPlanRoutes = require("./routes/planRoutes");
+const createAdminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +43,18 @@ db.serialize(function () {
             focus INTEGER NOT NULL,
             bounce INTEGER NOT NULL,
             updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS plans (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            plan_text TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            reviewed_at TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
     `);
@@ -205,44 +219,8 @@ app.post("/api/profile", function (req, res) {
     );
 });
 
-
-app.post("/api/generate-plan", async function (req, res) {
-    if (!req.session.userId) {
-        return res.status(401).json({ message: "Please log in before generating a plan." });
-    }
-
-    const { name, age, sport, goal, challenge, days, confidence, stress, focus, bounce } = req.body;
-
-    if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_MODEL) {
-        return res.status(500).json({ message: "Gemini is not set up. Add GEMINI_API_KEY and GEMINI_MODEL to your .env file." });
-    }
-
-    const prompt = `You are a mental health coach for athletes. Make a ${days} day mental wellness plan for this athlete:
-Name: ${name}, Age: ${age}, Sport: ${sport}, Goal: ${goal}, Challenge: ${challenge}.
-Self-ratings (1-5): Confidence before games: ${confidence}, Stress under pressure: ${stress}, Focus during practice/games: ${focus}, Bounce back after mistakes: ${bounce}.
-Use lower scores to focus more on that area. Format the answer exactly like this, one line per day: "Day 1: <one short thing to do>" then "Day 2: <one short thing to do>" up to Day ${days}. Keep each day to one short activity. Do not add any extra text before or after.`;
-
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
-
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-
-        const data = await response.json();
-        const plan = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!response.ok || !plan) {
-            return res.status(500).json({ message: "Gemini could not generate a plan. Check your API key and model name." });
-        }
-
-        res.json({ plan });
-    } catch (error) {
-        res.status(500).json({ message: "Something went wrong while generating your plan." });
-    }
-});
+app.use(createPlanRoutes(db));
+app.use(createAdminRoutes(db));
 
 app.listen(PORT, function () {
     console.log(`MindZone is running at http://localhost:${PORT}`);
