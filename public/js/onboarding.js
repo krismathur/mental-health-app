@@ -14,7 +14,7 @@ async function makeSureUserIsLoggedIn() {
 
 makeSureUserIsLoggedIn();
 
-button.addEventListener("click", function (event) {
+button.addEventListener("click", async function (event) {
     event.preventDefault();
 
     const name = document.getElementById("name").value.trim();
@@ -56,6 +56,35 @@ button.addEventListener("click", function (event) {
     localStorage.setItem("mindzone_focus", focus.value);
     localStorage.setItem("mindzone_bounce", bounce.value);
     localStorage.setItem("mindzone_motivation", extra);
+
+    try {
+        const response = await fetch("/api/profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name,
+                age,
+                sport,
+                goal,
+                challenge,
+                days,
+                confidence: confidence.value,
+                stress: stress.value,
+                focus: focus.value,
+                bounce: bounce.value
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message);
+            return;
+        }
+    } catch (error) {
+        alert("Could not save your profile. Please try again.");
+        return;
+    }
 
     window.location.href = "welcome.html";
 });

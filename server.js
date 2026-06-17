@@ -26,6 +26,24 @@ db.serialize(function () {
             created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
     `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS profiles (
+            user_id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            age TEXT NOT NULL,
+            sport TEXT NOT NULL,
+            goal TEXT NOT NULL,
+            challenge TEXT NOT NULL,
+            days INTEGER NOT NULL,
+            confidence INTEGER NOT NULL,
+            stress INTEGER NOT NULL,
+            focus INTEGER NOT NULL,
+            bounce INTEGER NOT NULL,
+            updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    `);
 });
 
 app.use(express.json());
@@ -117,9 +135,87 @@ app.post("/api/logout", function (req, res) {
     });
 });
 
+app.get("/api/profile", function (req, res) {
+    if (!req.session.userId) {
+        return res.status(401).json({ message: "Not logged in." });
+    }
+
+    db.get(
+        "SELECT name, age, sport, goal, challenge, days, confidence, stress, focus, bounce FROM profiles WHERE user_id = ?",
+        [req.session.userId],
+        function (error, profile) {
+            if (error) {
+                return res.status(500).json({ message: "Could not load profile." });
+            }
+
+            if (!profile) {
+                return res.status(404).json({ message: "No profile found." });
+            }
+
+            res.json({ profile });
+        }
+    );
+});
+
+app.post("/api/profile", function (req, res) {
+    if (!req.session.userId) {
+        return res.status(401).json({ message: "Not logged in." });
+    }
+
+    const name = (req.body.name || "").trim();
+    const age = (req.body.age || "").trim();
+    const sport = (req.body.sport || "").trim();
+    const goal = (req.body.goal || "").trim();
+    const challenge = (req.body.challenge || "").trim();
+    const days = parseInt(req.body.days, 10);
+    const confidence = parseInt(req.body.confidence, 10);
+    const stress = parseInt(req.body.stress, 10);
+    const focus = parseInt(req.body.focus, 10);
+    const bounce = parseInt(req.body.bounce, 10);
+
+    if (!name || !age || !sport || !goal || !challenge || !days || !confidence || !stress || !focus || !bounce) {
+        return res.status(400).json({ message: "Please fill out every profile field." });
+    }
+
+    db.run(
+        `INSERT INTO profiles (user_id, name, age, sport, goal, challenge, days, confidence, stress, focus, bounce)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(user_id) DO UPDATE SET
+            name = excluded.name,
+            age = excluded.age,
+            sport = excluded.sport,
+            goal = excluded.goal,
+            challenge = excluded.challenge,
+            days = excluded.days,
+            confidence = excluded.confidence,
+            stress = excluded.stress,
+            focus = excluded.focus,
+            bounce = excluded.bounce,
+            updated_at = CURRENT_TIMESTAMP`,
+        [req.session.userId, name, age, sport, goal, challenge, days, confidence, stress, focus, bounce],
+        function (error) {
+            if (error) {
+                return res.status(500).json({ message: "Could not save profile." });
+            }
+
+            req.session.name = name;
+            db.run("UPDATE users SET name = ? WHERE id = ?", [name, req.session.userId]);
+            res.json({ message: "Profile saved." });
+        }
+    );
+});
+
 
 app.post("/api/generate-plan", async function (req, res) {
+    if (!req.session.userId) {
+        return res.status(401).json({ message: "Please log in before generating a plan." });
+    }
+
     const { name, age, sport, goal, challenge, days, confidence, stress, focus, bounce } = req.body;
+
+    if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_MODEL) {
+        return res.status(500).json({ message: "Gemini is not set up. Add GEMINI_API_KEY and GEMINI_MODEL to your .env file." });
+    }
 
     const prompt = `You are a mental health coach for athletes. Make a ${days} day mental wellness plan for this athlete:
 Name: ${name}, Age: ${age}, Sport: ${sport}, Goal: ${goal}, Challenge: ${challenge}.
@@ -128,17 +224,24 @@ Use lower scores to focus more on that area. Format the answer exactly like this
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
-    const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    });
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
 
-    const data = await response.json();
-    const plan = data.candidates[0].content.parts[0].text;
+        const data = await response.json();
+        const plan = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    res.json({plan});
+        if (!response.ok || !plan) {
+            return res.status(500).json({ message: "Gemini could not generate a plan. Check your API key and model name." });
+        }
 
+        res.json({ plan });
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong while generating your plan." });
+    }
 });
 
 app.listen(PORT, function () {

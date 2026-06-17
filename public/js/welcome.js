@@ -4,11 +4,14 @@ const planGrid = document.getElementById("planGrid");
 const mainCard = document.getElementById("mainCard");
 
 const settingsBtn = document.getElementById("settingsBtn");
+const logoutBtn = document.getElementById("logoutBtn");
 const settingsOverlay = document.getElementById("settingsOverlay");
 const overlayBackdrop = document.getElementById("overlayBackdrop");
 const closeSettingsBtn = document.getElementById("closeSettingsBtn");
 const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 const regenerateBtn = document.getElementById("regenerateBtn");
+
+loadProfileFromServer();
 
 // Open settings and load saved profile data into the form
 settingsBtn.addEventListener("click", function () {
@@ -16,11 +19,48 @@ settingsBtn.addEventListener("click", function () {
     settingsOverlay.classList.remove("overlay-hidden");
 });
 
+logoutBtn.addEventListener("click", async function () {
+    await fetch("/api/logout", {
+        method: "POST"
+    });
+
+    window.location.href = "index.html";
+});
+
 closeSettingsBtn.addEventListener("click", closeSettings);
 overlayBackdrop.addEventListener("click", closeSettings);
 
 function closeSettings() {
     settingsOverlay.classList.add("overlay-hidden");
+}
+
+async function loadProfileFromServer() {
+    try {
+        const response = await fetch("/api/profile");
+
+        if (!response.ok) {
+            window.location.href = "onboarding.html";
+            return;
+        }
+
+        const data = await response.json();
+        saveProfileToLocalStorage(data.profile);
+    } catch (error) {
+        window.location.href = "onboarding.html";
+    }
+}
+
+function saveProfileToLocalStorage(profile) {
+    localStorage.setItem("mindzone_name", profile.name);
+    localStorage.setItem("mindzone_age", profile.age);
+    localStorage.setItem("mindzone_sport", profile.sport);
+    localStorage.setItem("mindzone_goal", profile.goal);
+    localStorage.setItem("mindzone_challenge", profile.challenge);
+    localStorage.setItem("mindzone_days", profile.days);
+    localStorage.setItem("mindzone_confidence", profile.confidence);
+    localStorage.setItem("mindzone_stress", profile.stress);
+    localStorage.setItem("mindzone_focus", profile.focus);
+    localStorage.setItem("mindzone_bounce", profile.bounce);
 }
 
 // Load profile from localStorage into the settings form
@@ -46,8 +86,8 @@ function setStarRating(name, value) {
     }
 }
 
-// Read settings form and save to localStorage
-function saveSettingsFromForm() {
+// Read settings form and save to localStorage/database
+async function saveSettingsFromForm() {
     const name = document.getElementById("settingsName").value.trim();
     const age = document.getElementById("settingsAge").value.trim();
     const sport = document.getElementById("settingsSport").value.trim();
@@ -76,17 +116,46 @@ function saveSettingsFromForm() {
     localStorage.setItem("mindzone_focus", focus.value);
     localStorage.setItem("mindzone_bounce", bounce.value);
 
+    try {
+        const response = await fetch("/api/profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name,
+                age,
+                sport,
+                goal,
+                challenge,
+                days,
+                confidence: confidence.value,
+                stress: stress.value,
+                focus: focus.value,
+                bounce: bounce.value
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message);
+            return false;
+        }
+    } catch (error) {
+        alert("Could not save your profile. Please try again.");
+        return false;
+    }
+
     return true;
 }
 
-saveSettingsBtn.addEventListener("click", function () {
-    if (saveSettingsFromForm()) {
+saveSettingsBtn.addEventListener("click", async function () {
+    if (await saveSettingsFromForm()) {
         closeSettings();
     }
 });
 
 regenerateBtn.addEventListener("click", async function () {
-    if (!saveSettingsFromForm()) {
+    if (!await saveSettingsFromForm()) {
         return;
     }
     closeSettings();

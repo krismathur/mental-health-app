@@ -6,6 +6,21 @@ function showMessage(text) {
     message.textContent = text;
 }
 
+async function sendUserToNextPage() {
+    try {
+        const response = await fetch("/api/profile");
+
+        if (response.ok) {
+            window.location.href = "welcome.html";
+            return;
+        }
+    } catch (error) {
+        // If the profile check fails, send the user through onboarding.
+    }
+
+    window.location.href = "onboarding.html";
+}
+
 signupForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -46,7 +61,7 @@ loginForm.addEventListener("submit", async function (event) {
     const result = await response.json();
 
     if (response.ok) {
-        window.location.href = "onboarding.html";
+        await sendUserToNextPage();
     } else {
         showMessage(result.message);
     }
