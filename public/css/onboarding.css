@@ -1,0 +1,196 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f4f8;
+    color: #1f2d3d;
+    min-height: 100vh;
+}
+
+/* ── Navbar ── */
+nav {
+    display: flex;
+    align-items: center;
+    padding: 18px 40px;
+    background-color: #fff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.nav-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2b6cb0;
+    text-decoration: none;
+}
+
+.page {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #2b6cb0;
+    margin-bottom: 8px;
+}
+
+.tagline {
+    color: #4a5568;
+    font-size: 1.1rem;
+    margin-bottom: 36px;
+}
+
+/* White form card */
+.card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 36px 40px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.card h2 {
+    color: #2b6cb0;
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    margin-top: 14px;
+}
+
+.req {
+    color: red;
+}
+
+input {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    box-sizing: border-box;
+    background: #f8fafc;
+}
+
+input:focus {
+    outline: none;
+    border-color: #2b6cb0;
+    box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.15);
+    background: white;
+}
+
+button {
+    display: block;
+    width: 100%;
+    margin-top: 24px;
+    padding: 13px;
+    background-color: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #245a9a;
+}
+
+/* Star rating questions (1–5) */
+.star-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.star-section h3 {
+    color: #2b6cb0;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.star-hint {
+    color: #718096;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.star-row {
+    margin-top: 18px;
+}
+
+.star-question {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.star-scale {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 8px;
+}
+
+.stars {
+    display: flex;
+    gap: 8px;
+}
+
+/* Hide the radio circle; user clicks the number box instead */
+.stars input {
+    display: none;
+}
+
+.stars label {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    padding: 8px 0;
+    flex: 1;
+    text-align: center;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4a5568;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Highlight the selected number */
+.stars label:has(input:checked) {
+    background-color: #2b6cb0;
+    border-color: #2b6cb0;
+    color: white;
+}
