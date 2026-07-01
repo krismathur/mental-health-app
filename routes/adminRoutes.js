@@ -59,7 +59,9 @@ function createAdminRoutes(db) {
                 profiles.confidence,
                 profiles.stress,
                 profiles.focus,
-                profiles.bounce
+                profiles.bounce,
+                profiles.mental_skill,
+                profiles.goal_commitment
             FROM plans
             JOIN users ON users.id = plans.user_id
             LEFT JOIN profiles ON profiles.user_id = plans.user_id

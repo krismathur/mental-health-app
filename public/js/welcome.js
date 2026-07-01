@@ -61,6 +61,8 @@ function saveProfileToLocalStorage(profile) {
     localStorage.setItem("mindzone_goal", profile.goal);
     localStorage.setItem("mindzone_challenge", profile.challenge);
     localStorage.setItem("mindzone_days", profile.days);
+    localStorage.setItem("mindzone_mental_skill", profile.mental_skill);
+    localStorage.setItem("mindzone_goal_commitment", profile.goal_commitment);
     localStorage.setItem("mindzone_confidence", profile.confidence);
     localStorage.setItem("mindzone_stress", profile.stress);
     localStorage.setItem("mindzone_focus", profile.focus);
@@ -74,6 +76,8 @@ function loadSettingsIntoForm() {
     document.getElementById("settingsSport").value = localStorage.getItem("mindzone_sport") || "";
     document.getElementById("settingsGoal").value = localStorage.getItem("mindzone_goal") || "";
     document.getElementById("settingsChallenge").value = localStorage.getItem("mindzone_challenge") || "";
+    document.getElementById("settingsMentalSkill").value = localStorage.getItem("mindzone_mental_skill") || "";
+    document.getElementById("settingsGoalCommitment").value = localStorage.getItem("mindzone_goal_commitment") || "";
     document.getElementById("settingsDays").value = localStorage.getItem("mindzone_days") || "";
 
     setStarRating("confidence", localStorage.getItem("mindzone_confidence"));
@@ -97,6 +101,8 @@ async function saveSettingsFromForm() {
     const sport = document.getElementById("settingsSport").value.trim();
     const goal = document.getElementById("settingsGoal").value.trim();
     const challenge = document.getElementById("settingsChallenge").value.trim();
+    const mentalSkill = document.getElementById("settingsMentalSkill").value.trim();
+    const goalCommitment = document.getElementById("settingsGoalCommitment").value.trim();
     const days = document.getElementById("settingsDays").value.trim();
 
     const confidence = document.querySelector('#settingsForm input[name="confidence"]:checked');
@@ -104,8 +110,16 @@ async function saveSettingsFromForm() {
     const focus = document.querySelector('#settingsForm input[name="focus"]:checked');
     const bounce = document.querySelector('#settingsForm input[name="bounce"]:checked');
 
-    if (!name || !age || !sport || !goal || !challenge || !days || !confidence || !stress || !focus || !bounce) {
+    if (!name || !age || !sport || !goal || !challenge || !mentalSkill || !goalCommitment || !days || !confidence || !stress || !focus || !bounce) {
         alert("Please fill out every field before saving.");
+        return false;
+    }
+
+    const mentalSkillNum = parseInt(mentalSkill, 10);
+    const goalCommitmentNum = parseInt(goalCommitment, 10);
+
+    if (mentalSkillNum < 1 || mentalSkillNum > 10 || goalCommitmentNum < 1 || goalCommitmentNum > 10) {
+        alert("Ratings must be between 1 and 10.");
         return false;
     }
 
@@ -114,6 +128,8 @@ async function saveSettingsFromForm() {
     localStorage.setItem("mindzone_sport", sport);
     localStorage.setItem("mindzone_goal", goal);
     localStorage.setItem("mindzone_challenge", challenge);
+    localStorage.setItem("mindzone_mental_skill", mentalSkill);
+    localStorage.setItem("mindzone_goal_commitment", goalCommitment);
     localStorage.setItem("mindzone_days", days);
     localStorage.setItem("mindzone_confidence", confidence.value);
     localStorage.setItem("mindzone_stress", stress.value);
@@ -131,6 +147,8 @@ async function saveSettingsFromForm() {
                 goal,
                 challenge,
                 days,
+                mentalSkill,
+                goalCommitment,
                 confidence: confidence.value,
                 stress: stress.value,
                 focus: focus.value,
@@ -198,7 +216,7 @@ async function loadCurrentPlan(profileLoaded) {
         } else if (data.status === "rejected") {
             showPlanMessage(data.message, "rejected");
         } else {
-            showPlanMessage("Press the button below to generate your daily plan.", "none");
+            showPlanMessage("Hit the button below and we'll build your daily mental training plan.", "none");
         }
     } catch (error) {
         showPlanMessage("Could not load your plan right now.", "none");
@@ -215,7 +233,7 @@ function showPlanMessage(message, status) {
     planText.textContent = message;
     generateButton.hidden = false;
     generateButton.disabled = waitingForApproval;
-    generateButton.textContent = waitingForApproval ? "Waiting for Approval" : "Generate Plan →";
+    generateButton.textContent = waitingForApproval ? "Waiting for Approval ⏳" : "Generate My Plan 🚀";
     updateRegenerateButton();
 }
 
@@ -223,7 +241,7 @@ function updateRegenerateButton() {
     const canRegenerate = currentPlanStatus === "approved";
     regenerateBtn.hidden = !canRegenerate;
     regenerateBtn.disabled = !canRegenerate;
-    regenerateBtn.textContent = "Regenerate Plan";
+    regenerateBtn.textContent = "Regenerate Plan 🔄";
 }
 
 // Generate plan from localStorage data and wait for admin approval
@@ -238,6 +256,8 @@ async function generatePlan(loadingMessage) {
     const stress = localStorage.getItem("mindzone_stress");
     const focus = localStorage.getItem("mindzone_focus");
     const bounce = localStorage.getItem("mindzone_bounce");
+    const mentalSkill = localStorage.getItem("mindzone_mental_skill");
+    const goalCommitment = localStorage.getItem("mindzone_goal_commitment");
 
     if (currentPlanStatus === "pending") {
         showPlanMessage("Your plan is already waiting for admin approval. You will have it within 24 hours or sooner.", "pending");
@@ -250,13 +270,13 @@ async function generatePlan(loadingMessage) {
     planGrid.innerHTML = "";
     generateButton.hidden = false;
     generateButton.disabled = true;
-    generateButton.textContent = "Generating...";
+    generateButton.textContent = "Generating... ✨";
     regenerateBtn.disabled = true;
 
     const response = await fetch("/api/generate-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, age, sport, goal, challenge, days, confidence, stress, focus, bounce })
+        body: JSON.stringify({ name, age, sport, goal, challenge, days, confidence, stress, focus, bounce, mentalSkill, goalCommitment })
     });
 
     const data = await response.json();

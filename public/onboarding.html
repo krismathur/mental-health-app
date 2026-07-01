@@ -2,94 +2,170 @@
 <html>
     <head>
         <title>Onboarding - MindZone</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/onboarding.css">
     </head>
     <body>
 
         <nav>
-            <a class="nav-logo" href="index.html">MindZone</a>
+            <a class="nav-logo" href="index.html">🧠 MindZone</a>
         </nav>
 
         <div class="page">
 
-            <h1>MindZone</h1>
-            <p class="tagline">Train your mind. Elevate your game.</p>
+            <div class="page-header">
+                <img
+                    class="header-img"
+                    src="images/step-questions.jpg"
+                    alt="Teen athlete thinking about their goals"
+                >
+                <div class="header-text">
+                    <span class="badge">Step 2 of 2 — Almost there!</span>
+                    <h1>Let's build your profile! 🏆</h1>
+                    <p class="tagline">Tell us about you so we can make a plan that actually fits your life.</p>
+                </div>
+            </div>
+
+            <div class="progress-bar" aria-label="Progress">
+                <div class="progress-step done">
+                    <span class="step-icon">✅</span>
+                    <span>Account</span>
+                </div>
+                <div class="progress-line done"></div>
+                <div class="progress-step active">
+                    <span class="step-icon">📝</span>
+                    <span>Your Info</span>
+                </div>
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <span class="step-icon">🎯</span>
+                    <span>Your Plan</span>
+                </div>
+            </div>
 
             <div class="card">
-                <h2>Create Your Profile</h2>
-                <p class="subtitle">Tell us about yourself to get started.</p>
+                <div class="card-top">
+                    <img src="images/card-mind.jpg" alt="" class="card-thumb">
+                    <div>
+                        <h2>About You</h2>
+                        <p class="subtitle">No wrong answers — just be honest!</p>
+                    </div>
+                </div>
 
-                <form>
-                    <label for="name">Name <span class="req">*</span></label>
-                    <input id="name" type="text" placeholder="Your name" required>
+                <form id="onboardingForm">
+                    <div class="form-section">
+                        <h3 class="section-label">👤 The basics</h3>
 
-                    <label for="age">Age <span class="req">*</span></label>
-                    <input id="age" type="number" placeholder="Your age" required>
+                        <label for="name">Your Name <span class="req">*</span></label>
+                        <input id="name" type="text" placeholder="What should we call you?" required>
 
-                    <label for="sport">Sport <span class="req">*</span></label>
-                    <input id="sport" type="text" placeholder="e.g. Soccer, Basketball" required>
+                        <label for="age">Your Age <span class="req">*</span></label>
+                        <input id="age" type="number" min="10" max="18" placeholder="10–18" required>
 
-                    <label for="goal">Main Goal <span class="req">*</span></label>
-                    <input id="goal" type="text" placeholder="What do you want to improve?" required>
+                        <label for="sport">Your Sport <span class="req">*</span></label>
+                        <input id="sport" type="text" placeholder="🏀 Basketball, ⚽ Soccer, 🏊 Swimming..." required>
 
-                    <label for="challenge">Biggest Challenge <span class="req">*</span></label>
-                    <input id="challenge" type="text" placeholder="What holds you back?" required>
+                        <div class="scale-row">
+                            <p class="scale-question">How much time do you spend trying to be mentally prepared? <span class="req">*</span></p>
+                            <p class="scale-hint">1 = hardly any · 10 = a lot</p>
+                            <div class="stars scale-10">
+                                <label><input type="radio" name="mentalSkill" value="1" required> 1</label>
+                                <label><input type="radio" name="mentalSkill" value="2"> 2</label>
+                                <label><input type="radio" name="mentalSkill" value="3"> 3</label>
+                                <label><input type="radio" name="mentalSkill" value="4"> 4</label>
+                                <label><input type="radio" name="mentalSkill" value="5"> 5</label>
+                                <label><input type="radio" name="mentalSkill" value="6"> 6</label>
+                                <label><input type="radio" name="mentalSkill" value="7"> 7</label>
+                                <label><input type="radio" name="mentalSkill" value="8"> 8</label>
+                                <label><input type="radio" name="mentalSkill" value="9"> 9</label>
+                                <label><input type="radio" name="mentalSkill" value="10"> 10</label>
+                            </div>
+                        </div>
+                    </div>
 
-                    <label for="days">How Many Days Do You Want Your Plan To Be?<span class="req">*</span></label>
-                    <input id="days" type="number" min="1" max="20" placeholder="e.g. 7" required>
+                    <div class="form-section">
+                        <h3 class="section-label">🎯 Your goals</h3>
 
-                    <!-- Quick check-in: pick 1 (low) to 5 (high) for each question -->
+                        <label for="goal">What do you want to get better at? <span class="req">*</span></label>
+                        <input id="goal" type="text" placeholder="Stay calm before games, focus better..." required>
+
+                        <label for="challenge">What's your biggest challenge? <span class="req">*</span></label>
+                        <input id="challenge" type="text" placeholder="Nerves, losing focus, bouncing back..." required>
+
+                        <div class="scale-row">
+                            <p class="scale-question">How much are you willing to work on your goal? <span class="req">*</span></p>
+                            <p class="scale-hint">1 = not much · 10 = all the way</p>
+                            <div class="stars scale-10">
+                                <label><input type="radio" name="goalCommitment" value="1" required> 1</label>
+                                <label><input type="radio" name="goalCommitment" value="2"> 2</label>
+                                <label><input type="radio" name="goalCommitment" value="3"> 3</label>
+                                <label><input type="radio" name="goalCommitment" value="4"> 4</label>
+                                <label><input type="radio" name="goalCommitment" value="5"> 5</label>
+                                <label><input type="radio" name="goalCommitment" value="6"> 6</label>
+                                <label><input type="radio" name="goalCommitment" value="7"> 7</label>
+                                <label><input type="radio" name="goalCommitment" value="8"> 8</label>
+                                <label><input type="radio" name="goalCommitment" value="9"> 9</label>
+                                <label><input type="radio" name="goalCommitment" value="10"> 10</label>
+                            </div>
+                        </div>
+
+                        <label for="days">How many days should your plan be? <span class="req">*</span></label>
+                        <input id="days" type="number" min="1" max="20" placeholder="Try 7 days!" required>
+                    </div>
+
                     <div class="star-section">
-                        <h3>Quick Check-In</h3>
-                        <p class="star-hint">Tap a number for each question. 1 = low · 5 = high</p>
+                        <h3>⭐ Quick Check-In</h3>
+                        <p class="star-hint">Tap a number for each one. 1 = not much · 5 = a lot!</p>
 
                         <div class="star-row">
                             <p class="star-question">How confident do you feel before games or practice?</p>
                             <div class="stars">
-                                <label><input type="radio" name="confidence" value="1" required> 1</label>
-                                <label><input type="radio" name="confidence" value="2"> 2</label>
-                                <label><input type="radio" name="confidence" value="3"> 3</label>
-                                <label><input type="radio" name="confidence" value="4"> 4</label>
-                                <label><input type="radio" name="confidence" value="5"> 5</label>
+                                <label><input type="radio" name="confidence" value="1" required><span class="star-num">1</span><span class="star-emoji">😟</span></label>
+                                <label><input type="radio" name="confidence" value="2"><span class="star-num">2</span><span class="star-emoji">😐</span></label>
+                                <label><input type="radio" name="confidence" value="3"><span class="star-num">3</span><span class="star-emoji">😊</span></label>
+                                <label><input type="radio" name="confidence" value="4"><span class="star-num">4</span><span class="star-emoji">😄</span></label>
+                                <label><input type="radio" name="confidence" value="5"><span class="star-num">5</span><span class="star-emoji">🔥</span></label>
                             </div>
                         </div>
 
                         <div class="star-row">
                             <p class="star-question">How stressed do you get under pressure?</p>
-                            <p class="star-scale">1 = calm · 5 = very stressed</p>
+                            <p class="star-scale">1 = super calm · 5 = really stressed</p>
                             <div class="stars">
-                                <label><input type="radio" name="stress" value="1" required> 1</label>
-                                <label><input type="radio" name="stress" value="2"> 2</label>
-                                <label><input type="radio" name="stress" value="3"> 3</label>
-                                <label><input type="radio" name="stress" value="4"> 4</label>
-                                <label><input type="radio" name="stress" value="5"> 5</label>
+                                <label><input type="radio" name="stress" value="1" required><span class="star-num">1</span><span class="star-emoji">😌</span></label>
+                                <label><input type="radio" name="stress" value="2"><span class="star-num">2</span><span class="star-emoji">😊</span></label>
+                                <label><input type="radio" name="stress" value="3"><span class="star-num">3</span><span class="star-emoji">😬</span></label>
+                                <label><input type="radio" name="stress" value="4"><span class="star-num">4</span><span class="star-emoji">😰</span></label>
+                                <label><input type="radio" name="stress" value="5"><span class="star-num">5</span><span class="star-emoji">😱</span></label>
                             </div>
                         </div>
 
                         <div class="star-row">
                             <p class="star-question">How well can you focus during practice or games?</p>
                             <div class="stars">
-                                <label><input type="radio" name="focus" value="1" required> 1</label>
-                                <label><input type="radio" name="focus" value="2"> 2</label>
-                                <label><input type="radio" name="focus" value="3"> 3</label>
-                                <label><input type="radio" name="focus" value="4"> 4</label>
-                                <label><input type="radio" name="focus" value="5"> 5</label>
+                                <label><input type="radio" name="focus" value="1" required><span class="star-num">1</span><span class="star-emoji">💤</span></label>
+                                <label><input type="radio" name="focus" value="2"><span class="star-num">2</span><span class="star-emoji">😑</span></label>
+                                <label><input type="radio" name="focus" value="3"><span class="star-num">3</span><span class="star-emoji">👀</span></label>
+                                <label><input type="radio" name="focus" value="4"><span class="star-num">4</span><span class="star-emoji">🎯</span></label>
+                                <label><input type="radio" name="focus" value="5"><span class="star-num">5</span><span class="star-emoji">🧠</span></label>
                             </div>
                         </div>
 
                         <div class="star-row">
-                            <p class="star-question">How quickly do you bounce back after a bad game or mistake?</p>
+                            <p class="star-question">How fast do you bounce back after a bad game or mistake?</p>
                             <div class="stars">
-                                <label><input type="radio" name="bounce" value="1" required> 1</label>
-                                <label><input type="radio" name="bounce" value="2"> 2</label>
-                                <label><input type="radio" name="bounce" value="3"> 3</label>
-                                <label><input type="radio" name="bounce" value="4"> 4</label>
-                                <label><input type="radio" name="bounce" value="5"> 5</label>
+                                <label><input type="radio" name="bounce" value="1" required><span class="star-num">1</span><span class="star-emoji">😞</span></label>
+                                <label><input type="radio" name="bounce" value="2"><span class="star-num">2</span><span class="star-emoji">😕</span></label>
+                                <label><input type="radio" name="bounce" value="3"><span class="star-num">3</span><span class="star-emoji">🙂</span></label>
+                                <label><input type="radio" name="bounce" value="4"><span class="star-num">4</span><span class="star-emoji">💪</span></label>
+                                <label><input type="radio" name="bounce" value="5"><span class="star-num">5</span><span class="star-emoji">🚀</span></label>
                             </div>
                         </div>
                     </div>
 
-                    <button id="submitBtn" type="submit">Get Started →</button>
+                    <button id="submitBtn" type="submit">Build My Plan! 🎯</button>
                 </form>
             </div>
 

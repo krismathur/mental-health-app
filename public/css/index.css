@@ -111,13 +111,29 @@ nav {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
+.hero-img-wrap {
+    flex-shrink: 0;
+    max-width: 42%;
+    text-align: center;
+}
+
 .hero-img {
     width: 340px;
-    max-width: 42%;
+    max-width: 100%;
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    object-fit: cover;
-    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    aspect-ratio: 3 / 4;
+    background: rgba(255, 255, 255, 0.1);
+    display: block;
+}
+
+.hero-img-caption {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    opacity: 0.9;
+    letter-spacing: 0.3px;
 }
 
 /* Section titles */
@@ -299,6 +315,10 @@ footer {
 
     .hero-text {
         text-align: center;
+    }
+
+    .hero-img-wrap {
+        max-width: 100%;
     }
 
     .hero-img {

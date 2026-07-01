@@ -5,103 +5,218 @@
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #f0f4f8;
-    color: #1f2d3d;
+    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+    color: #2d3748;
     min-height: 100vh;
+    background-color: #0f2b4a;
+    background-image:
+        linear-gradient(rgba(10, 25, 47, 0.7), rgba(15, 43, 74, 0.8)),
+        url('../images/mental-strength-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
-/* ── Navbar ── */
 nav {
     display: flex;
     align-items: center;
-    padding: 18px 40px;
-    background-color: #fff;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    padding: 16px 40px;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
 .nav-logo {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 900;
     color: #2b6cb0;
     text-decoration: none;
 }
 
 .page {
-    padding: 60px 20px;
+    padding: 36px 20px 60px;
     text-align: center;
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 28px;
+}
+
+.header-img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(43, 108, 176, 0.18);
+    margin-bottom: 20px;
+}
+
+.badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #f6ad55, #fc8181);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
 }
 
 h1 {
-    font-size: 2.8rem;
-    font-weight: 800;
+    font-size: 2.2rem;
+    font-weight: 900;
     color: #2b6cb0;
     margin-bottom: 8px;
+    line-height: 1.2;
 }
 
 .tagline {
     color: #4a5568;
-    font-size: 1.1rem;
-    margin-bottom: 36px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.5;
 }
 
-/* White form card */
+/* Progress steps */
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 28px;
+    padding: 16px 12px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #a0aec0;
+    min-width: 70px;
+}
+
+.progress-step.done,
+.progress-step.active {
+    color: #2b6cb0;
+}
+
+.step-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.progress-line {
+    flex: 1;
+    height: 3px;
+    background: #e2e8f0;
+    min-width: 30px;
+    margin: 0 4px;
+    margin-bottom: 18px;
+    border-radius: 2px;
+}
+
+.progress-line.done {
+    background: linear-gradient(90deg, #2b6cb0, #63b3ed);
+}
+
 .card {
     background-color: white;
-    border-radius: 12px;
-    padding: 36px 40px;
-    max-width: 500px;
-    margin: 0 auto;
+    border-radius: 20px;
+    padding: 28px 30px;
     text-align: left;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 6px 24px rgba(43, 108, 176, 0.12);
+    border: 2px solid rgba(99, 179, 237, 0.2);
+}
+
+.card-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px dashed #e2e8f0;
+}
+
+.card-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 
 .card h2 {
     color: #2b6cb0;
-    font-size: 1.3rem;
-    margin-bottom: 4px;
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-bottom: 2px;
 }
 
 .subtitle {
     color: #718096;
-    font-size: 0.9rem;
-    margin-bottom: 24px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+.section-label {
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: #4a5568;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
 }
 
 label {
     display: block;
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 800;
     color: #4a5568;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
     margin-bottom: 5px;
-    margin-top: 14px;
+    margin-top: 12px;
 }
 
 .req {
-    color: red;
+    color: #fc8181;
 }
 
 input {
     display: block;
     width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 8px;
+    padding: 11px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
     font-size: 0.95rem;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
     box-sizing: border-box;
     background: #f8fafc;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input:focus {
     outline: none;
-    border-color: #2b6cb0;
-    box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.15);
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 4px rgba(99, 179, 237, 0.2);
     background: white;
 }
 
@@ -109,88 +224,166 @@ button {
     display: block;
     width: 100%;
     margin-top: 24px;
-    padding: 13px;
-    background-color: #2b6cb0;
+    padding: 15px;
+    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 700;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
     cursor: pointer;
+    box-shadow: 0 4px 14px rgba(43, 108, 176, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
 }
 
 button:hover {
-    background-color: #245a9a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(43, 108, 176, 0.35);
 }
 
-/* Star rating questions (1–5) */
+/* Star rating with emojis */
 .star-section {
-    margin-top: 24px;
+    margin-top: 8px;
     padding-top: 20px;
-    border-top: 1px solid #e2e8f0;
+    border-top: 2px dashed #e2e8f0;
 }
 
 .star-section h3 {
     color: #2b6cb0;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    font-weight: 900;
     margin-bottom: 4px;
 }
 
 .star-hint {
     color: #718096;
     font-size: 0.85rem;
+    font-weight: 600;
     margin-bottom: 8px;
 }
 
 .star-row {
     margin-top: 18px;
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 14px;
 }
 
 .star-question {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.92rem;
+    font-weight: 700;
     color: #4a5568;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     line-height: 1.4;
 }
 
 .star-scale {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: #718096;
-    margin-bottom: 8px;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
 .stars {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
-/* Hide the radio circle; user clicks the number box instead */
 .stars input {
     display: none;
 }
 
 .stars label {
-    display: inline-block;
-    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
     margin: 0;
-    padding: 8px 0;
+    padding: 8px 4px;
     flex: 1;
     text-align: center;
     text-transform: none;
     letter-spacing: 0;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #4a5568;
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 8px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
     cursor: pointer;
+    transition: transform 0.15s, background 0.15s, border-color 0.15s;
 }
 
-/* Highlight the selected number */
+.stars label:hover {
+    transform: scale(1.05);
+    border-color: #63b3ed;
+}
+
+.star-num {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #a0aec0;
+}
+
+.star-emoji {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
 .stars label:has(input:checked) {
-    background-color: #2b6cb0;
+    background: linear-gradient(135deg, #2b6cb0, #4299e1);
     border-color: #2b6cb0;
-    color: white;
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+}
+
+.stars label:has(input:checked) .star-num {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* 1–10 rating scales */
+.scale-row {
+    margin-top: 16px;
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 14px;
+}
+
+.scale-question {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #4a5568;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.scale-hint {
+    font-size: 0.78rem;
+    color: #718096;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.stars.scale-10 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+}
+
+.stars.scale-10 label {
+    padding: 8px 4px;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+@media (max-width: 500px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .progress-step span:not(.step-icon) {
+        font-size: 0.65rem;
+    }
+
+    .card {
+        padding: 22px 18px;
+    }
 }

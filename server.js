@@ -42,6 +42,8 @@ db.serialize(function () {
             stress INTEGER NOT NULL,
             focus INTEGER NOT NULL,
             bounce INTEGER NOT NULL,
+            mental_skill INTEGER,
+            goal_commitment INTEGER,
             updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
@@ -58,6 +60,24 @@ db.serialize(function () {
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
     `);
+
+    db.all("PRAGMA table_info(profiles)", function (pragmaError, columns) {
+        if (pragmaError) {
+            return;
+        }
+
+        const columnNames = columns.map(function (column) {
+            return column.name;
+        });
+
+        if (!columnNames.includes("mental_skill")) {
+            db.run("ALTER TABLE profiles ADD COLUMN mental_skill INTEGER");
+        }
+
+        if (!columnNames.includes("goal_commitment")) {
+            db.run("ALTER TABLE profiles ADD COLUMN goal_commitment INTEGER");
+        }
+    });
 });
 
 app.use(express.json());
@@ -155,7 +175,7 @@ app.get("/api/profile", function (req, res) {
     }
 
     db.get(
-        "SELECT name, age, sport, goal, challenge, days, confidence, stress, focus, bounce FROM profiles WHERE user_id = ?",
+        "SELECT name, age, sport, goal, challenge, days, confidence, stress, focus, bounce, mental_skill, goal_commitment FROM profiles WHERE user_id = ?",
         [req.session.userId],
         function (error, profile) {
             if (error) {
@@ -186,14 +206,20 @@ app.post("/api/profile", function (req, res) {
     const stress = parseInt(req.body.stress, 10);
     const focus = parseInt(req.body.focus, 10);
     const bounce = parseInt(req.body.bounce, 10);
+    const mentalSkill = parseInt(req.body.mentalSkill, 10);
+    const goalCommitment = parseInt(req.body.goalCommitment, 10);
 
-    if (!name || !age || !sport || !goal || !challenge || !days || !confidence || !stress || !focus || !bounce) {
+    if (!name || !age || !sport || !goal || !challenge || !days || !confidence || !stress || !focus || !bounce || !mentalSkill || !goalCommitment) {
         return res.status(400).json({ message: "Please fill out every profile field." });
     }
 
+    if (mentalSkill < 1 || mentalSkill > 10 || goalCommitment < 1 || goalCommitment > 10) {
+        return res.status(400).json({ message: "Ratings must be between 1 and 10." });
+    }
+
     db.run(
-        `INSERT INTO profiles (user_id, name, age, sport, goal, challenge, days, confidence, stress, focus, bounce)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `INSERT INTO profiles (user_id, name, age, sport, goal, challenge, days, confidence, stress, focus, bounce, mental_skill, goal_commitment)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(user_id) DO UPDATE SET
             name = excluded.name,
             age = excluded.age,
@@ -205,8 +231,10 @@ app.post("/api/profile", function (req, res) {
             stress = excluded.stress,
             focus = excluded.focus,
             bounce = excluded.bounce,
+            mental_skill = excluded.mental_skill,
+            goal_commitment = excluded.goal_commitment,
             updated_at = CURRENT_TIMESTAMP`,
-        [req.session.userId, name, age, sport, goal, challenge, days, confidence, stress, focus, bounce],
+        [req.session.userId, name, age, sport, goal, challenge, days, confidence, stress, focus, bounce, mentalSkill, goalCommitment],
         function (error) {
             if (error) {
                 return res.status(500).json({ message: "Could not save profile." });

@@ -49,7 +49,7 @@ function createPlanRoutes(db) {
             return res.status(401).json({ message: "Please log in before generating a plan." });
         }
 
-        const { name, age, sport, goal, challenge, days, confidence, stress, focus, bounce } = req.body;
+        const { name, age, sport, goal, challenge, days, confidence, stress, focus, bounce, mentalSkill, goalCommitment } = req.body;
 
         if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_MODEL) {
             return res.status(500).json({ message: "Gemini is not set up. Add GEMINI_API_KEY and GEMINI_MODEL to your .env file." });
@@ -74,8 +74,9 @@ function createPlanRoutes(db) {
         async function generateAndSavePlan() {
             const prompt = `You are a mental health coach for athletes. Make a ${days} day mental wellness plan for this athlete:
 Name: ${name}, Age: ${age}, Sport: ${sport}, Goal: ${goal}, Challenge: ${challenge}.
+Time spent on mental preparation (1-10): ${mentalSkill}. Willingness to work on goal (1-10): ${goalCommitment}.
 Self-ratings (1-5): Confidence before games: ${confidence}, Stress under pressure: ${stress}, Focus during practice/games: ${focus}, Bounce back after mistakes: ${bounce}.
-Use lower scores to focus more on that area. Format the answer exactly like this, one line per day: "Day 1: <one short thing to do>" then "Day 2: <one short thing to do>" up to Day ${days}. Keep each day to one short activity. Do not add any extra text before or after.`;
+Use lower scores to focus more on that area. Match plan intensity to their willingness to work (${goalCommitment}/10). Format the answer exactly like this, one line per day: "Day 1: <one short thing to do>" then "Day 2: <one short thing to do>" up to Day ${days}. Keep each day to one short activity. Do not add any extra text before or after.`;
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 

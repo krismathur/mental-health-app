@@ -2,31 +2,55 @@
 <html>
     <head>
         <title>Welcome - MindZone</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/welcome.css">
     </head>
     <body>
 
         <nav>
-            <a class="nav-logo" href="index.html">MindZone</a>
+            <a class="nav-logo" href="index.html">🧠 MindZone</a>
             <div class="nav-links">
-                <button type="button" id="settingsBtn" class="nav-btn">Settings</button>
+                <button type="button" id="settingsBtn" class="nav-btn">⚙️ Settings</button>
                 <button type="button" id="logoutBtn" class="nav-btn btn-fill">Log Out</button>
             </div>
         </nav>
 
-        <!-- Blue banner at the top (same style as index page) -->
         <section class="hero">
-            <h1>Your Mental Wellness Plan</h1>
-            <p>A personalized day-by-day plan, built for you.</p>
+            <div class="hero-inner">
+                <div class="hero-text">
+                    <span class="hero-badge">🎉 You're in!</span>
+                    <h1>Your Game Plan Is Ready</h1>
+                    <p>A personalized day-by-day guide built just for you — let's crush it!</p>
+                </div>
+                <img
+                    class="hero-img"
+                    src="images/step-plan.jpg"
+                    alt="Daily wellness plan on a phone"
+                >
+            </div>
         </section>
 
         <div class="page">
+            <div class="encourage-strip">
+                <span>💪 You've got this</span>
+                <span>🧘 Stay calm</span>
+                <span>🎯 Stay focused</span>
+                <span>🔥 Keep going</span>
+            </div>
+
             <div class="card" id="mainCard">
-                <h2>Ready when you are</h2>
-                <p class="subtitle" id="planText">
-                    Press the button below to generate your daily plan.
-                </p>
-                <button id="generatePlanButton" type="button">Generate Plan →</button>
+                <div class="card-top">
+                    <img src="images/card-mind.jpg" alt="" class="card-thumb">
+                    <div>
+                        <h2>Ready when you are! 🌟</h2>
+                        <p class="subtitle" id="planText">
+                            Hit the button below and we'll build your daily mental training plan.
+                        </p>
+                    </div>
+                </div>
+                <button id="generatePlanButton" type="button">Generate My Plan 🚀</button>
             </div>
 
             <div id="planGrid" class="plan-grid" hidden></div>
@@ -37,7 +61,7 @@
             <div class="overlay-backdrop" id="overlayBackdrop"></div>
             <div class="settings-panel">
                 <div class="settings-header">
-                    <h2>Settings</h2>
+                    <h2>⚙️ Settings</h2>
                     <button type="button" id="closeSettingsBtn" class="close-btn">&times;</button>
                 </div>
 
@@ -46,7 +70,7 @@
                     <input id="settingsName" type="text" placeholder="Your name">
 
                     <label for="settingsAge">Age</label>
-                    <input id="settingsAge" type="number" placeholder="Your age">
+                    <input id="settingsAge" type="number" min="10" max="18" placeholder="10–18">
 
                     <label for="settingsSport">Sport</label>
                     <input id="settingsSport" type="text" placeholder="e.g. Soccer, Basketball">
@@ -57,11 +81,17 @@
                     <label for="settingsChallenge">Biggest Challenge</label>
                     <input id="settingsChallenge" type="text" placeholder="What holds you back?">
 
+                    <label for="settingsMentalSkill">Time spent on mental prep (1–10)</label>
+                    <input id="settingsMentalSkill" type="number" min="1" max="10" placeholder="1–10">
+
+                    <label for="settingsGoalCommitment">Willingness to work on goal (1–10)</label>
+                    <input id="settingsGoalCommitment" type="number" min="1" max="10" placeholder="1–10">
+
                     <label for="settingsDays">Plan Length (days)</label>
                     <input id="settingsDays" type="number" min="1" max="20" placeholder="e.g. 7">
 
                     <div class="star-section">
-                        <h3>Quick Check-In</h3>
+                        <h3>⭐ Quick Check-In</h3>
                         <p class="star-hint">1 = low · 5 = high</p>
 
                         <div class="star-row">
@@ -110,8 +140,8 @@
                         </div>
                     </div>
 
-                    <button type="button" id="saveSettingsBtn" class="settings-action-btn">Save Changes</button>
-                    <button type="button" id="regenerateBtn" class="settings-action-btn secondary">Regenerate Plan</button>
+                    <button type="button" id="saveSettingsBtn" class="settings-action-btn">Save Changes 💾</button>
+                    <button type="button" id="regenerateBtn" class="settings-action-btn secondary">Regenerate Plan 🔄</button>
                 </form>
             </div>
         </div>
