@@ -216,7 +216,7 @@ body::after {
 .overlay {
     position: fixed;
     inset: 0;
-    z-index: 100;
+    z-index: 1100;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -241,10 +241,25 @@ body::after {
     border-radius: 0;
     width: 100%;
     height: 100vh;
+    max-height: 100vh;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding: 24px 28px 28px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     text-align: left;
+    box-sizing: border-box;
+}
+
+/* Flex overlays: keep header/footer pinned, scroll the main content area */
+.med-panel.fix-panel,
+.med-panel.saved-tips-panel,
+.med-panel.avatar-panel,
+.med-panel.reset-panel,
+.med-panel.meditation-journey-panel {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
 .med-header {
@@ -307,6 +322,8 @@ body::after {
     background: rgba(6, 43, 58, 0.55);
     border: 2px solid rgba(129, 230, 217, 0.3);
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .meditation-intro {
@@ -551,6 +568,8 @@ body::after {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -658,6 +677,8 @@ body::after {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .avatar-proceed-btn {
@@ -696,7 +717,7 @@ body::after {
 }
 
 .avatar-page-shell {
-    min-height: calc(100vh - var(--site-nav-space));
+    min-height: 100vh;
     padding: 28px 24px 40px;
     display: flex;
     justify-content: center;
@@ -705,8 +726,8 @@ body::after {
 .avatar-page-panel {
     position: relative;
     width: min(920px, 100%);
-    min-height: calc(100vh - var(--site-nav-space) - 56px);
-    max-height: calc(100vh - var(--site-nav-space) - 56px);
+    min-height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
     padding: 24px 28px 20px;
     border-radius: 18px;
     border: 3px solid rgba(237, 100, 166, 0.55);
@@ -718,14 +739,19 @@ body::after {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .avatar-profile-area {
     flex: 1;
+    min-height: 0;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 24px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .avatar-page-footer {
@@ -838,6 +864,8 @@ body::after {
     justify-content: center;
     padding: 12px 24px 8px;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mental-training-hidden {
@@ -1339,6 +1367,9 @@ body::after {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .fix-prompt {
@@ -1546,6 +1577,8 @@ body::after {
     border: 2px solid rgba(144, 205, 244, 0.35);
     box-shadow: inset 0 0 40px rgba(10, 25, 47, 0.45);
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .reset-feature-area.reset-view-list #resetExerciseActive {

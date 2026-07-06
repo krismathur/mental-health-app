@@ -88,6 +88,7 @@ app.use(function (req, res, next) {
 
     next();
 });
+
 app.use(express.static(publicPath));
 app.use(session({
     secret: "mindzone-local-secret",

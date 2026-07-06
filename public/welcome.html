@@ -15,45 +15,44 @@
         <nav class="site-nav">
             <a class="nav-logo" href="index.html">🧠 MindZone</a>
             <div class="nav-links">
-                <a class="nav-btn video-library-btn" href="#">Video Library</a>
+                <a class="nav-btn video-library-btn" href="#">🎬 Videos</a>
                 <a class="nav-btn rewards-btn" href="#">⭐ Rewards</a>
                 <button type="button" id="settingsBtn" class="nav-btn">⚙️ Settings</button>
-                <button type="button" id="logoutBtn" class="nav-btn btn-fill">Log Out</button>
+                <button type="button" id="logoutBtn" class="nav-btn nav-btn-fill">Log Out</button>
             </div>
         </nav>
 
         <section class="hero">
             <div class="hero-inner">
                 <div class="hero-text">
-                    <span class="hero-badge">🎉 You're in!</span>
-                    <h1>Your Game Plan Is Ready</h1>
-                    <p>A personalized day-by-day guide built just for you — let's crush it!</p>
+                    <span class="hero-badge">🎯 Your Game Plan</span>
+                    <h1>Train Your Mind Daily</h1>
+                    <p>One focused day at a time — built just for you.</p>
                 </div>
             </div>
         </section>
 
         <div class="page">
-            <div class="encourage-strip">
-                <span>💪 You've got this</span>
+            <div class="quick-motivation" aria-hidden="true">
+                <span>💪 Show up</span>
                 <span>🧘 Stay calm</span>
-                <span>🎯 Stay focused</span>
                 <span>🔥 Keep going</span>
             </div>
 
             <div class="card" id="mainCard">
-                <div class="card-top">
-                    <img src="images/card-mind.jpg" alt="" class="card-thumb">
-                    <div>
-                        <h2>Ready when you are! 🌟</h2>
-                        <p class="subtitle" id="planText">
-                            Hit the button below and we'll build your daily mental training plan.
-                        </p>
-                    </div>
-                </div>
-                <button id="generatePlanButton" type="button">Generate My Plan 🚀</button>
+                <div class="card-accent"></div>
+                <div class="card-icon">🧠</div>
+                <h2 class="card-title">Ready when you are</h2>
+                <p class="subtitle" id="planText">
+                    Hit the button below and we'll build your daily mental training plan.
+                </p>
             </div>
 
-            <div id="planGrid" class="plan-grid" hidden></div>
+            <div id="planView" class="plan-view" hidden></div>
+
+            <div class="plan-actions">
+                <button id="generatePlanButton" type="button">Generate My Plan 🚀</button>
+            </div>
 
             <a href="meditation.html" class="continue-btn">Continue Building Mental Strength 🧘</a>
         </div>
@@ -143,15 +142,10 @@
                     </div>
 
                     <button type="button" id="saveSettingsBtn" class="settings-action-btn">Save Changes 💾</button>
-                    <button type="button" id="regenerateBtn" class="settings-action-btn secondary">Regenerate Plan 🔄</button>
+                    <button type="button" id="regenerateBtn" class="settings-action-btn secondary" hidden>Regenerate Plan 🔄</button>
                 </form>
             </div>
         </div>
-
-        <script src="js/welcome.js"></script>
-    
-
-
 
         <!-- Video Library overlay (hidden until Video Library is clicked) -->
         <div id="videoLibraryOverlay" class="video-overlay video-hidden">
@@ -340,6 +334,8 @@
         </div>
 
         <script src="js/video-library.js"></script>
+        <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
+        <script src="js/welcome.js"></script>
     </body>
 </html>

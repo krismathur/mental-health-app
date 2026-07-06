@@ -996,10 +996,19 @@ finishBreathingBtn.addEventListener("click", function () {
 
 function openOverlay(overlay) {
     overlay.classList.remove("overlay-hidden");
+    document.body.classList.add("overlay-open");
 }
 
 function closeOverlay(overlay) {
     overlay.classList.add("overlay-hidden");
+    syncBodyOverlayState();
+}
+
+function syncBodyOverlayState() {
+    const anyOpen = !!document.querySelector(".rewards-overlay:not(.rewards-hidden)")
+        || !!document.querySelector(".video-overlay:not(.video-hidden)")
+        || !!document.querySelector(".overlay:not(.overlay-hidden)");
+    document.body.classList.toggle("overlay-open", anyOpen);
 }
 
 function getSelectedFixTipCount() {

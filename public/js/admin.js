@@ -125,7 +125,11 @@ function createPlanCard(plan) {
 
     const planEditor = document.createElement("textarea");
     planEditor.className = "plan-editor";
-    planEditor.value = plan.plan_text;
+    try {
+        planEditor.value = JSON.stringify(JSON.parse(plan.plan_text), null, 2);
+    } catch (error) {
+        planEditor.value = plan.plan_text;
+    }
 
     const actions = document.createElement("div");
     actions.className = "actions";

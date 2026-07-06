@@ -3,11 +3,19 @@ const TRAINING_PROGRESS_KEY = "mentalTrainingProgress";
 const TRAINING_QUESTION_KEY = "mentalTrainingQuestionIndex";
 const TRAINING_SESSION_LEVEL_KEY = "mentalTrainingSessionLevel";
 const TRAINING_SESSION_CORRECT_KEY = "mentalTrainingSessionCorrect";
+const TRAINING_QUESTION_ORDER_KEY = "mentalTrainingQuestionOrder";
 
 const mentalTrainingIntro = document.getElementById("mentalTrainingIntro");
 const mentalTrainingMain = document.getElementById("mentalTrainingMain");
 const mentalTrainingBottom = document.getElementById("mentalTrainingBottom");
 const mentalTrainingFooter = document.getElementById("mentalTrainingFooter");
+const closeMentalTrainingBtn = document.getElementById("closeMentalTrainingBtn");
+
+if (closeMentalTrainingBtn) {
+    closeMentalTrainingBtn.addEventListener("click", function () {
+        window.location.href = "meditation.html";
+    });
+}
 
 const PROGRESS_STEP = 5;
 
@@ -131,8 +139,65 @@ function saveSessionLevel(level) {
     localStorage.setItem(TRAINING_SESSION_LEVEL_KEY, String(level));
 }
 
-function setActiveQuestionsForLevel(level) {
-    activeQuestions = QUESTION_TIERS[level];
+function shuffleArray(items) {
+    const copy = items.slice();
+
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = temp;
+    }
+
+    return copy;
+}
+
+function saveQuestionOrder(level, order) {
+    localStorage.setItem(TRAINING_QUESTION_ORDER_KEY, JSON.stringify({
+        level: level,
+        order: order
+    }));
+}
+
+function getSavedQuestionOrder(level) {
+    const raw = localStorage.getItem(TRAINING_QUESTION_ORDER_KEY);
+    if (!raw) {
+        return null;
+    }
+
+    try {
+        const saved = JSON.parse(raw);
+        const tierLength = QUESTION_TIERS[level].length;
+
+        if (
+            saved &&
+            saved.level === level &&
+            Array.isArray(saved.order) &&
+            saved.order.length === tierLength
+        ) {
+            return saved.order;
+        }
+    } catch (error) {
+        return null;
+    }
+
+    return null;
+}
+
+function setActiveQuestionsForLevel(level, forceNewOrder) {
+    const tier = QUESTION_TIERS[level];
+    let order = forceNewOrder ? null : getSavedQuestionOrder(level);
+
+    if (!order) {
+        order = shuffleArray(tier.map(function (_, index) {
+            return index;
+        }));
+        saveQuestionOrder(level, order);
+    }
+
+    activeQuestions = order.map(function (index) {
+        return tier[index];
+    });
 }
 
 function startNewSession(level) {
@@ -148,7 +213,7 @@ function startNewSession(level) {
     saveQuestionIndex(0);
     saveTrainingProgress(0);
     saveSessionCorrectCount(0);
-    setActiveQuestionsForLevel(level);
+    setActiveQuestionsForLevel(level, true);
 }
 
 function updateBarProgress(isCorrect) {
@@ -267,7 +332,7 @@ function renderSummaryScreen(extraMessage) {
 
 function startMissedReview() {
     isReviewMode = true;
-    reviewQuestions = missedQuestions.slice();
+    reviewQuestions = shuffleArray(missedQuestions.slice());
     reviewIndex = 0;
     reviewStillWrong = [];
     renderMissedReviewQuestion();
@@ -415,13 +480,14 @@ function loadMentalTrainingPage() {
     }
 
     const sessionLevel = getSessionLevel();
-    setActiveQuestionsForLevel(sessionLevel);
     currentQuestionIndex = getQuestionIndex();
     sessionCorrectCount = getSessionCorrectCount();
     barProgress = getTrainingProgress();
 
-    if (currentQuestionIndex >= activeQuestions.length) {
+    if (currentQuestionIndex >= QUESTION_TIERS[sessionLevel].length) {
         startNewSession(sessionLevel);
+    } else {
+        setActiveQuestionsForLevel(sessionLevel, false);
     }
 
     renderProgressBar();

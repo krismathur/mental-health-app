@@ -1,0 +1,84 @@
+{
+  "weeklyGoal": "This week, Test, we will learn some cool tricks to help you focus better on the soccer field. We will also work on calming those nervous feelings so you can play your best. By the end of these three days, you will have great tools to use every time you play.",
+  "days": [
+    {
+      "day": 1,
+      "title": "Getting to Know Your Nerves",
+      "duration": "20-30 minutes",
+      "daySummary": [
+        "Today we will start by understanding what nerves are and how they show up for you.",
+        "Nervous feelings can sometimes make it hard to focus on the game.",
+        "It is totally normal to feel nervous before games, and many athletes feel this way.",
+        "We will learn a simple way to notice your nerves and start to calm them down."
+      ],
+      "whatToDo": [
+        "Sit in a quiet spot for five minutes and just notice how your body feels right now.",
+        "Think about a time you felt nervous before a soccer game or even a big test.",
+        "Notice if your heart beats fast or if your stomach feels funny when you are nervous.",
+        "Try taking five slow, deep breaths, breathing in through your nose and out through your mouth, to help you feel more relaxed."
+      ],
+      "sportTryIt": [
+        "When you next practice soccer, pay attention to any small nervous feelings you might have, even if they are tiny.",
+        "Remember to take a few deep breaths before you do something tricky like a penalty kick or a big pass."
+      ],
+      "thinkAboutIt": [
+        "What do your nerves feel like in your body when you play soccer?",
+        "How do those nervous feelings change your focus during a game?"
+      ],
+      "youAreDoneWhen": "Done."
+    },
+    {
+      "day": 2,
+      "title": "Your Secret Focus Breath",
+      "duration": "20-30 minutes",
+      "daySummary": [
+        "Today we will learn a powerful breathing exercise that can calm your nerves and sharpen your focus.",
+        "This special breath helps your brain relax and allows you to think more clearly during the game.",
+        "When you feel nervous, your breath can become fast and shallow, which makes it harder to concentrate.",
+        "Practicing this breath regularly will make it easier to use when you really need it on the field."
+      ],
+      "whatToDo": [
+        "Find a comfortable place to sit or lie down without distractions.",
+        "We will practice 'Square Breathing': breathe in for 4 counts, hold for 4 counts, breathe out for 4 counts, and hold for 4 counts.",
+        "Do this 'Square Breathing' five times in a row, paying close attention to the air moving in and out.",
+        "Imagine yourself playing soccer calmly and clearly as you breathe."
+      ],
+      "sportTryIt": [
+        "During your next soccer practice, try to use 'Square Breathing' for a few moments before a drill starts or when you are waiting for your turn.",
+        "See if you can use one or two 'Square Breaths' right before you receive a pass or take a shot during practice."
+      ],
+      "thinkAboutIt": [
+        "How did using the 'Square Breathing' make you feel, especially when you were practicing soccer?",
+        "Did you notice any changes in your focus after doing the breathing exercise?"
+      ],
+      "youAreDoneWhen": "Done."
+    },
+    {
+      "day": 3,
+      "title": "Your Game-Day Focus Plan",
+      "duration": "20-30 minutes",
+      "daySummary": [
+        "Today we will put everything together into a simple plan you can use before every soccer game.",
+        "Having a routine helps calm your nerves because you know exactly what to do.",
+        "This plan will help you get into the zone and stay focused throughout the entire game.",
+        "You now have great tools to manage your nerves and boost your focus."
+      ],
+      "whatToDo": [
+        "Write down three things you will do before your next soccer game to get focused and calm.",
+        "Make sure one of those things is practicing 'Square Breathing' for at least five rounds.",
+        "Another thing could be thinking about one or two simple instructions for yourself, like 'Stay wide' or 'Attack the ball'.",
+        "Imagine yourself walking onto the field feeling confident and ready to play your best game."
+      ],
+      "sportTryIt": [
+        "Before your next soccer game, try out your new pre-game focus plan step-by-step.",
+        "During the game, if you make a mistake or feel nervous, take one or two 'Square Breaths' to get your focus back.",
+        "Remember to tell yourself encouraging things like 'Next play!' or 'You've got this!' after a tough moment."
+      ],
+      "thinkAboutIt": [
+        "How do you feel knowing you have a clear plan to handle nerves and stay focused for your next game?",
+        "What is one positive thought you can tell yourself if you start to feel nervous during a game?"
+      ],
+      "youAreDoneWhen": "Done."
+    }
+  ]
+}

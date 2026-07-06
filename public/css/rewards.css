@@ -1,9 +1,11 @@
 /* Rewards overlay shared by every page */
-.video-library-btn {
+.video-library-btn,
+.rewards-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     white-space: nowrap;
+    line-height: 1;
 }
 
 .rewards-overlay {
@@ -36,7 +38,10 @@
     z-index: 1;
     width: min(920px, 100%);
     max-height: 90vh;
+    overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     background:
         linear-gradient(135deg, rgba(15, 43, 74, 0.97), rgba(43, 108, 176, 0.96)),
         linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.08) 49%, rgba(255, 255, 255, 0.08) 51%, transparent 52%);
@@ -45,8 +50,6 @@
     padding: 30px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
     border: 2px solid rgba(255, 255, 255, 0.16);
-    overflow-x: hidden;
-    overflow-y: auto;
 }
 
 .rewards-panel::before {

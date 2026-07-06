@@ -29,105 +29,116 @@ body::before {
 /* Hero */
 .hero {
     color: #fff;
-    padding: 50px 20px 55px;
+    padding: 32px 20px 28px;
 }
 
 .hero-inner {
-    max-width: 760px;
+    max-width: 720px;
     margin: 0 auto;
-    text-align: center;
-}
-
-.hero-text {
     text-align: center;
 }
 
 .hero-badge {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 0.82rem;
     font-weight: 800;
     margin-bottom: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2.35rem;
     font-weight: 900;
-    margin-bottom: 12px;
-    line-height: 1.15;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    line-height: 1.12;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
 }
 
 .hero p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    opacity: 0.95;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    opacity: 0.94;
+    max-width: 420px;
+    margin: 0 auto;
     text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
 }
 
 .page {
-    padding: 36px 20px 50px;
+    padding: 8px 20px 44px;
     text-align: center;
-    max-width: 800px;
+    max-width: 720px;
     margin: 0 auto;
 }
 
-/* Encouragement strip */
-.encourage-strip {
+.quick-motivation {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 28px;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
-.encourage-strip span {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.88rem;
+.quick-motivation span {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 0.82rem;
     font-weight: 800;
     color: #2b6cb0;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .card {
-    background-color: rgba(255, 255, 255, 0.97);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     border-radius: 20px;
-    padding: 28px 32px;
-    margin: 0 auto 32px;
-    text-align: left;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
-    border: 2px solid rgba(255, 255, 255, 0.35);
+    padding: 28px 28px 26px;
+    margin: 0 auto 28px;
+    text-align: center;
+    box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.22),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+}
+
+.card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #2b6cb0, #4299e1, #63b3ed);
+}
+
+.card-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.18);
+}
+
+.card-title {
+    color: #1a365d;
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin: 0 0 10px;
 }
 
 .card.hidden {
     display: none;
-}
-
-.card-top {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 20px;
-}
-
-.card-thumb {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    object-fit: cover;
-    flex-shrink: 0;
-}
-
-.card h2 {
-    color: #2b6cb0;
-    font-size: 1.3rem;
-    font-weight: 900;
-    margin-bottom: 4px;
 }
 
 .subtitle {
@@ -137,11 +148,26 @@ body::before {
     line-height: 1.5;
 }
 
+.plan-view {
+    margin-bottom: 20px;
+}
+
+.plan-actions {
+    margin-bottom: 20px;
+}
+
+.plan-actions #generatePlanButton {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
 #generatePlanButton {
     display: block;
     width: 100%;
-    margin-top: 4px;
-    padding: 15px;
+    margin-top: 18px;
+    padding: 15px 18px;
     background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
     color: white;
     border: none;
@@ -166,18 +192,28 @@ body::before {
     box-shadow: none;
 }
 
+#generatePlanButton.is-loading:disabled {
+    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+    opacity: 0.85;
+    cursor: wait;
+}
+
 .continue-btn {
-    display: inline-block;
-    margin-top: 24px;
-    padding: 15px 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 14px 28px;
     background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
     color: white;
     text-decoration: none;
-    border-radius: 14px;
-    font-size: 1.1rem;
+    border-radius: 999px;
+    font-size: 1rem;
     font-weight: 800;
     font-family: 'Nunito', sans-serif;
-    box-shadow: 0 4px 14px rgba(237, 137, 54, 0.35);
+    box-shadow: 0 6px 20px rgba(237, 137, 54, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.35);
     transition: transform 0.15s, box-shadow 0.15s;
 }
 
@@ -186,50 +222,219 @@ body::before {
     box-shadow: 0 6px 18px rgba(237, 137, 54, 0.4);
 }
 
-.plan-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 14px;
-    margin: 0 auto;
-    padding: 0 4px;
-}
-
-.plan-grid.two-col {
-    grid-template-columns: 1fr 1fr;
-    max-width: 980px;
-}
-
-.plan-row {
-    display: grid;
-    grid-template-columns: 38px 90px 1fr;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.97);
-    border-radius: 16px;
-    padding: 18px 20px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+.plan-view {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin: 0 auto 28px;
+    max-width: 700px;
     text-align: left;
-    border: 2px solid transparent;
-    transition: border-color 0.2s, transform 0.15s, opacity 0.2s;
 }
 
-.plan-row:hover {
-    border-color: rgba(99, 179, 237, 0.4);
-    transform: translateY(-1px);
+.weekly-goal-card,
+.daily-plan-card,
+.plan-waiting-card,
+.plan-finished-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border-radius: 20px;
+    padding: 24px 26px;
+    box-shadow:
+        0 10px 32px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.45) inset;
+    border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
-.plan-row-complete {
-    opacity: 0;
-    transform: translateX(20px);
+.weekly-goal-card {
+    border-left: 5px solid #4299e1;
+    padding-left: 22px;
 }
 
-.plan-check {
+.daily-plan-card {
+    border-top: 4px solid #2b6cb0;
+}
+
+.weekly-goal-label {
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2b6cb0;
+    margin-bottom: 8px;
+}
+
+.weekly-goal-text,
+.plan-sentence {
+    color: #2d3748;
+    line-height: 1.6;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+}
+
+.weekly-goal-text {
+    font-size: 1.02rem;
+    color: #1a365d;
+}
+
+.plan-summary-section {
+    background: linear-gradient(135deg, #f0f7ff 0%, #ebf8ff 100%);
+    border-radius: 14px;
+    padding: 16px 18px;
+    border: 1px solid #bee3f8;
+    margin-top: 16px;
+}
+
+.plan-section h3 {
+    font-size: 0.95rem;
+    color: #2b6cb0;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #ebf8ff;
+}
+
+.plan-steps-section {
+    counter-reset: plan-step;
+}
+
+.plan-steps-section .plan-sentence {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 10px;
+}
+
+.plan-steps-section .plan-sentence::before {
+    counter-increment: plan-step;
+    content: counter(plan-step);
+    position: absolute;
+    left: 0;
+    top: 0.1rem;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2b6cb0, #4299e1);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
+}
+
+.daily-plan-header h2 {
+    font-size: 1.35rem;
+    color: #1a365d;
+    margin-bottom: 4px;
+    line-height: 1.25;
+}
+
+.daily-plan-kicker {
+    display: inline-block;
+    background: #ebf8ff;
+    color: #2b6cb0;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    margin-bottom: 8px;
+}
+
+.daily-plan-meta {
+    color: #718096;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.plan-summary-sentence {
+    font-size: 0.95rem;
+    color: #1a365d;
+}
+
+.plan-done-line {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f0fff4 0%, #ebf8ff 100%);
+    border: 1px solid #bee3f8;
+    color: #2d3748;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.plan-done-line::before {
+    content: "✓ ";
+    color: #2b6cb0;
+}
+
+.plan-section {
+    margin-top: 18px;
+    padding-top: 0;
+    border-top: none;
+}
+
+.daily-complete-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #f0f7ff;
+    border: 2px solid #bee3f8;
     cursor: pointer;
 }
 
-.plan-check input {
+.daily-complete-text {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #2b6cb0;
+}
+
+.daily-plan-card-complete {
+    opacity: 0.72;
+    transform: scale(0.99);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.plan-waiting-card,
+.plan-finished-card {
+    text-align: center;
+    border-top: none;
+}
+
+.plan-waiting-card {
+    border-left: 5px solid #48bb78;
+}
+
+.plan-finished-card {
+    border-left: 5px solid #ed8936;
+}
+
+.plan-waiting-icon {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+}
+
+.plan-waiting-card h2,
+.plan-finished-card h2 {
+    color: #1a365d;
+    margin-bottom: 10px;
+}
+
+.plan-waiting-card p,
+.plan-finished-card p {
+    color: #4a5568;
+    line-height: 1.65;
+    font-weight: 600;
+}
+
+.plan-waiting-note {
+    margin-top: 10px;
+    font-size: 0.92rem;
+    color: #718096;
+}
+
+.daily-complete-row input {
     display: none;
 }
 
@@ -240,13 +445,14 @@ body::before {
     border-radius: 6px;
     background: white;
     position: relative;
+    flex-shrink: 0;
 }
 
-.plan-check input:checked + .custom-check {
+.daily-complete-row input:checked + .custom-check {
     background: #2b6cb0;
 }
 
-.plan-check input:checked + .custom-check::after {
+.daily-complete-row input:checked + .custom-check::after {
     content: "";
     position: absolute;
     left: 6px;
@@ -258,38 +464,17 @@ body::before {
     transform: rotate(45deg);
 }
 
-.plan-day {
-    font-size: 0.82rem;
-    font-weight: 900;
-    color: #2b6cb0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-right: 3px solid #e2e8f0;
-    padding-right: 14px;
+/* Video + Rewards overlays on welcome — sit above nav */
+.video-overlay,
+.rewards-overlay {
+    z-index: 1100;
 }
 
-.plan-rec {
-    color: #4a5568;
-    font-size: 0.97rem;
-    font-weight: 600;
-    line-height: 1.55;
-    padding-left: 16px;
-}
-
-/* Alternate day colors */
-.plan-row:nth-child(odd) .plan-day {
-    color: #667eea;
-}
-
-.plan-row:nth-child(3n) .plan-day {
-    color: #f6ad55;
-}
-
-/* Settings overlay */
+/* Settings overlay — above nav (nav is z-index 1000) */
 .overlay {
     position: fixed;
     inset: 0;
-    z-index: 100;
+    z-index: 1100;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -315,6 +500,8 @@ body::before {
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding: 24px 28px 28px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     text-align: left;
@@ -504,9 +691,5 @@ body::before {
 
     .hero h1 {
         font-size: 2rem;
-    }
-
-    .plan-grid.two-col {
-        grid-template-columns: 1fr;
     }
 }

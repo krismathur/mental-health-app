@@ -20,6 +20,13 @@ function loadSelectedAvatar() {
 
 loadSelectedAvatar();
 
+const closeAvatarPageBtn = document.getElementById("closeAvatarPageBtn");
+if (closeAvatarPageBtn) {
+    closeAvatarPageBtn.addEventListener("click", function () {
+        window.location.href = "meditation.html";
+    });
+}
+
 const startMentalTrainingBtn = document.getElementById("startMentalTrainingBtn");
 if (startMentalTrainingBtn) {
     startMentalTrainingBtn.addEventListener("click", function () {
