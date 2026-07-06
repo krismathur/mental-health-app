@@ -1,92 +1,45 @@
 body {
     margin: 0;
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    color: #2d3748;
+    color: #fff;
     min-height: 100vh;
     background-color: #0f2b4a;
-    background-image:
-        linear-gradient(rgba(10, 25, 47, 0.7), rgba(15, 43, 74, 0.8)),
-        url('../images/mental-strength-bg.png');
+    background-image: url('../images/baseball-pitcher-hitter.png');
     background-size: cover;
-    background-position: center;
+    background-position: center 55%;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 40px;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 18, 32, 0.48);
+    z-index: 0;
+    pointer-events: none;
 }
 
-.nav-logo {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #2b6cb0;
-    text-decoration: none;
-}
-
-.nav-links {
-    display: flex;
-    gap: 12px;
-}
-
-.nav-btn {
-    padding: 8px 18px;
-    border: 2px solid #2b6cb0;
-    border-radius: 20px;
-    background: white;
-    color: #2b6cb0;
-    font-size: 0.92rem;
-    font-weight: 800;
-    font-family: 'Nunito', sans-serif;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, transform 0.15s;
-}
-
-.nav-btn:hover {
-    background-color: #2b6cb0;
-    color: white;
-    transform: translateY(-1px);
-}
-
-.nav-btn.btn-fill {
-    background-color: #2b6cb0;
-    color: white;
-}
-
-.nav-btn.btn-fill:hover {
-    background-color: #245a9a;
-}
-
-/* Hero with image */
-.hero {
+.hero,
+.page {
     position: relative;
     z-index: 1;
-    background: linear-gradient(135deg, rgba(15, 43, 74, 0.92) 0%, rgba(26, 79, 138, 0.9) 50%, rgba(90, 103, 216, 0.88) 100%);
+}
+
+/* Hero */
+.hero {
     color: #fff;
     padding: 50px 20px 55px;
-    backdrop-filter: blur(4px);
 }
 
 .hero-inner {
-    max-width: 900px;
+    max-width: 760px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 36px;
+    text-align: center;
 }
 
 .hero-text {
-    flex: 1;
-    text-align: left;
+    text-align: center;
 }
 
 .hero-badge {
@@ -105,28 +58,19 @@ nav {
     font-weight: 900;
     margin-bottom: 12px;
     line-height: 1.15;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
 }
 
 .hero p {
     font-size: 1.1rem;
     line-height: 1.6;
-    opacity: 0.92;
-}
-
-.hero-img {
-    width: 280px;
-    max-width: 40%;
-    border-radius: 16px;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
-    object-fit: cover;
-    aspect-ratio: 4 / 3;
+    opacity: 0.95;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
 }
 
 .page {
     padding: 36px 20px 50px;
     text-align: center;
-    position: relative;
-    z-index: 1;
     max-width: 800px;
     margin: 0 auto;
 }
@@ -151,13 +95,13 @@ nav {
 }
 
 .card {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.97);
     border-radius: 20px;
     padding: 28px 32px;
     margin: 0 auto 32px;
     text-align: left;
-    box-shadow: 0 6px 24px rgba(43, 108, 176, 0.12);
-    border: 2px solid rgba(99, 179, 237, 0.2);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.35);
 }
 
 .card.hidden {
@@ -222,6 +166,26 @@ nav {
     box-shadow: none;
 }
 
+.continue-btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 15px 32px;
+    background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: 0 4px 14px rgba(237, 137, 54, 0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.continue-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(237, 137, 54, 0.4);
+}
+
 .plan-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -237,20 +201,61 @@ nav {
 
 .plan-row {
     display: grid;
-    grid-template-columns: 90px 1fr;
+    grid-template-columns: 38px 90px 1fr;
     align-items: center;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.97);
     border-radius: 16px;
     padding: 18px 20px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
     text-align: left;
     border: 2px solid transparent;
-    transition: border-color 0.2s, transform 0.15s;
+    transition: border-color 0.2s, transform 0.15s, opacity 0.2s;
 }
 
 .plan-row:hover {
     border-color: rgba(99, 179, 237, 0.4);
     transform: translateY(-1px);
+}
+
+.plan-row-complete {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.plan-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.plan-check input {
+    display: none;
+}
+
+.custom-check {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #2b6cb0;
+    border-radius: 6px;
+    background: white;
+    position: relative;
+}
+
+.plan-check input:checked + .custom-check {
+    background: #2b6cb0;
+}
+
+.plan-check input:checked + .custom-check::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
 
 .plan-day {
@@ -492,22 +497,9 @@ nav {
 }
 
 @media (max-width: 700px) {
-    nav {
-        padding: 14px 20px;
-    }
-
-    .hero-inner {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .hero-text {
-        text-align: center;
-    }
-
-    .hero-img {
-        max-width: 100%;
-        width: 100%;
+    body {
+        background-position: center 50%;
+        background-attachment: scroll;
     }
 
     .hero h1 {

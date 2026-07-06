@@ -6,12 +6,17 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/welcome.css">
+        <link rel="stylesheet" href="css/rewards.css">
+        <link rel="stylesheet" href="css/video-library.css">
+        <link rel="stylesheet" href="css/nav.css">
     </head>
-    <body>
+    <body class="has-site-nav">
 
-        <nav>
+        <nav class="site-nav">
             <a class="nav-logo" href="index.html">🧠 MindZone</a>
             <div class="nav-links">
+                <a class="nav-btn video-library-btn" href="#">Video Library</a>
+                <a class="nav-btn rewards-btn" href="#">⭐ Rewards</a>
                 <button type="button" id="settingsBtn" class="nav-btn">⚙️ Settings</button>
                 <button type="button" id="logoutBtn" class="nav-btn btn-fill">Log Out</button>
             </div>
@@ -24,11 +29,6 @@
                     <h1>Your Game Plan Is Ready</h1>
                     <p>A personalized day-by-day guide built just for you — let's crush it!</p>
                 </div>
-                <img
-                    class="hero-img"
-                    src="images/step-plan.jpg"
-                    alt="Daily wellness plan on a phone"
-                >
             </div>
         </section>
 
@@ -54,6 +54,8 @@
             </div>
 
             <div id="planGrid" class="plan-grid" hidden></div>
+
+            <a href="meditation.html" class="continue-btn">Continue Building Mental Strength 🧘</a>
         </div>
 
         <!-- Settings overlay (hidden until Settings is clicked) -->
@@ -147,5 +149,197 @@
         </div>
 
         <script src="js/welcome.js"></script>
+    
+
+
+
+        <!-- Video Library overlay (hidden until Video Library is clicked) -->
+        <div id="videoLibraryOverlay" class="video-overlay video-hidden">
+            <div class="video-backdrop" id="videoLibraryBackdrop"></div>
+            <div class="video-panel">
+                <div class="video-header">
+                    <div class="video-title-wrap">
+                        <div class="video-brain-mark">🧠</div>
+                        <div>
+                            <p class="video-kicker">Mindset Film Room</p>
+                            <h2>Video Library</h2>
+                        </div>
+                    </div>
+                    <button type="button" id="closeVideoLibraryBtn" class="video-close-btn">&times;</button>
+                </div>
+
+                <p class="video-intro">
+                    Study how athletes train confidence, focus, pressure control, and bounce-back mindset.
+                </p>
+
+                <div class="mental-tags">
+                    <a href="#video-focus">Focus</a>
+                    <a href="#video-pressure">Pressure</a>
+                    <a href="#video-confidence">Confidence</a>
+                    <a href="#video-reset">Reset</a>
+                    <a href="#video-resilience">Resilience</a>
+                </div>
+
+                <div class="video-library-content">
+                    <section class="video-category" id="video-focus">
+                        <h3 class="video-category-title">Focus</h3>
+                        <div class="video-list">
+                            <a class="video-item" href="https://www.youtube.com/watch?v=n4v8lvlIM4g" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Focus</span>
+                                    <h3>Why Visualization Works</h3>
+                                    <p>How mental rehearsal helps athletes train the brain.</p>
+                                </div>
+                            </a>
+
+                            <a class="video-item" href="https://www.youtube.com/watch?v=M1yq4Hbn2fg" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Focus</span>
+                                    <h3>How Do I Mentally Prepare for a Game? | Basketball Mental Game Tips</h3>
+                                    <p>Pregame focus, breathing, confidence, and mental preparation.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="video-category" id="video-pressure">
+                        <h3 class="video-category-title">Pressure</h3>
+                        <div class="video-list">
+                            <a class="video-item" href="https://www.youtube.com/watch?v=NCkuAPR_rP4" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Pressure</span>
+                                    <h3>How Do I Be Clutch in Big Moments? | Basketball Mental Game Tips</h3>
+                                    <p>Pressure, confidence, and staying locked in during big moments.</p>
+                                </div>
+                            </a>
+
+                            <a class="video-item" href="https://www.youtube.com/watch?v=YlSrPiSw3oE" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Pressure</span>
+                                    <h3>Mental Toughness, Strategies for Nervous Players, & Misconceptions</h3>
+                                    <p>Practical reset tools for nerves, pressure, and focus.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="video-category" id="video-confidence">
+                        <h3 class="video-category-title">Confidence</h3>
+                        <div class="video-list">
+                            <a class="video-item" href="https://www.youtube.com/watch?v=VSceuiPBpxY" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Confidence</span>
+                                    <h3>THE MINDSET OF A WINNER | Kobe Bryant Champions Advice</h3>
+                                    <p>Confidence, work ethic, and responding to obstacles.</p>
+                                </div>
+                            </a>
+
+                            <a class="video-item" href="https://www.youtube.com/watch?v=5JT4gUMkD-w" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Confidence</span>
+                                    <h3>5 Mental Toughness Exercises Every Athlete Should Practice Daily</h3>
+                                    <p>Daily mental exercises for building stronger performance habits.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="video-category" id="video-reset">
+                        <h3 class="video-category-title">Reset</h3>
+                        <div class="video-list">
+                            <a class="video-item" href="https://www.youtube.com/watch?v=d9XaNm0E3Yg" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Reset</span>
+                                    <h3>Simone Biles on Prioritizing Mental Health</h3>
+                                    <p>Why mental health matters for strong athletes.</p>
+                                </div>
+                            </a>
+
+                            <a class="video-item" href="https://www.youtube.com/watch?v=vQRKPFI88PI" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Reset</span>
+                                    <h3>LeBron James Answers Your Burning Questions | MIND THE GAME</h3>
+                                    <p>Self-doubt, accountability, leadership, and preparation.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="video-category" id="video-resilience">
+                        <h3 class="video-category-title">Resilience</h3>
+                        <div class="video-list">
+                            <a class="video-item" href="https://www.youtube.com/watch?v=rlp-MMqB3YM" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Resilience</span>
+                                    <h3>Michael Jordan: “Limits Are Often Just an Illusion”</h3>
+                                    <p>Failure, fear, trying again, and trusting your work.</p>
+                                </div>
+                            </a>
+
+                            <a class="video-item" href="https://www.youtube.com/watch?v=T0tqqNYt0oQ" target="_blank" rel="noopener noreferrer">
+                                <span class="video-play">▶</span>
+                                <div>
+                                    <span class="video-category-label">Resilience</span>
+                                    <h3>Kobe Bryant explains what ‘Mamba Mentality’ is</h3>
+                                    <p>Mindset, discipline, and getting better every day.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rewards overlay (hidden until Rewards is clicked) -->
+        <div id="rewardsOverlay" class="rewards-overlay rewards-hidden">
+            <div class="rewards-backdrop" id="rewardsBackdrop"></div>
+            <div class="rewards-panel">
+                <div class="rewards-header">
+                    <div>
+                        <p class="rewards-kicker">Mental Strength Rewards</p>
+                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                    </div>
+                    <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
+                </div>
+
+                <p class="rewards-intro">
+                    Track your progress, celebrate effort, and keep building confidence one rep at a time.
+                </p>
+
+                <div class="rewards-grid">
+                    <button type="button" class="reward-card" data-reward="xp">
+                        <span class="reward-icon">⚡</span>
+                        <h3>XP</h3>
+                        <p>Earn points for showing up and finishing mental training.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="stars">
+                        <span class="reward-icon">⭐</span>
+                        <h3>Stars</h3>
+                        <p>Collect stars when you stay consistent with your plan.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="badges">
+                        <span class="reward-icon">🏅</span>
+                        <h3>Mental Badges</h3>
+                        <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
+                    </button>
+                </div>
+
+                <div id="rewardDetails" class="reward-details" hidden></div>
+            </div>
+        </div>
+
+        <script src="js/video-library.js"></script>
+        <script src="js/rewards.js"></script>
     </body>
 </html>

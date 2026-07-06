@@ -1,0 +1,457 @@
+/* Rewards overlay shared by every page */
+.video-library-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.rewards-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+}
+
+.rewards-overlay.rewards-hidden {
+    display: none;
+}
+
+.rewards-backdrop {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(246, 173, 85, 0.35), transparent 28%),
+        radial-gradient(circle at 80% 15%, rgba(99, 179, 237, 0.35), transparent 30%),
+        rgba(7, 18, 36, 0.72);
+    backdrop-filter: blur(6px);
+}
+
+.rewards-panel {
+    position: relative;
+    z-index: 1;
+    width: min(920px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background:
+        linear-gradient(135deg, rgba(15, 43, 74, 0.97), rgba(43, 108, 176, 0.96)),
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.08) 49%, rgba(255, 255, 255, 0.08) 51%, transparent 52%);
+    color: white;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.rewards-panel::before {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(246, 173, 85, 0.22);
+    top: -90px;
+    right: -70px;
+}
+
+.rewards-panel::after {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(104, 211, 145, 0.18);
+    bottom: -70px;
+    left: -50px;
+}
+
+.rewards-header,
+.rewards-intro,
+.rewards-grid {
+    position: relative;
+    z-index: 1;
+}
+
+.rewards-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.rewards-kicker {
+    margin: 0 0 6px;
+    color: #fbd38d;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.rewards-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    line-height: 1.15;
+    font-weight: 900;
+}
+
+.rewards-close-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.rewards-close-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.rewards-intro {
+    max-width: 650px;
+    color: #dbeafe;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 24px;
+}
+
+.rewards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.reward-card {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 18px;
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s, background 0.15s;
+}
+
+.reward-card:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+}
+
+.reward-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f6ad55, #fbd38d);
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+}
+
+.reward-card h3 {
+    margin: 0 0 8px;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.reward-card p {
+    margin: 0;
+    color: #dbeafe;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.reward-details {
+    position: relative;
+    z-index: 1;
+    margin-top: 18px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 18px;
+}
+
+.reward-details h3 {
+    margin: 0 0 8px;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.reward-details p {
+    margin: 0 0 8px;
+    color: #dbeafe;
+    line-height: 1.45;
+}
+
+.reward-big-number {
+    color: #fbd38d !important;
+    font-size: 1.6rem;
+    font-weight: 900;
+}
+
+.xp-detail,
+.stars-detail {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.reward-orb {
+    width: 86px;
+    height: 86px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 2.5rem;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.xp-orb {
+    background: radial-gradient(circle at 35% 30%, #bee3f8, #4299e1 55%, #1a4f8a 100%);
+}
+
+.stars-orb {
+    background: radial-gradient(circle at 35% 30%, #fefcbf, #f6ad55 55%, #c05621 100%);
+}
+
+.reward-detail-text {
+    flex: 1;
+}
+
+.reward-label {
+    color: #fbd38d !important;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.mental-meter {
+    height: 16px;
+    margin-top: 18px;
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.mental-meter-fill {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #68d391, #63b3ed, #fbd38d);
+    border-radius: 999px;
+    transition: width 0.7s ease;
+}
+
+.stars-meter-fill {
+    background: linear-gradient(90deg, #f6ad55, #fbd38d);
+}
+
+.badges-meter-fill {
+    background: linear-gradient(90deg, #a0aec0, #fbd38d, #68d391);
+}
+
+.star-trail {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+}
+
+.star-trail span {
+    color: #fbd38d;
+    font-size: 2.1rem;
+    text-shadow: 0 0 14px rgba(251, 211, 141, 0.5);
+}
+
+.reward-note {
+    margin-top: 12px !important;
+    color: #fbd38d !important;
+    font-weight: 800;
+}
+
+.reward-progress-text {
+    margin-top: 8px !important;
+    color: #bee3f8 !important;
+    font-size: 0.92rem;
+    font-weight: 800;
+}
+
+.badge-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.color-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f6ad55, #fbd38d, #68d391, #63b3ed);
+    font-size: 2.6rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.badge-progress {
+    color: #fbd38d !important;
+    font-weight: 800;
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.locked-badge {
+    min-height: 145px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    overflow: hidden;
+}
+
+.locked-badge::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    width: 88px;
+    height: 88px;
+    background: linear-gradient(145deg, #d1d5db, #8a94a3);
+    clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+    border: 4px solid #6b7280;
+    box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.28), 0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
+.locked-badge::after {
+    content: "";
+    position: absolute;
+    top: 96px;
+    width: 56px;
+    height: 36px;
+    background: linear-gradient(90deg, #737b88 0 45%, #9ca3af 45% 55%, #737b88 55% 100%);
+    clip-path: polygon(0 0, 100% 0, 82% 100%, 50% 72%, 18% 100%);
+}
+
+.locked-badge.earned-badge::before {
+    background: linear-gradient(145deg, #fbd38d, #f6ad55, #68d391);
+    border-color: #fbd38d;
+}
+
+.locked-badge.earned-badge::after {
+    background: linear-gradient(90deg, #2b6cb0 0 45%, #63b3ed 45% 55%, #2b6cb0 55% 100%);
+}
+
+.badge-corner-number {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    z-index: 2;
+    min-width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    background: linear-gradient(135deg, #fbd38d, #f6ad55);
+    color: #1a202c;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    font-style: italic;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+    border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+.reward-screen-flash {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(251, 211, 141, 0.65), rgba(99, 179, 237, 0.24), transparent 72%);
+    animation: rewardFlash 5s ease forwards;
+}
+
+.reward-pop-message {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    z-index: 1000;
+    transform: translateX(-50%);
+    padding: 14px 24px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f6ad55, #fbd38d);
+    color: #1a202c;
+    font-size: 1rem;
+    font-weight: 900;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+    animation: rewardPop 5s ease forwards;
+}
+
+@keyframes rewardFlash {
+    0% { opacity: 0; }
+    12% { opacity: 1; }
+    72% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes rewardPop {
+    0% { opacity: 0; transform: translate(-50%, -14px) scale(0.9); }
+    12% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    72% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -8px) scale(0.98); }
+}
+
+@media (max-width: 720px) {
+    .rewards-panel {
+        padding: 24px 20px;
+    }
+
+    .rewards-header h2 {
+        font-size: 1.55rem;
+    }
+
+    .rewards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .badge-summary {
+        align-items: flex-start;
+    }
+
+    .xp-detail,
+    .stars-detail {
+        align-items: flex-start;
+    }
+
+}

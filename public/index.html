@@ -2,15 +2,21 @@
 <html>
     <head>
         <title>MindZone</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="css/rewards.css">
+        <link rel="stylesheet" href="css/nav.css">
     </head>
-    <body>
+    <body class="has-site-nav">
 
-        <nav>
-            <a class="nav-logo" href="index.html">MindZone</a>
+        <nav class="site-nav">
+            <a class="nav-logo" href="index.html">🧠 MindZone</a>
             <div class="nav-links">
-                <a id="loginLink" class="btn-fill" href="auth.html?tab=login">Log In</a>
-                <a id="signupLink" class="btn-fill" href="auth.html?tab=signup">Create Account</a>
+                <a class="nav-btn rewards-btn" href="#">⭐ Rewards</a>
+                <a id="loginLink" class="nav-btn nav-btn-fill" href="auth.html?tab=login">Log In</a>
+                <a id="signupLink" class="nav-btn nav-btn-fill" href="auth.html?tab=signup">Create Account</a>
             </div>
         </nav>
 
@@ -22,14 +28,6 @@
                         You know this feeling, your team is down two, you get the ball with 5 seconds on the clock, you say to yourself "dont miss dont miss"... and you miss. MindZone helps you own your mindset in high pressure moments. Sign up to be the best mental athlete you can possibly be.
                     </p>
                     <a class="hero-btn" href="auth.html">Make My Plan</a>
-                </div>
-                <div class="hero-img-wrap">
-                    <img
-                        class="hero-img"
-                        src="images/founder-mindzone.jpg"
-                        alt="Founder of MindZone"
-                    >
-                    <p class="hero-img-caption">Founder of MindZone</p>
                 </div>
             </div>
         </section>
@@ -97,5 +95,48 @@
         </footer>
 
         <script src="js/index.js"></script>
+    
+
+        <!-- Rewards overlay (hidden until Rewards is clicked) -->
+        <div id="rewardsOverlay" class="rewards-overlay rewards-hidden">
+            <div class="rewards-backdrop" id="rewardsBackdrop"></div>
+            <div class="rewards-panel">
+                <div class="rewards-header">
+                    <div>
+                        <p class="rewards-kicker">Mental Strength Rewards</p>
+                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                    </div>
+                    <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
+                </div>
+
+                <p class="rewards-intro">
+                    Track your progress, celebrate effort, and keep building confidence one rep at a time.
+                </p>
+
+                <div class="rewards-grid">
+                    <button type="button" class="reward-card" data-reward="xp">
+                        <span class="reward-icon">⚡</span>
+                        <h3>XP</h3>
+                        <p>Earn points for showing up and finishing mental training.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="stars">
+                        <span class="reward-icon">⭐</span>
+                        <h3>Stars</h3>
+                        <p>Collect stars when you stay consistent with your plan.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="badges">
+                        <span class="reward-icon">🏅</span>
+                        <h3>Mental Badges</h3>
+                        <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
+                    </button>
+                </div>
+
+                <div id="rewardDetails" class="reward-details" hidden></div>
+            </div>
+        </div>
+
+        <script src="js/rewards.js"></script>
     </body>
 </html>

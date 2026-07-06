@@ -6,84 +6,66 @@
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    color: #1f2d3d;
+    color: #fff;
     min-height: 100vh;
-    background-color: #f0f4f8;
+    background-color: #1a2f4a;
+    background-image: url("../images/evening-track-sunset.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 40px;
-    background-color: #fff;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 22, 40, 0.42);
+    z-index: 0;
+    pointer-events: none;
 }
 
-.nav-logo {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #2b6cb0;
-    text-decoration: none;
+.hero,
+.steps,
+.about,
+.video-section,
+footer {
+    position: relative;
+    z-index: 1;
 }
 
-.nav-links {
-    display: flex;
-    gap: 12px;
-}
-
-.nav-links a {
-    text-decoration: none;
-    padding: 8px 18px;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: background 0.2s, color 0.2s;
-}
-
-.nav-links .btn-fill {
-    background-color: #2b6cb0;
-    color: #fff;
-}
-
-.nav-links .btn-fill:hover {
-    background-color: #2563a8;
-}
-
-/* Hero with image */
+/* Hero */
 .hero {
-    background: linear-gradient(135deg, #1a4f8a 0%, #2b6cb0 55%, #3a8fd1 100%);
     color: #fff;
-    padding: 60px 20px 70px;
+    padding: 80px 20px 90px;
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
 }
 
 .hero-inner {
-    max-width: 960px;
+    max-width: 760px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 40px;
+    text-align: center;
 }
 
 .hero-text {
-    flex: 1;
-    text-align: left;
+    text-align: center;
 }
 
 .hero h1 {
-    font-size: 2.8rem;
+    font-size: 3rem;
     font-weight: 800;
     margin-bottom: 16px;
     line-height: 1.15;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
 }
 
 .hero p {
     font-size: 1.15rem;
     line-height: 1.65;
-    opacity: 0.95;
+    opacity: 0.98;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
 }
 
 .hero-note {
@@ -111,45 +93,22 @@ nav {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
-.hero-img-wrap {
-    flex-shrink: 0;
-    max-width: 42%;
-    text-align: center;
-}
-
-.hero-img {
-    width: 340px;
-    max-width: 100%;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    object-fit: contain;
-    aspect-ratio: 3 / 4;
-    background: rgba(255, 255, 255, 0.1);
-    display: block;
-}
-
-.hero-img-caption {
-    margin-top: 10px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    opacity: 0.9;
-    letter-spacing: 0.3px;
-}
-
 /* Section titles */
 .section-title {
     text-align: center;
     font-size: 1.8rem;
     font-weight: 800;
-    color: #2b6cb0;
+    color: #fff;
     margin-bottom: 8px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 .section-subtitle {
     text-align: center;
-    color: #4a5568;
+    color: rgba(255, 255, 255, 0.92);
     font-size: 1rem;
     margin-bottom: 32px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* How it works */
@@ -166,11 +125,11 @@ nav {
 }
 
 .step-card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.96);
     border-radius: 16px;
     padding: 0 0 24px;
     text-align: center;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
     overflow: hidden;
     position: relative;
 }
@@ -223,10 +182,10 @@ nav {
 }
 
 .about-card {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.96);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
 }
 
 .card-img {
@@ -258,10 +217,10 @@ nav {
 }
 
 .video-card {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.96);
     border-radius: 16px;
     padding: 30px 24px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
     text-align: center;
 }
 
@@ -300,30 +259,14 @@ footer {
     text-align: center;
     padding: 28px 20px;
     font-size: 0.85rem;
-    color: #a0aec0;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
 }
 
 @media (max-width: 800px) {
-    nav {
-        padding: 16px 20px;
-    }
-
-    .hero-inner {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .hero-text {
-        text-align: center;
-    }
-
-    .hero-img-wrap {
-        max-width: 100%;
-    }
-
-    .hero-img {
-        max-width: 100%;
-        width: 100%;
+    .hero {
+        min-height: calc(100vh - var(--site-nav-space));
+        padding: 50px 20px 60px;
     }
 
     .hero h1 {

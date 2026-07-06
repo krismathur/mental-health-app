@@ -6,57 +6,36 @@
 
 body {
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    color: #2d3748;
+    color: #fff;
     min-height: 100vh;
     background-color: #0f2b4a;
-    background-image:
-        linear-gradient(rgba(10, 25, 47, 0.7), rgba(15, 43, 74, 0.8)),
-        url('../images/mental-strength-bg.png');
+    background-image: url('../images/wimbledon-baseline-match.png');
     background-size: cover;
-    background-position: center;
+    background-position: center 45%;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
 
-nav {
-    display: flex;
-    align-items: center;
-    padding: 16px 40px;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.nav-logo {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #2b6cb0;
-    text-decoration: none;
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 20, 35, 0.45);
+    z-index: 0;
+    pointer-events: none;
 }
 
 .page {
-    padding: 36px 20px 60px;
-    text-align: center;
     position: relative;
     z-index: 1;
+    padding: 36px 20px 60px;
+    text-align: center;
     max-width: 560px;
     margin: 0 auto;
 }
 
 .page-header {
     margin-bottom: 28px;
-}
-
-.header-img {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 20px;
-    box-shadow: 0 8px 28px rgba(43, 108, 176, 0.18);
-    margin-bottom: 20px;
 }
 
 .badge {
@@ -73,16 +52,18 @@ nav {
 h1 {
     font-size: 2.2rem;
     font-weight: 900;
-    color: #2b6cb0;
+    color: #fff;
     margin-bottom: 8px;
     line-height: 1.2;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
 }
 
 .tagline {
-    color: #4a5568;
+    color: rgba(255, 255, 255, 0.95);
     font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.5;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* Progress steps */
@@ -93,9 +74,9 @@ h1 {
     gap: 0;
     margin-bottom: 28px;
     padding: 16px 12px;
-    background: white;
+    background: rgba(255, 255, 255, 0.96);
     border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .progress-step {
@@ -134,12 +115,12 @@ h1 {
 }
 
 .card {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.97);
     border-radius: 20px;
     padding: 28px 30px;
     text-align: left;
-    box-shadow: 0 6px 24px rgba(43, 108, 176, 0.12);
-    border: 2px solid rgba(99, 179, 237, 0.2);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.35);
 }
 
 .card-top {
@@ -375,6 +356,11 @@ button:hover {
 }
 
 @media (max-width: 500px) {
+    body {
+        background-position: center 35%;
+        background-attachment: scroll;
+    }
+
     h1 {
         font-size: 1.8rem;
     }

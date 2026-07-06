@@ -11,39 +11,19 @@ body {
     min-height: 100vh;
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 40px;
-    background-color: #fff;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.nav-logo {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #2b6cb0;
-    text-decoration: none;
-}
-
-.nav-btn,
 .secondary-btn {
     padding: 8px 18px;
     border: 2px solid #2b6cb0;
-    border-radius: 6px;
+    border-radius: 14px;
     background: white;
     color: #2b6cb0;
+    text-decoration: none;
     font-size: 0.95rem;
     font-weight: 600;
     font-family: 'Segoe UI', Arial, sans-serif;
     cursor: pointer;
 }
 
-.nav-btn:hover,
 .secondary-btn:hover {
     background-color: #2b6cb0;
     color: white;

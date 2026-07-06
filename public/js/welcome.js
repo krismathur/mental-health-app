@@ -313,6 +313,19 @@ function renderPlan(plan) {
         const row = document.createElement("div");
         row.className = "plan-row";
 
+        const checkWrap = document.createElement("label");
+        checkWrap.className = "plan-check";
+
+        const check = document.createElement("input");
+        check.type = "checkbox";
+        check.setAttribute("aria-label", "Complete day " + entry.day);
+
+        const checkBox = document.createElement("span");
+        checkBox.className = "custom-check";
+
+        checkWrap.appendChild(check);
+        checkWrap.appendChild(checkBox);
+
         const dayEl = document.createElement("div");
         dayEl.className = "plan-day";
         dayEl.textContent = "Day " + entry.day;
@@ -321,6 +334,16 @@ function renderPlan(plan) {
         recEl.className = "plan-rec";
         recEl.textContent = entry.text;
 
+        check.addEventListener("change", function () {
+            if (check.checked) {
+                row.classList.add("plan-row-complete");
+                setTimeout(function () {
+                    row.remove();
+                }, 220);
+            }
+        });
+
+        row.appendChild(checkWrap);
         row.appendChild(dayEl);
         row.appendChild(recEl);
         planGrid.appendChild(row);

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Your Mental Choices - MindZone</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/meditation.css">
+        <link rel="stylesheet" href="css/rewards.css">
+        <link rel="stylesheet" href="css/video-library.css">
+        <link rel="stylesheet" href="css/nav.css">
+    </head>
+    <body class="avatar-page has-site-nav">
+
+        <nav class="site-nav">
+            <a class="nav-logo" href="index.html">🧠 MindZone</a>
+            <div class="nav-links">
+                <a class="nav-btn video-library-btn" href="#">Video Library</a>
+                <a class="nav-btn rewards-btn" href="#">⭐ Rewards</a>
+            </div>
+        </nav>
+
+        <main class="avatar-page-shell">
+            <div class="avatar-page-panel">
+                <div class="med-header avatar-header">
+                    <h2>Your Mental Choices</h2>
+                </div>
+
+                <div class="avatar-profile-area" id="avatarProfileArea"></div>
+
+                <div class="avatar-page-footer">
+                    <a href="meditation.html" class="avatar-back-link">← Back to Activities</a>
+                    <button type="button" id="startMentalTrainingBtn" class="avatar-start-training-btn">Start Mental Training</button>
+                </div>
+            </div>
+        </main>
+
+        <div id="rewardsOverlay" class="rewards-overlay rewards-hidden">
+            <div class="rewards-backdrop" id="rewardsBackdrop"></div>
+            <div class="rewards-panel">
+                <div class="rewards-header">
+                    <div>
+                        <p class="rewards-kicker">Mental Strength Rewards</p>
+                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                    </div>
+                    <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
+                </div>
+
+                <p class="rewards-intro">
+                    Track your progress, celebrate effort, and keep building confidence one rep at a time.
+                </p>
+
+                <div class="rewards-grid">
+                    <button type="button" class="reward-card" data-reward="xp">
+                        <span class="reward-icon">⚡</span>
+                        <h3>XP</h3>
+                        <p>Earn points for showing up and finishing mental training.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="stars">
+                        <span class="reward-icon">⭐</span>
+                        <h3>Stars</h3>
+                        <p>Collect stars when you stay consistent with your plan.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="badges">
+                        <span class="reward-icon">🏅</span>
+                        <h3>Mental Badges</h3>
+                        <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
+                    </button>
+                </div>
+
+                <div id="rewardDetails" class="reward-details" hidden></div>
+            </div>
+        </div>
+
+        <script src="js/video-library.js"></script>
+        <script src="js/rewards.js"></script>
+        <script src="js/avatar.js"></script>
+    </body>
+</html>

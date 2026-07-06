@@ -6,69 +6,35 @@
 
 body {
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(145deg, #1a2332 0%, #243447 45%, #1e3a5f 100%);
-    color: #e2e8f0;
-    min-height: 100vh;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 40px;
-    background-color: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.nav-logo {
-    font-size: 1.5rem;
-    font-weight: 900;
     color: #fff;
-    text-decoration: none;
+    min-height: 100vh;
+    background-color: #0f172a;
+    background-image: url("../images/final-four-posterize.png");
+    background-size: 125% auto;
+    background-position: 50% 28%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
-.nav-links {
-    display: flex;
-    gap: 10px;
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 15, 30, 0.5);
+    z-index: 0;
+    pointer-events: none;
 }
 
-.nav-btn {
-    text-decoration: none;
-    padding: 8px 18px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #e2e8f0;
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
-}
-
-.nav-btn.active {
-    background-color: #2b6cb0;
-    border-color: #2b6cb0;
-    color: white;
-}
-
-.nav-btn:not(.active):hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
-    color: white;
-}
-
-/* Two-column layout */
 .auth-layout {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     gap: 40px;
     max-width: 1000px;
-    margin: 40px auto;
-    padding: 0 24px;
-    position: relative;
-    z-index: 1;
+    margin: 0 auto;
+    min-height: calc(100vh - var(--site-nav-space));
+    padding: 40px 24px;
 }
 
 .auth-hero {
@@ -76,30 +42,21 @@ nav {
     min-width: 0;
 }
 
-.auth-hero-img {
-    width: 100%;
-    max-height: 340px;
-    aspect-ratio: 3 / 4;
-    object-fit: contain;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 20px;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
-    margin-bottom: 24px;
-}
-
 .auth-hero-text h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 900;
     color: #fff;
     margin-bottom: 12px;
     line-height: 1.2;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
 }
 
 .auth-hero-text p {
-    color: #cbd5e0;
+    color: #f7fafc;
     font-size: 1.05rem;
     line-height: 1.6;
     margin-bottom: 16px;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
 }
 
 .badge {
@@ -125,12 +82,13 @@ nav {
 .perks li {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #e2e8f0;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     padding: 10px 16px;
     border-radius: 10px;
-    box-shadow: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(6px);
 }
 
 .auth-wrapper {
@@ -140,10 +98,10 @@ nav {
 }
 
 .auth-card {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.97);
     border-radius: 16px;
     padding: 28px 26px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
     text-align: left;
     border: none;
 }
@@ -299,13 +257,17 @@ input:focus {
 }
 
 @media (max-width: 800px) {
-    nav {
-        padding: 14px 20px;
+    body {
+        background-size: 140% auto;
+        background-position: 50% 24%;
+        background-attachment: scroll;
     }
 
     .auth-layout {
         flex-direction: column;
+        min-height: auto;
         margin: 24px auto;
+        padding: 24px 20px 40px;
     }
 
     .auth-hero {
