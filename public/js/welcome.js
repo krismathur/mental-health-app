@@ -23,6 +23,10 @@ function finishWelcomeInit() {
 
 loadProfileFromServer()
     .then(function (profileLoaded) {
+        if (profileLoaded && !profileIsComplete(getProfileFromStorage())) {
+            showPlanMessage("Your profile is missing some info. Finish onboarding, then come back to generate your plan.", "none");
+            return false;
+        }
         return loadCurrentPlan(profileLoaded);
     })
     .finally(finishWelcomeInit);
@@ -227,6 +231,12 @@ async function loadCurrentPlan(profileLoaded) {
 
     try {
         const response = await fetch("/api/my-plan");
+
+        if (response.status === 401) {
+            window.location.href = "auth.html";
+            return;
+        }
+
         const data = await response.json();
 
         if (!response.ok) {
@@ -234,7 +244,7 @@ async function loadCurrentPlan(profileLoaded) {
             return;
         }
 
-        currentPlanStatus = data.status;
+        currentPlanStatus = data.status || "none";
 
         if (data.status === "approved") {
             try {
@@ -400,6 +410,14 @@ async function generatePlan(loadingMessage) {
             data = await response.json();
         } catch (parseError) {
             showPlanMessage("Something went wrong while generating your plan. Please try again.", currentPlanStatus);
+            return;
+        }
+
+        if (response.status === 401) {
+            showPlanMessage("Your session expired. Please log in again.", "none");
+            setTimeout(function () {
+                window.location.href = "auth.html";
+            }, 1200);
             return;
         }
 

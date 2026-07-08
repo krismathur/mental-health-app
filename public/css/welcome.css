@@ -154,6 +154,8 @@ body::before {
 
 .plan-actions {
     margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
 }
 
 .plan-actions #generatePlanButton {
@@ -161,6 +163,7 @@ body::before {
     width: 100%;
     max-width: 480px;
     margin: 0 auto;
+    pointer-events: auto;
 }
 
 #generatePlanButton {
