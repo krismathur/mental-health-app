@@ -15,6 +15,7 @@
         <nav class="site-nav">
             <a class="nav-logo" href="index.html">🧠 MindZone</a>
             <div class="nav-links">
+                <button type="button" id="moodTrendBtn" class="nav-btn mood-trend-nav-btn">📈 Mood Trend</button>
                 <a class="nav-btn video-library-btn" href="#">🎬 Videos</a>
                 <a class="nav-btn rewards-btn" href="#">⭐ Rewards</a>
                 <button type="button" id="settingsBtn" class="nav-btn">⚙️ Settings</button>
@@ -24,19 +25,19 @@
 
         <section class="hero">
             <div class="hero-inner">
-                <div class="hero-text">
-                    <span class="hero-badge">🎯 Your Game Plan</span>
-                    <h1>Train Your Mind Daily</h1>
-                    <p>One focused day at a time — built just for you.</p>
-                </div>
+                <span class="hero-badge">🎯 Your Game Plan</span>
             </div>
         </section>
 
         <div class="page">
-            <div class="quick-motivation" aria-hidden="true">
-                <span>💪 Show up</span>
-                <span>🧘 Stay calm</span>
-                <span>🔥 Keep going</span>
+            <div id="planIntro" class="plan-intro">
+                <h1>Train Your Mind Daily</h1>
+                <p>One focused day at a time — built just for you.</p>
+                <div class="quick-motivation" aria-hidden="true">
+                    <span>💪 Show up</span>
+                    <span>🧘 Stay calm</span>
+                    <span>🔥 Keep going</span>
+                </div>
             </div>
 
             <div class="card" id="mainCard">
@@ -54,7 +55,107 @@
                 <button id="generatePlanButton" type="button">Generate My Plan 🚀</button>
             </div>
 
-            <a href="meditation.html" class="continue-btn">Continue Building Mental Strength 🧘</a>
+            <div class="welcome-action-stack">
+                <button type="button" id="weeklyReflectionBtn" class="welcome-action-btn weekly-reflection-btn">Weekly Reflection 📝</button>
+                <button type="button" id="emotionCheckinBtn" class="welcome-action-btn emotion-checkin-btn">Emotion Check-in 💭</button>
+                <a href="meditation.html" class="welcome-action-btn continue-btn">Continue Building Mental Strength 🧘</a>
+            </div>
+        </div>
+
+        <!-- Emotion Check-in overlay -->
+        <div id="emotionCheckinOverlay" class="overlay overlay-hidden">
+            <div class="overlay-backdrop" id="emotionCheckinBackdrop"></div>
+            <div class="emotion-checkin-panel">
+                <div class="settings-header">
+                    <h2>💭 Emotion Check-in</h2>
+                    <button type="button" id="closeEmotionCheckinBtn" class="close-btn">&times;</button>
+                </div>
+                <p class="emotion-checkin-intro">Tap the emoji that matches how you feel right now.</p>
+                <div class="emotion-grid">
+                    <div class="emotion-cell" data-emotion="Happy">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Happy mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">😊</span></span>
+                            <span class="emotion-label">Happy</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Calm">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Calm mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">😌</span></span>
+                            <span class="emotion-label">Calm</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Excited">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Excited mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">🤩</span></span>
+                            <span class="emotion-label">Excited</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Anxious">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Anxious mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">😰</span></span>
+                            <span class="emotion-label">Anxious</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Sad">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Sad mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">😢</span></span>
+                            <span class="emotion-label">Sad</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Angry">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Angry mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">😠</span></span>
+                            <span class="emotion-label">Angry</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Tired">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Tired mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">😴</span></span>
+                            <span class="emotion-label">Tired</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Stressed">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Stressed mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">😫</span></span>
+                            <span class="emotion-label">Stressed</span>
+                        </button>
+                    </div>
+                    <div class="emotion-cell" data-emotion="Proud">
+                        <button type="button" class="emotion-speak-btn" aria-label="Listen to Proud mood">
+                            <span class="emotion-speak-icon" aria-hidden="true">🔊</span>
+                        </button>
+                        <button type="button" class="emotion-pick-btn">
+                            <span class="emotion-circle"><span class="emotion-emoji" aria-hidden="true">💪</span></span>
+                            <span class="emotion-label">Proud</span>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" id="saveMoodBtn" class="emotion-save-btn" disabled>Save Your Mood Today</button>
+            </div>
         </div>
 
         <!-- Settings overlay (hidden until Settings is clicked) -->
@@ -88,8 +189,8 @@
                     <label for="settingsGoalCommitment">Willingness to work on goal (1–10)</label>
                     <input id="settingsGoalCommitment" type="number" min="1" max="10" placeholder="1–10">
 
-                    <label for="settingsDays">Plan Length (days)</label>
-                    <input id="settingsDays" type="number" min="1" max="20" placeholder="e.g. 7">
+                    <label for="settingsWeeks">Plan Length (weeks)</label>
+                    <input id="settingsWeeks" type="number" min="1" max="4" placeholder="e.g. 2">
 
                     <div class="star-section">
                         <h3>⭐ Quick Check-In</h3>
@@ -333,6 +434,42 @@
             </div>
         </div>
 
+        <!-- Weekly Reflection overlay -->
+        <div id="weeklyReflectionOverlay" class="overlay overlay-hidden">
+            <div class="overlay-backdrop" id="weeklyReflectionBackdrop"></div>
+            <div class="weekly-reflection-panel">
+                <div class="settings-header">
+                    <h2>📝 Weekly Reflection</h2>
+                    <button type="button" id="closeWeeklyReflectionBtn" class="close-btn">&times;</button>
+                </div>
+                <p class="weekly-reflection-prompt">How did your mental strength improve this week?</p>
+                <textarea id="weeklyReflectionInput" class="weekly-reflection-input" rows="6" placeholder="Write a few sentences about what got better this week..."></textarea>
+                <p id="weeklyReflectionNotice" class="weekly-reflection-notice" hidden>This is a once a week feature.</p>
+                <button type="button" id="saveWeeklyReflectionBtn" class="weekly-reflection-save-btn">Save Reflection</button>
+            </div>
+        </div>
+
+        <!-- Mood Trend overlay -->
+        <div id="moodTrendOverlay" class="overlay overlay-hidden">
+            <div class="overlay-backdrop" id="moodTrendBackdrop"></div>
+            <div class="mood-trend-panel">
+                <div class="settings-header">
+                    <h2>📈 Mood Trend</h2>
+                    <button type="button" id="closeMoodTrendBtn" class="close-btn">&times;</button>
+                </div>
+                <div id="moodTrendSummary" class="mood-trend-summary"></div>
+                <h3 class="mood-trend-week-title">This Week</h3>
+                <div id="moodTrendWeek" class="mood-trend-week"></div>
+            </div>
+        </div>
+
+        <div id="moodSavedPopup" class="mood-saved-popup mood-saved-popup-hidden" role="status" aria-live="polite">
+            <div class="mood-saved-popup-box">
+                <p>Saved to Mood Trend!</p>
+            </div>
+        </div>
+
+        <script src="js/meditation-speech.js"></script>
         <script src="js/video-library.js"></script>
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>

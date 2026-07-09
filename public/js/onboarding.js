@@ -23,7 +23,7 @@ form.addEventListener("submit", async function (event) {
     const sport = document.getElementById("sport").value.trim();
     const goal = document.getElementById("goal").value.trim();
     const challenge = document.getElementById("challenge").value.trim();
-    const days = document.getElementById("days").value.trim();
+    const weeks = document.getElementById("weeks").value.trim();
 
     const mentalSkill = document.querySelector('input[name="mentalSkill"]:checked');
     const goalCommitment = document.querySelector('input[name="goalCommitment"]:checked');
@@ -32,7 +32,7 @@ form.addEventListener("submit", async function (event) {
     const focus = document.querySelector('input[name="focus"]:checked');
     const bounce = document.querySelector('input[name="bounce"]:checked');
 
-    if (!name || !age || !sport || !goal || !challenge || !days || !mentalSkill || !goalCommitment || !confidence || !stress || !focus || !bounce) {
+    if (!name || !age || !sport || !goal || !challenge || !weeks || !mentalSkill || !goalCommitment || !confidence || !stress || !focus || !bounce) {
         alert("Please fill out every field and tap a number for each question.");
         return;
     }
@@ -43,11 +43,13 @@ form.addEventListener("submit", async function (event) {
         return;
     }
 
-    const daysNum = parseInt(days, 10);
-    if (daysNum < 1 || daysNum > 20) {
-        alert("Please choose a plan length between 1 and 20 days.");
+    const weeksNum = parseInt(weeks, 10);
+    if (weeksNum < 1 || weeksNum > 4) {
+        alert("Please choose a plan length between 1 and 4 weeks.");
         return;
     }
+
+    const days = String(weeksNum * 7);
 
     const sportLower = sport.toLowerCase();
     let extra = "Keep showing up, and trust your training.";

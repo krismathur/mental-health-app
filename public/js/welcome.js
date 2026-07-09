@@ -2,6 +2,8 @@ const generateButton = document.getElementById("generatePlanButton");
 const planText = document.getElementById("planText");
 const planView = document.getElementById("planView");
 const mainCard = document.getElementById("mainCard");
+const planIntro = document.getElementById("planIntro");
+const pageContainer = document.querySelector(".page");
 
 const settingsBtn = document.getElementById("settingsBtn");
 const settingsOverlay = document.getElementById("settingsOverlay");
@@ -9,6 +11,33 @@ const overlayBackdrop = document.getElementById("overlayBackdrop");
 const closeSettingsBtn = document.getElementById("closeSettingsBtn");
 const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 const regenerateBtn = document.getElementById("regenerateBtn");
+const emotionCheckinBtn = document.getElementById("emotionCheckinBtn");
+const emotionCheckinOverlay = document.getElementById("emotionCheckinOverlay");
+const emotionCheckinBackdrop = document.getElementById("emotionCheckinBackdrop");
+const closeEmotionCheckinBtn = document.getElementById("closeEmotionCheckinBtn");
+const saveMoodBtn = document.getElementById("saveMoodBtn");
+const emotionCells = document.querySelectorAll(".emotion-cell");
+const moodSavedPopup = document.getElementById("moodSavedPopup");
+const moodTrendBtn = document.getElementById("moodTrendBtn");
+const moodTrendOverlay = document.getElementById("moodTrendOverlay");
+const moodTrendBackdrop = document.getElementById("moodTrendBackdrop");
+const closeMoodTrendBtn = document.getElementById("closeMoodTrendBtn");
+const moodTrendSummary = document.getElementById("moodTrendSummary");
+const moodTrendWeek = document.getElementById("moodTrendWeek");
+const weeklyReflectionBtn = document.getElementById("weeklyReflectionBtn");
+const weeklyReflectionOverlay = document.getElementById("weeklyReflectionOverlay");
+const weeklyReflectionBackdrop = document.getElementById("weeklyReflectionBackdrop");
+const closeWeeklyReflectionBtn = document.getElementById("closeWeeklyReflectionBtn");
+const weeklyReflectionInput = document.getElementById("weeklyReflectionInput");
+const weeklyReflectionNotice = document.getElementById("weeklyReflectionNotice");
+const saveWeeklyReflectionBtn = document.getElementById("saveWeeklyReflectionBtn");
+const MOOD_STORAGE_KEY = "mindzone_mood_today";
+const MOOD_HISTORY_KEY = "mindzone_mood_history";
+const WEEKLY_REFLECTION_KEY = "mindzone_weekly_reflection";
+const MOOD_DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const POSITIVE_MOODS = ["Happy", "Calm", "Excited", "Proud"];
+const TOUGH_MOODS = ["Anxious", "Sad", "Angry", "Stressed"];
+let moodSavedPopupTimer = null;
 let currentPlanStatus = "none";
 let currentPlanId = null;
 let currentPlanText = null;
@@ -54,6 +83,473 @@ if (overlayBackdrop) {
 function closeSettings() {
     settingsOverlay.classList.add("overlay-hidden");
 }
+
+function openEmotionCheckin() {
+    if (emotionCheckinOverlay) {
+        restoreSavedMoodSelection();
+        emotionCheckinOverlay.classList.remove("overlay-hidden");
+    }
+}
+
+function closeEmotionCheckin() {
+    if (window.MeditationSpeech) {
+        window.MeditationSpeech.cancel();
+    }
+    clearEmotionSpeakState();
+
+    if (emotionCheckinOverlay) {
+        emotionCheckinOverlay.classList.add("overlay-hidden");
+    }
+}
+
+function clearEmotionSpeakState() {
+    document.querySelectorAll(".emotion-speak-btn.is-speaking").forEach(function (button) {
+        button.classList.remove("is-speaking");
+    });
+}
+
+function speakMoodLabel(cell) {
+    if (!cell || !window.MeditationSpeech) {
+        return;
+    }
+
+    const moodName = cell.dataset.emotion;
+    if (!moodName) {
+        return;
+    }
+
+    const speakButton = cell.querySelector(".emotion-speak-btn");
+    clearEmotionSpeakState();
+
+    window.MeditationSpeech.speak(moodName, {
+        onStart: function () {
+            if (speakButton) {
+                speakButton.classList.add("is-speaking");
+            }
+        },
+        onEnd: function () {
+            if (speakButton) {
+                speakButton.classList.remove("is-speaking");
+            }
+        },
+        onError: function () {
+            if (speakButton) {
+                speakButton.classList.remove("is-speaking");
+            }
+        }
+    });
+}
+
+function selectEmotionCell(cell) {
+    emotionCells.forEach(function (otherCell) {
+        otherCell.classList.remove("is-selected");
+    });
+    cell.classList.add("is-selected");
+    updateSaveMoodButton();
+}
+
+function getTodayDateString() {
+    return new Date().toISOString().slice(0, 10);
+}
+
+function getMoodHistory() {
+    const savedHistory = localStorage.getItem(MOOD_HISTORY_KEY);
+    if (savedHistory) {
+        try {
+            const history = JSON.parse(savedHistory);
+            if (Array.isArray(history)) {
+                return history;
+            }
+        } catch (error) {
+            localStorage.removeItem(MOOD_HISTORY_KEY);
+        }
+    }
+
+    const legacyMood = localStorage.getItem(MOOD_STORAGE_KEY);
+    if (legacyMood) {
+        try {
+            const mood = JSON.parse(legacyMood);
+            if (mood && mood.date && mood.emotion) {
+                return [mood];
+            }
+        } catch (error) {
+            localStorage.removeItem(MOOD_STORAGE_KEY);
+        }
+    }
+
+    return [];
+}
+
+function saveMoodHistoryEntry(mood) {
+    const history = getMoodHistory().filter(function (entry) {
+        return entry.date !== mood.date;
+    });
+    history.push(mood);
+    history.sort(function (a, b) {
+        return a.date.localeCompare(b.date);
+    });
+
+    if (history.length > 90) {
+        history.splice(0, history.length - 90);
+    }
+
+    localStorage.setItem(MOOD_HISTORY_KEY, JSON.stringify(history));
+    localStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(mood));
+}
+
+function getMoodForDate(dateString) {
+    return getMoodHistory().find(function (entry) {
+        return entry.date === dateString;
+    }) || null;
+}
+
+function getCurrentWeekDates() {
+    const today = new Date();
+    const start = new Date(today);
+    start.setHours(0, 0, 0, 0);
+    start.setDate(today.getDate() - today.getDay());
+
+    const dates = [];
+    for (let index = 0; index < 7; index += 1) {
+        const day = new Date(start);
+        day.setDate(start.getDate() + index);
+        dates.push(day.toISOString().slice(0, 10));
+    }
+
+    return dates;
+}
+
+function getCurrentWeekKey() {
+    const weekDates = getCurrentWeekDates();
+    return weekDates[0] || getTodayDateString();
+}
+
+function getWeeklyReflectionEntry() {
+    const saved = localStorage.getItem(WEEKLY_REFLECTION_KEY);
+    if (!saved) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(saved);
+    } catch (error) {
+        localStorage.removeItem(WEEKLY_REFLECTION_KEY);
+        return null;
+    }
+}
+
+function getReflectionForCurrentWeek() {
+    const entry = getWeeklyReflectionEntry();
+    if (!entry || entry.weekKey !== getCurrentWeekKey()) {
+        return null;
+    }
+
+    return entry;
+}
+
+function openWeeklyReflection() {
+    if (!weeklyReflectionOverlay) {
+        return;
+    }
+
+    if (weeklyReflectionInput) {
+        weeklyReflectionInput.value = "";
+    }
+
+    if (weeklyReflectionNotice) {
+        weeklyReflectionNotice.hidden = true;
+    }
+
+    weeklyReflectionOverlay.classList.remove("overlay-hidden");
+}
+
+function closeWeeklyReflection() {
+    if (weeklyReflectionOverlay) {
+        weeklyReflectionOverlay.classList.add("overlay-hidden");
+    }
+}
+
+function saveWeeklyReflection() {
+    if (!weeklyReflectionInput) {
+        return;
+    }
+
+    const text = weeklyReflectionInput.value.trim();
+    if (!text) {
+        return;
+    }
+
+    if (getReflectionForCurrentWeek()) {
+        if (weeklyReflectionNotice) {
+            weeklyReflectionNotice.hidden = false;
+        }
+        return;
+    }
+
+    localStorage.setItem(WEEKLY_REFLECTION_KEY, JSON.stringify({
+        weekKey: getCurrentWeekKey(),
+        text: text,
+        savedOn: getTodayDateString()
+    }));
+
+    closeWeeklyReflection();
+}
+
+function getWeekMoodEntries() {
+    return getCurrentWeekDates().map(function (dateString) {
+        const date = new Date(dateString + "T12:00:00");
+        return {
+            date: dateString,
+            dayName: MOOD_DAY_NAMES[date.getDay()],
+            mood: getMoodForDate(dateString)
+        };
+    });
+}
+
+function getOverallMoodSummary(weekEntries) {
+    const loggedEntries = weekEntries.filter(function (entry) {
+        return entry.mood;
+    });
+
+    if (!loggedEntries.length) {
+        return {
+            headline: "No check-ins yet",
+            message: "Use Emotion Check-in to save how you feel each day. Your overall mood trend will show up here."
+        };
+    }
+
+    const counts = {};
+    loggedEntries.forEach(function (entry) {
+        const emotion = entry.mood.emotion;
+        counts[emotion] = (counts[emotion] || 0) + 1;
+    });
+
+    const ranked = Object.keys(counts).sort(function (a, b) {
+        return counts[b] - counts[a];
+    });
+    const topEmotion = ranked[0];
+    const topEntry = loggedEntries.find(function (entry) {
+        return entry.mood.emotion === topEmotion;
+    });
+    const topEmoji = topEntry ? topEntry.mood.emoji : "";
+
+    let positiveCount = 0;
+    let toughCount = 0;
+    loggedEntries.forEach(function (entry) {
+        if (POSITIVE_MOODS.includes(entry.mood.emotion)) {
+            positiveCount += 1;
+        }
+        if (TOUGH_MOODS.includes(entry.mood.emotion)) {
+            toughCount += 1;
+        }
+    });
+
+    let message = "You logged " + topEmotion.toLowerCase() + " most often this week.";
+    if (positiveCount >= toughCount + 2) {
+        message = "Overall, this has been a positive week for you. " + topEmoji + " " + topEmotion + " showed up the most.";
+    } else if (toughCount >= positiveCount + 2) {
+        message = "This week has felt heavier overall. Checking in is a strong step — " + topEmotion.toLowerCase() + " came up most.";
+    } else if (loggedEntries.length >= 3) {
+        message = "You have had a mixed week. Your most common mood was " + topEmotion.toLowerCase() + ".";
+    }
+
+    return {
+        headline: "Your overall mood: " + topEmotion + " " + topEmoji,
+        message: message
+    };
+}
+
+function renderMoodTrend() {
+    if (!moodTrendSummary || !moodTrendWeek) {
+        return;
+    }
+
+    const weekEntries = getWeekMoodEntries();
+    const summary = getOverallMoodSummary(weekEntries);
+
+    moodTrendSummary.innerHTML = `
+        <p class="mood-trend-headline">${escapeHtml(summary.headline)}</p>
+        <p class="mood-trend-message">${escapeHtml(summary.message)}</p>
+    `;
+
+    moodTrendWeek.innerHTML = weekEntries.map(function (entry) {
+        if (!entry.mood) {
+            return `
+                <div class="mood-trend-day is-empty">
+                    <p class="mood-trend-day-name">${escapeHtml(entry.dayName)}</p>
+                    <div class="mood-trend-day-box">
+                        <span class="mood-trend-day-empty">—</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="mood-trend-day">
+                <p class="mood-trend-day-name">${escapeHtml(entry.dayName)}</p>
+                <div class="mood-trend-day-box">
+                    <span class="mood-trend-day-emoji" aria-hidden="true">${escapeHtml(entry.mood.emoji)}</span>
+                    <span class="mood-trend-day-label">${escapeHtml(entry.mood.emotion)}</span>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function openMoodTrend() {
+    if (!moodTrendOverlay) {
+        return;
+    }
+
+    renderMoodTrend();
+    moodTrendOverlay.classList.remove("overlay-hidden");
+}
+
+function closeMoodTrend() {
+    if (moodTrendOverlay) {
+        moodTrendOverlay.classList.add("overlay-hidden");
+    }
+}
+
+function daysToWeeks(daysValue) {
+    const days = parseInt(daysValue, 10);
+    if (!days || days < 1) {
+        return "";
+    }
+
+    return String(Math.max(1, Math.round(days / 7)));
+}
+
+function weeksToDays(weeksValue) {
+    const weeks = parseInt(weeksValue, 10);
+    if (!weeks || weeks < 1) {
+        return "";
+    }
+
+    return String(weeks * 7);
+}
+
+function getSelectedEmotionCell() {
+    return document.querySelector(".emotion-cell.is-selected");
+}
+
+function updateSaveMoodButton() {
+    if (!saveMoodBtn) {
+        return;
+    }
+
+    saveMoodBtn.disabled = !getSelectedEmotionCell();
+}
+
+function restoreSavedMoodSelection() {
+    emotionCells.forEach(function (cell) {
+        cell.classList.remove("is-selected");
+    });
+
+    const savedMood = getMoodForDate(getTodayDateString());
+    if (savedMood && savedMood.emotion) {
+        emotionCells.forEach(function (cell) {
+            if (cell.dataset.emotion === savedMood.emotion) {
+                cell.classList.add("is-selected");
+            }
+        });
+    }
+
+    updateSaveMoodButton();
+}
+
+function saveMoodToday() {
+    const selectedCell = getSelectedEmotionCell();
+    if (!selectedCell) {
+        return;
+    }
+
+    const emojiElement = selectedCell.querySelector(".emotion-emoji");
+    const mood = {
+        date: getTodayDateString(),
+        emotion: selectedCell.dataset.emotion,
+        emoji: emojiElement ? emojiElement.textContent.trim() : ""
+    };
+
+    localStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(mood));
+    saveMoodHistoryEntry(mood);
+    closeEmotionCheckin();
+    showMoodSavedPopup();
+}
+
+function showMoodSavedPopup() {
+    if (!moodSavedPopup) {
+        return;
+    }
+
+    moodSavedPopup.classList.remove("mood-saved-popup-hidden");
+    clearTimeout(moodSavedPopupTimer);
+    moodSavedPopupTimer = setTimeout(function () {
+        moodSavedPopup.classList.add("mood-saved-popup-hidden");
+    }, 2600);
+}
+
+if (emotionCheckinBtn) {
+    emotionCheckinBtn.addEventListener("click", openEmotionCheckin);
+}
+
+if (closeEmotionCheckinBtn) {
+    closeEmotionCheckinBtn.addEventListener("click", closeEmotionCheckin);
+}
+
+if (emotionCheckinBackdrop) {
+    emotionCheckinBackdrop.addEventListener("click", closeEmotionCheckin);
+}
+
+if (saveMoodBtn) {
+    saveMoodBtn.addEventListener("click", saveMoodToday);
+}
+
+if (moodTrendBtn) {
+    moodTrendBtn.addEventListener("click", openMoodTrend);
+}
+
+if (closeMoodTrendBtn) {
+    closeMoodTrendBtn.addEventListener("click", closeMoodTrend);
+}
+
+if (moodTrendBackdrop) {
+    moodTrendBackdrop.addEventListener("click", closeMoodTrend);
+}
+
+if (weeklyReflectionBtn) {
+    weeklyReflectionBtn.addEventListener("click", openWeeklyReflection);
+}
+
+if (closeWeeklyReflectionBtn) {
+    closeWeeklyReflectionBtn.addEventListener("click", closeWeeklyReflection);
+}
+
+if (weeklyReflectionBackdrop) {
+    weeklyReflectionBackdrop.addEventListener("click", closeWeeklyReflection);
+}
+
+if (saveWeeklyReflectionBtn) {
+    saveWeeklyReflectionBtn.addEventListener("click", saveWeeklyReflection);
+}
+
+emotionCells.forEach(function (cell) {
+    const pickButton = cell.querySelector(".emotion-pick-btn");
+    const speakButton = cell.querySelector(".emotion-speak-btn");
+
+    if (pickButton) {
+        pickButton.addEventListener("click", function () {
+            selectEmotionCell(cell);
+        });
+    }
+
+    if (speakButton) {
+        speakButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+            speakMoodLabel(cell);
+        });
+    }
+});
 
 async function loadProfileFromServer() {
     try {
@@ -102,7 +598,7 @@ function loadSettingsIntoForm() {
     document.getElementById("settingsChallenge").value = localStorage.getItem("mindzone_challenge") || "";
     document.getElementById("settingsMentalSkill").value = localStorage.getItem("mindzone_mental_skill") || "";
     document.getElementById("settingsGoalCommitment").value = localStorage.getItem("mindzone_goal_commitment") || "";
-    document.getElementById("settingsDays").value = localStorage.getItem("mindzone_days") || "";
+    document.getElementById("settingsWeeks").value = daysToWeeks(localStorage.getItem("mindzone_days"));
 
     setStarRating("confidence", localStorage.getItem("mindzone_confidence"));
     setStarRating("stress", localStorage.getItem("mindzone_stress"));
@@ -128,25 +624,33 @@ async function saveSettingsFromForm() {
     const challenge = document.getElementById("settingsChallenge").value.trim();
     const mentalSkill = document.getElementById("settingsMentalSkill").value.trim();
     const goalCommitment = document.getElementById("settingsGoalCommitment").value.trim();
-    const days = document.getElementById("settingsDays").value.trim();
+    const weeks = document.getElementById("settingsWeeks").value.trim();
 
     const confidence = document.querySelector('#settingsForm input[name="confidence"]:checked');
     const stress = document.querySelector('#settingsForm input[name="stress"]:checked');
     const focus = document.querySelector('#settingsForm input[name="focus"]:checked');
     const bounce = document.querySelector('#settingsForm input[name="bounce"]:checked');
 
-    if (!name || !age || !sport || !goal || !challenge || !mentalSkill || !goalCommitment || !days || !confidence || !stress || !focus || !bounce) {
+    if (!name || !age || !sport || !goal || !challenge || !mentalSkill || !goalCommitment || !weeks || !confidence || !stress || !focus || !bounce) {
         alert("Please fill out every field before saving.");
         return false;
     }
 
     const mentalSkillNum = parseInt(mentalSkill, 10);
     const goalCommitmentNum = parseInt(goalCommitment, 10);
+    const weeksNum = parseInt(weeks, 10);
 
     if (mentalSkillNum < 1 || mentalSkillNum > 10 || goalCommitmentNum < 1 || goalCommitmentNum > 10) {
         alert("Ratings must be between 1 and 10.");
         return false;
     }
+
+    if (weeksNum < 1 || weeksNum > 4) {
+        alert("Plan length must be between 1 and 4 weeks.");
+        return false;
+    }
+
+    const days = weeksToDays(weeks);
 
     localStorage.setItem("mindzone_name", name);
     localStorage.setItem("mindzone_age", age);
@@ -264,8 +768,30 @@ async function loadCurrentPlan(profileLoaded) {
     }
 }
 
+function restorePlanIntroToPage() {
+    if (!planIntro || !pageContainer || planIntro.parentElement === pageContainer) {
+        if (planIntro) {
+            planIntro.classList.remove("plan-intro--in-card");
+        }
+        return;
+    }
+
+    pageContainer.insertBefore(planIntro, pageContainer.firstChild);
+    planIntro.classList.remove("plan-intro--in-card");
+}
+
+function attachPlanIntroToWeeklyGoal(card) {
+    if (!planIntro || !card) {
+        return;
+    }
+
+    planIntro.classList.add("plan-intro--in-card");
+    card.insertBefore(planIntro, card.firstChild);
+}
+
 function showPlanMessage(message, status) {
     currentPlanStatus = status;
+    restorePlanIntroToPage();
 
     if (mainCard) {
         mainCard.classList.remove("hidden");
@@ -391,6 +917,7 @@ async function generatePlan(loadingMessage) {
     isGeneratingPlan = true;
     mainCard.classList.remove("hidden");
     planText.textContent = loadingMessage || "Generating your plan...";
+    restorePlanIntroToPage();
     planView.hidden = true;
     planView.innerHTML = "";
     setGenerateButtonState(currentPlanStatus, true);
@@ -523,6 +1050,7 @@ function renderPlan(planText, planId) {
 
     currentPlanStatus = "approved";
     mainCard.classList.add("hidden");
+    restorePlanIntroToPage();
     planView.hidden = false;
     planView.innerHTML = "";
 
@@ -556,6 +1084,7 @@ function renderPlan(planText, planId) {
 function createWeeklyGoalCard(weeklyGoal) {
     const card = document.createElement("section");
     card.className = "weekly-goal-card";
+    attachPlanIntroToWeeklyGoal(card);
 
     const label = document.createElement("p");
     label.className = "weekly-goal-label";
@@ -569,7 +1098,7 @@ function createWeeklyGoalCard(weeklyGoal) {
 function appendSentenceBlock(container, content, className) {
     const sentences = Array.isArray(content)
         ? content
-        : String(content || "").split(/(?<=[.!?])\s+/).filter(Boolean);
+        : splitSentences(String(content || ""));
 
     sentences.forEach(function (sentence) {
         const paragraph = document.createElement("p");
@@ -577,6 +1106,11 @@ function appendSentenceBlock(container, content, className) {
         paragraph.textContent = sentence.trim();
         container.appendChild(paragraph);
     });
+}
+
+function splitSentences(text){
+    const matches = text.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g);
+    return matches ? matches.map(function (sentence) { return sentence.trim(); }).filter(Boolean) : [];
 }
 
 function appendPlanParagraphs(card, title, items) {

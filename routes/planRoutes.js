@@ -273,7 +273,7 @@ Name: ${name}
 Sport: ${sport}
 Main goal: ${goal}
 Main challenge: ${challenge}
-Plan length: ${days} days
+Plan length: ${Math.max(1, Math.round(days / 7))} week(s) (${days} daily sessions)
 Time on mental prep (1-10): ${mentalSkill}
 Willingness to work (1-10): ${goalCommitment}
 Confidence (1-5): ${confidence}

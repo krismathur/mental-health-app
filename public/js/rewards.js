@@ -4,7 +4,104 @@ const rewardsBackdrop = document.getElementById("rewardsBackdrop");
 const closeRewardsBtn = document.getElementById("closeRewardsBtn");
 const rewardCards = document.querySelectorAll(".reward-card");
 const rewardDetails = document.getElementById("rewardDetails");
+const GEMSTONE_STORAGE_KEY = "mindzone_login_gemstones";
+const GEMSTONE_DISPLAY_COUNT = 10;
 let activeRewardType = "";
+
+function getTodayDateString() {
+    return new Date().toISOString().slice(0, 10);
+}
+
+function getGemstoneData() {
+    const saved = localStorage.getItem(GEMSTONE_STORAGE_KEY);
+    if (!saved) {
+        return { loginDates: [] };
+    }
+
+    try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.loginDates)) {
+            return parsed;
+        }
+    } catch (error) {
+        localStorage.removeItem(GEMSTONE_STORAGE_KEY);
+    }
+
+    return { loginDates: [] };
+}
+
+function saveGemstoneData(data) {
+    localStorage.setItem(GEMSTONE_STORAGE_KEY, JSON.stringify(data));
+}
+
+function awardLoginGemstone() {
+    const data = getGemstoneData();
+    const today = getTodayDateString();
+
+    if (data.loginDates.includes(today)) {
+        return false;
+    }
+
+    data.loginDates.push(today);
+    data.loginDates.sort();
+    saveGemstoneData(data);
+
+    if (activeRewardType === "streak") {
+        showRewardDetails("streak");
+    }
+
+    return true;
+}
+
+function getLoginStreak(loginDates) {
+    if (!loginDates.length) {
+        return 0;
+    }
+
+    const dateSet = new Set(loginDates);
+    let streak = 0;
+    const cursor = new Date();
+
+    cursor.setHours(0, 0, 0, 0);
+
+    while (true) {
+        const key = cursor.toISOString().slice(0, 10);
+        if (!dateSet.has(key)) {
+            break;
+        }
+
+        streak += 1;
+        cursor.setDate(cursor.getDate() - 1);
+    }
+
+    return streak;
+}
+
+function setupRewardsStreakLink() {
+    const rewardsGrid = document.querySelector(".rewards-grid");
+    if (!rewardsGrid || document.getElementById("rewardsStreakBtn")) {
+        return;
+    }
+
+    const streakButton = document.createElement("button");
+    streakButton.type = "button";
+    streakButton.id = "rewardsStreakBtn";
+    streakButton.className = "rewards-streak-btn";
+    streakButton.textContent = "Your Streak";
+    rewardsGrid.insertAdjacentElement("afterend", streakButton);
+    streakButton.addEventListener("click", function () {
+        showRewardDetails("streak");
+    });
+}
+
+function initLoginGemstones() {
+    setupRewardsStreakLink();
+
+    if (sessionStorage.getItem("mindzone_record_login_gem") === "1") {
+        sessionStorage.removeItem("mindzone_record_login_gem");
+        awardLoginGemstone();
+    }
+}
 
 function getRewards() {
     return {
@@ -26,6 +123,7 @@ function resetRewards() {
         stars: 0,
         activityCompletions: 0
     });
+    saveGemstoneData({ loginDates: [] });
 
     if (activeRewardType) {
         showRewardDetails(activeRewardType);
@@ -71,6 +169,31 @@ function showRewardDetails(type) {
     const badgeProgress = rewards.activityCompletions % 3;
     const xpProgress = Math.min(100, rewards.xp);
     const starProgress = Math.min(5, rewards.stars);
+
+    if (type === "streak") {
+        const gemstoneData = getGemstoneData();
+        const gemsEarned = gemstoneData.loginDates.length;
+        const streak = getLoginStreak(gemstoneData.loginDates);
+        const gemsShown = Math.min(GEMSTONE_DISPLAY_COUNT, gemsEarned);
+
+        rewardDetails.innerHTML = `
+            <div class="badge-summary">
+                <div class="color-badge gemstone-orb">💎</div>
+                <div>
+                    <h3>Your Streak</h3>
+                    <p class="reward-big-number">${streak} Day Streak</p>
+                    <p>Log in each day to collect a new gemstone.</p>
+                    <p class="badge-progress">${gemsEarned} gemstone${gemsEarned === 1 ? "" : "s"} collected</p>
+                </div>
+            </div>
+
+            <div class="gemstone-grid badge-grid">
+                ${makeGemstoneGrid(gemsShown)}
+            </div>
+            <p class="reward-note">${gemsEarned >= GEMSTONE_DISPLAY_COUNT ? "You filled all 10 gemstone slots. Keep logging in to grow your streak." : "Each login adds another gemstone below."}</p>
+        `;
+        return;
+    }
 
     if (type === "xp") {
         rewardDetails.innerHTML = `
@@ -154,6 +277,17 @@ function makeBadgeGrid(badgesEarned) {
     return badges;
 }
 
+function makeGemstoneGrid(gemsEarned) {
+    let gemstones = "";
+
+    for (let i = 1; i <= GEMSTONE_DISPLAY_COUNT; i++) {
+        const earnedClass = i <= gemsEarned ? " earned-gemstone" : "";
+        gemstones += `<div class="locked-gemstone${earnedClass}"><span class="badge-corner-number">${i}</span></div>`;
+    }
+
+    return gemstones;
+}
+
 function flashRewardsScreen(message) {
     const flash = document.createElement("div");
     flash.className = "reward-screen-flash";
@@ -205,9 +339,12 @@ window.addRewardProgress = addRewardProgress;
 window.resetRewards = resetRewards;
 window.resetSavedTips = resetSavedTips;
 window.resetAllUserProgress = resetAllUserProgress;
+window.awardLoginGemstone = awardLoginGemstone;
 
 const PROGRESS_RESET_FLAG = "mindzone_tips_rewards_cleared_2026_07_04_pm";
 if (!localStorage.getItem(PROGRESS_RESET_FLAG)) {
     resetAllUserProgress();
     localStorage.setItem(PROGRESS_RESET_FLAG, "1");
 }
+
+initLoginGemstones();

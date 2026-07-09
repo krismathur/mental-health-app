@@ -29,13 +29,14 @@ body::before {
 /* Hero */
 .hero {
     color: #fff;
-    padding: 32px 20px 28px;
+    padding: 24px 20px 12px;
+    padding-left: max(16px, calc((100% - 1120px) / 2 + 16px));
 }
 
 .hero-inner {
     max-width: 720px;
-    margin: 0 auto;
-    text-align: center;
+    margin: 0;
+    text-align: left;
 }
 
 .hero-badge {
@@ -51,34 +52,72 @@ body::before {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-.hero h1 {
+.plan-intro {
+    margin-bottom: 20px;
+}
+
+.plan-intro h1 {
     font-size: 2.35rem;
     font-weight: 900;
-    margin-bottom: 10px;
+    margin: 0 0 10px;
     line-height: 1.12;
+    color: #fff;
     text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
 }
 
-.hero p {
+.plan-intro p {
     font-size: 1.05rem;
     line-height: 1.55;
     opacity: 0.94;
     max-width: 420px;
-    margin: 0 auto;
+    margin: 0 0 14px;
+    color: #fff;
     text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
 }
 
-.page {
-    padding: 8px 20px 44px;
+.plan-intro--in-card {
     text-align: center;
+    margin: 0 0 22px;
+    padding-bottom: 22px;
+    border-bottom: 2px solid rgba(190, 227, 248, 0.85);
+    background: rgba(255, 255, 255, 0.55);
+    border-radius: 14px;
+    padding: 18px 16px 22px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.plan-intro--in-card h1 {
+    color: #1a365d;
+    text-shadow: none;
+    font-size: 2rem;
+}
+
+.plan-intro--in-card p {
+    color: #718096;
+    opacity: 1;
+    text-shadow: none;
+    margin: 0 auto 14px;
+    max-width: 480px;
+}
+
+.plan-intro--in-card .quick-motivation {
+    justify-content: center;
+    margin-bottom: 0;
+}
+
+.page {
+    padding: 8px 20px 100px;
+    padding-left: max(16px, calc((100% - 1120px) / 2 + 16px));
+    text-align: left;
     max-width: 720px;
-    margin: 0 auto;
+    margin: 0;
 }
 
 .quick-motivation {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 8px;
     margin-bottom: 20px;
 }
@@ -100,8 +139,8 @@ body::before {
     background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     border-radius: 20px;
     padding: 28px 28px 26px;
-    margin: 0 auto 28px;
-    text-align: center;
+    margin: 0 0 28px;
+    text-align: left;
     box-shadow:
         0 12px 36px rgba(0, 0, 0, 0.22),
         0 0 0 1px rgba(255, 255, 255, 0.5) inset;
@@ -120,7 +159,7 @@ body::before {
 .card-icon {
     width: 52px;
     height: 52px;
-    margin: 0 auto 14px;
+    margin: 0 0 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -148,10 +187,6 @@ body::before {
     line-height: 1.5;
 }
 
-.plan-view {
-    margin-bottom: 20px;
-}
-
 .plan-actions {
     margin-bottom: 20px;
     position: relative;
@@ -162,7 +197,7 @@ body::before {
     display: block;
     width: 100%;
     max-width: 480px;
-    margin: 0 auto;
+    margin: 0;
     pointer-events: auto;
 }
 
@@ -201,23 +236,37 @@ body::before {
     cursor: wait;
 }
 
-.continue-btn {
+.welcome-action-stack {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.welcome-action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 8px;
     padding: 14px 28px;
-    background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
     color: white;
     text-decoration: none;
     border-radius: 999px;
     font-size: 1rem;
     font-weight: 800;
     font-family: 'Nunito', sans-serif;
-    box-shadow: 0 6px 20px rgba(237, 137, 54, 0.35);
     border: 2px solid rgba(255, 255, 255, 0.35);
     transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+}
+
+.continue-btn {
+    background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
+    box-shadow: 0 6px 20px rgba(237, 137, 54, 0.35);
 }
 
 .continue-btn:hover {
@@ -225,11 +274,31 @@ body::before {
     box-shadow: 0 6px 18px rgba(237, 137, 54, 0.4);
 }
 
+.emotion-checkin-btn {
+    background: linear-gradient(135deg, #805ad5 0%, #b794f4 100%);
+    box-shadow: 0 6px 20px rgba(128, 90, 213, 0.35);
+}
+
+.emotion-checkin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(128, 90, 213, 0.42);
+}
+
+.weekly-reflection-btn {
+    background: linear-gradient(135deg, #319795 0%, #4fd1c5 100%);
+    box-shadow: 0 6px 20px rgba(49, 151, 149, 0.35);
+}
+
+.weekly-reflection-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(49, 151, 149, 0.42);
+}
+
 .plan-view {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    margin: 0 auto 28px;
+    margin: 0 0 28px;
     max-width: 700px;
     text-align: left;
 }
@@ -238,7 +307,9 @@ body::before {
 .daily-plan-card,
 .plan-waiting-card,
 .plan-finished-card {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     border-radius: 20px;
     padding: 24px 26px;
     box-shadow:
@@ -247,13 +318,78 @@ body::before {
     border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
+.plan-waiting-card,
+.plan-finished-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.weekly-goal-card > *,
+.daily-plan-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.weekly-goal-card::before,
+.daily-plan-card::before,
+.weekly-goal-card::after,
+.daily-plan-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.weekly-goal-card::before {
+    z-index: 0;
+    background:
+        url("../images/card-mind.jpg") center 42% / cover no-repeat;
+    transform: scale(1.04);
+    filter: saturate(1.08) contrast(1.05);
+}
+
+.weekly-goal-card::after {
+    z-index: 0;
+    background:
+        linear-gradient(135deg, rgba(235, 248, 255, 0.94) 0%, rgba(219, 234, 254, 0.9) 52%, rgba(190, 227, 248, 0.84) 100%),
+        radial-gradient(circle at 88% 12%, rgba(66, 153, 225, 0.22), transparent 42%),
+        radial-gradient(circle at 8% 92%, rgba(49, 130, 206, 0.14), transparent 38%);
+}
+
+.daily-plan-card::before {
+    z-index: 0;
+    background:
+        url("../images/sports-mental-strength.png") center 38% / cover no-repeat;
+    transform: scale(1.05);
+    filter: saturate(1.1) contrast(1.04);
+}
+
+.daily-plan-card::after {
+    z-index: 0;
+    background:
+        linear-gradient(155deg, rgba(255, 255, 255, 0.856) 0%, rgba(237, 242, 247, 0.9) 48%, rgba(224, 242, 254, 0.86) 100%),
+        radial-gradient(circle at 14% 88%, rgba(43, 108, 176, 0.16), transparent 40%),
+        radial-gradient(circle at 92% 18%, rgba(99, 179, 237, 0.12), transparent 36%);
+}
+
 .weekly-goal-card {
     border-left: 5px solid #4299e1;
     padding-left: 22px;
+    box-shadow:
+        0 14px 36px rgba(43, 108, 176, 0.22),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+        inset 4px 0 18px rgba(53, 148, 226, 0.08);
+}
+
+.weekly-goal-card:has(.plan-intro--in-card) {
+    padding-top: 28px;
 }
 
 .daily-plan-card {
     border-top: 4px solid #2b6cb0;
+    box-shadow:
+        0 14px 36px rgba(43, 108, 176, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+        inset 0 4px 20px rgba(66, 153, 225, 0.07);
 }
 
 .weekly-goal-label {
@@ -280,11 +416,13 @@ body::before {
 }
 
 .plan-summary-section {
-    background: linear-gradient(135deg, #f0f7ff 0%, #ebf8ff 100%);
+    background: linear-gradient(135deg, rgba(240, 247, 255, 0.96) 0%, rgba(235, 248, 255, 0.92) 100%);
     border-radius: 14px;
     padding: 16px 18px;
-    border: 1px solid #bee3f8;
+    border: 1px solid rgba(190, 227, 248, 0.9);
     margin-top: 16px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .plan-section h3 {
@@ -382,9 +520,11 @@ body::before {
     margin-top: 20px;
     padding: 14px 16px;
     border-radius: 12px;
-    background: #f0f7ff;
-    border: 2px solid #bee3f8;
+    background: rgba(240, 247, 255, 0.92);
+    border: 2px solid rgba(190, 227, 248, 0.95);
     cursor: pointer;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .daily-complete-text {
@@ -401,7 +541,7 @@ body::before {
 
 .plan-waiting-card,
 .plan-finished-card {
-    text-align: center;
+    text-align: left;
     border-top: none;
 }
 
@@ -522,6 +662,438 @@ body::before {
     font-size: 1.3rem;
     font-weight: 900;
     margin: 0;
+}
+
+.emotion-checkin-panel {
+    position: relative;
+    z-index: 1;
+    background: white;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 24px 24px 28px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.emotion-checkin-panel .settings-header h2 {
+    color: #6b46c1;
+}
+
+.weekly-reflection-panel {
+    position: relative;
+    z-index: 1;
+    background: white;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 24px 24px 28px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    text-align: left;
+}
+
+.weekly-reflection-panel .settings-header h2 {
+    color: #285e61;
+}
+
+.weekly-reflection-prompt {
+    color: #1a365d;
+    font-size: 1.05rem;
+    font-weight: 900;
+    margin: 0 0 14px;
+    line-height: 1.45;
+}
+
+.weekly-reflection-input {
+    display: block;
+    width: 100%;
+    min-height: 140px;
+    padding: 14px 16px;
+    border: 2px solid #b2f5ea;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    line-height: 1.55;
+    color: #2d3748;
+    background: #f0fff4;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.weekly-reflection-input:focus {
+    outline: none;
+    border-color: #38b2ac;
+    box-shadow: 0 0 0 4px rgba(56, 178, 172, 0.18);
+    background: white;
+}
+
+.weekly-reflection-notice {
+    margin: 12px 0 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #fffaf0;
+    border: 2px solid #f6ad55;
+    color: #c05621;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.weekly-reflection-save-btn {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #319795 0%, #4fd1c5 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(49, 151, 149, 0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.weekly-reflection-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(49, 151, 149, 0.34);
+}
+
+.emotion-checkin-intro {
+    color: #718096;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 18px;
+    line-height: 1.5;
+}
+
+.emotion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.emotion-cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 118px;
+    padding: 14px 8px 12px;
+    border: 2px solid #e9d8fd;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #faf5ff 100%);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.emotion-pick-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+}
+
+.emotion-speak-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid #d6bcfa;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    color: #6b46c1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(128, 90, 213, 0.16);
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.emotion-speak-icon {
+    font-size: 0.72rem;
+    line-height: 1;
+}
+
+.emotion-speak-btn:hover {
+    transform: scale(1.06);
+    border-color: #b794f4;
+    background: #faf5ff;
+}
+
+.emotion-speak-btn.is-speaking {
+    background: linear-gradient(135deg, #805ad5 0%, #b794f4 100%);
+    border-color: #805ad5;
+    color: white;
+    box-shadow: 0 0 0 3px rgba(128, 90, 213, 0.2);
+}
+
+.emotion-cell:hover {
+    transform: translateY(-2px);
+    border-color: #b794f4;
+    box-shadow: 0 8px 18px rgba(128, 90, 213, 0.16);
+}
+
+.emotion-cell.is-selected {
+    border-color: #805ad5;
+    background: linear-gradient(180deg, #faf5ff 0%, #ede9fe 100%);
+    box-shadow: 0 0 0 3px rgba(128, 90, 213, 0.18);
+}
+
+.emotion-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ebf8ff 0%, #e9d8fd 100%);
+    border: 2px solid rgba(128, 90, 213, 0.18);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.emotion-emoji {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2.6rem;
+    line-height: 1;
+}
+
+.emotion-label {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #553c9a;
+    line-height: 1.2;
+}
+
+.emotion-save-btn {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #805ad5 0%, #b794f4 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(128, 90, 213, 0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.emotion-save-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(128, 90, 213, 0.34);
+}
+
+.emotion-save-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.mood-saved-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    pointer-events: none;
+}
+
+.mood-saved-popup-hidden {
+    display: none;
+}
+
+.mood-saved-popup-box {
+    min-width: 240px;
+    max-width: 320px;
+    padding: 22px 28px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #805ad5 0%, #b794f4 100%);
+    color: white;
+    text-align: center;
+    box-shadow:
+        0 16px 40px rgba(76, 29, 149, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    animation: moodSavedPopIn 0.28s ease;
+}
+
+.mood-saved-popup-box p {
+    margin: 0;
+    font-size: 1.08rem;
+    font-weight: 900;
+    line-height: 1.4;
+}
+
+@keyframes moodSavedPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.mood-trend-nav-btn {
+    background: rgba(128, 90, 213, 0.22);
+    border-color: rgba(214, 188, 250, 0.55);
+}
+
+.mood-trend-nav-btn:hover {
+    background: rgba(128, 90, 213, 0.34);
+}
+
+.mood-trend-panel {
+    position: relative;
+    z-index: 1;
+    background: white;
+    border-radius: 20px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 24px 24px 28px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    text-align: left;
+}
+
+.mood-trend-panel .settings-header h2 {
+    color: #6b46c1;
+}
+
+.mood-trend-summary {
+    background: linear-gradient(135deg, #faf5ff 0%, #ebf8ff 100%);
+    border: 2px solid #e9d8fd;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+}
+
+.mood-trend-headline {
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #553c9a;
+    line-height: 1.35;
+}
+
+.mood-trend-message {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #4a5568;
+    line-height: 1.55;
+}
+
+.mood-trend-week-title {
+    margin: 0 0 12px;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #805ad5;
+}
+
+.mood-trend-week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.mood-trend-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.mood-trend-day-name {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mood-trend-day-box {
+    width: 100%;
+    min-height: 92px;
+    padding: 10px 6px;
+    border-radius: 14px;
+    border: 2px solid #e9d8fd;
+    background: linear-gradient(180deg, #ffffff 0%, #faf5ff 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 4px 14px rgba(128, 90, 213, 0.08);
+}
+
+.mood-trend-day.is-empty .mood-trend-day-box {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    box-shadow: none;
+}
+
+.mood-trend-day-emoji {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.mood-trend-day-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: #553c9a;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.mood-trend-day-empty {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #cbd5e0;
+    line-height: 1;
 }
 
 .close-btn {
@@ -692,7 +1264,56 @@ body::before {
         background-attachment: scroll;
     }
 
-    .hero h1 {
+    .plan-intro h1,
+    .plan-intro--in-card h1 {
         font-size: 2rem;
+    }
+
+    .welcome-action-stack {
+        bottom: 16px;
+        right: 16px;
+        gap: 8px;
+    }
+
+    .welcome-action-btn {
+        padding: 12px 18px;
+        font-size: 0.92rem;
+    }
+
+    .emotion-grid {
+        gap: 8px;
+    }
+
+    .emotion-cell {
+        min-height: 104px;
+        padding: 10px 6px;
+    }
+
+    .emotion-speak-btn {
+        top: 6px;
+        right: 6px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .emotion-speak-icon {
+        font-size: 0.64rem;
+    }
+
+    .emotion-circle {
+        width: 54px;
+        height: 54px;
+    }
+
+    .emotion-emoji {
+        font-size: 2.15rem;
+    }
+
+    .emotion-label {
+        font-size: 0.74rem;
+    }
+
+    .mood-trend-week {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
