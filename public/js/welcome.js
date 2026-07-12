@@ -1158,8 +1158,7 @@ function createPlanFinishedCard() {
         <p>You completed every day. Update your settings and regenerate if you want a new plan.</p>
     `;
     return card;
-}
-
+} 
 function createDailyPlanCard(dayEntry, progress) {
     const card = document.createElement("section");
     card.className = "daily-plan-card";
@@ -1168,7 +1167,7 @@ function createDailyPlanCard(dayEntry, progress) {
     header.className = "daily-plan-header";
     header.innerHTML = `
         <p class="daily-plan-kicker">Today · Day ${dayEntry.day}</p>
-        <h2>${escapeHtml(dayEntry.title || "Mental Training")}</h2>
+        <h2>${escapeHtml(dayEntry.title || "Mental Training")}</h2> 
     `;
     card.appendChild(header);
 
