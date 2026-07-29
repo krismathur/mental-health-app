@@ -478,12 +478,10 @@ ${text}`;
 
         const problem = (req.body.problem || "").trim();
         if (!problem) {
-            return res.status(400).json({ message: "Tell us what went wrong before submitting." });
+            return res.status(400).json({ message: "Tell us what went wrong in sports before submitting." });
         }
 
-        if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_MODEL) {
-            return res.status(500).json({ message: "Gemini is not set up. Add GEMINI_API_KEY and GEMINI_MODEL to your .env file." });
-        }
+        const fixClipSearch = require("./fixClipSearch");
 
         db.get(
             "SELECT name, age, sport, goal, challenge FROM profiles WHERE user_id = ?",
@@ -493,60 +491,28 @@ ${text}`;
                     return res.status(500).json({ message: "Could not load your profile." });
                 }
 
-                const athleteInfo = profile
-                    ? `Athlete: ${profile.name}, Age: ${profile.age}, Sport: ${profile.sport}, Goal: ${profile.goal}, Main challenge: ${profile.challenge}.`
-                    : "Athlete profile not available.";
+                const profileSport = profile && profile.sport ? profile.sport : "";
 
-                const prompt = `You are a mental performance coach for young athletes ages 10-18.
-
-${athleteInfo}
-
-The athlete wrote what mentally went wrong today:
-"${problem}"
-
-Give exactly 7 very helpful, specific, actionable responses that will help this athlete avoid the same mental mistake again. Each response should be practical enough to use before or during their next game or practice.
-
-Good examples:
-- Before your next free throw, take 3 slow breaths, pick one cue word like "smooth," and only think about that word.
-- Write your mistake on paper, then write one thing you will do differently next time. Read it once before practice.
-
-Bad examples:
-- Stay positive.
-- Don't worry about it.
-- Believe in yourself.
-
-Return ONLY valid JSON in this exact shape with no extra text:
-{"advice":["response 1","response 2","response 3","response 4","response 5","response 6","response 7"]}`;
-
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+                if (!fixClipSearch.hasSportContext(problem, profileSport)) {
+                    return res.status(400).json({
+                        message: "Please include your sport (for example: Soccer — I missed an easy penalty kick)."
+                    });
+                }
 
                 try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    const video = await fixClipSearch.findClipForProblem(problem, profileSport);
+
+                    if (!video || !video.embedUrl) {
+                        return res.status(404).json({
+                            message: "Could not find a matching clip yet. Try again with your sport and the mistake, like: Basketball — I missed a free throw."
+                        });
+                    }
+
+                    res.json({ video: video });
+                } catch (searchError) {
+                    res.status(500).json({
+                        message: "Could not find a matching clip right now. Please try again."
                     });
-
-                    const data = await response.json();
-                    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                    if (!response.ok || !rawText) {
-                        return res.status(500).json({ message: "Gemini could not generate advice. Check your API key and model name." });
-                    }
-
-                    const cleanedText = rawText.replace(/```json|```/g, "").trim();
-                    const parsed = JSON.parse(cleanedText);
-                    const advice = Array.isArray(parsed.advice) ? parsed.advice.map(function (item) {
-                        return String(item).trim();
-                    }).filter(Boolean) : [];
-
-                    if (advice.length !== 7) {
-                        return res.status(500).json({ message: "Gemini did not return 7 responses. Please try again." });
-                    }
-
-                    res.json({ advice: advice });
-                } catch (parseError) {
-                    res.status(500).json({ message: "Something went wrong while generating your advice." });
                 }
             }
         );

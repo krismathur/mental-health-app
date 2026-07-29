@@ -62,6 +62,7 @@ loginForm.addEventListener("submit", async function (event) {
 
     if (response.ok) {
         sessionStorage.setItem("mindzone_record_login_gem", "1");
+        sessionStorage.setItem("mindzone_after_login", "1");
         await sendUserToNextPage();
     } else {
         showMessage(result.message);

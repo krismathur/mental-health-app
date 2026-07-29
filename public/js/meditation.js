@@ -16,15 +16,18 @@ let meditationSession = {
     active: false,
     program: null,
     segmentIndex: 0,
-    pauseTimeout: null
+    pauseTimeout: null,
+    engine: null,
+    lockedVoice: null
 };
 
 let meditationVoiceCache = null;
 let meditationAudio = null;
-let meditationUseGeminiVoice = true;
 let meditationAudioCache = new Map();
 const MEDITATION_BREATH_PAUSE_MS = 3000;
 const MEDITATION_AUDIO_PLAYBACK_RATE = 1.12;
+const MEDITATION_BROWSER_RATE = 1.1;
+const MEDITATION_BROWSER_PITCH = 0.96;
 
 const PREFERRED_MEDITATION_VOICES = [
     "Samantha",
@@ -57,42 +60,41 @@ const fixOverlayBackdrop = document.getElementById("fixOverlayBackdrop");
 const closeFixBtn = document.getElementById("closeFixBtn");
 const fixSubmitBtn = document.getElementById("fixSubmitBtn");
 const fixWhatWentWrongInput = document.getElementById("fixWhatWentWrongInput");
-const fixResults = document.getElementById("fixResults");
-const fixAdviceList = document.getElementById("fixAdviceList");
-const fixSaveTipsBtn = document.getElementById("fixSaveTipsBtn");
-
-const openSavedTipsBtn = document.getElementById("openSavedTipsBtn");
-const savedTipsOverlay = document.getElementById("savedTipsOverlay");
-const savedTipsBackdrop = document.getElementById("savedTipsBackdrop");
-const closeSavedTipsBtn = document.getElementById("closeSavedTipsBtn");
-const savedTipsList = document.getElementById("savedTipsList");
+const fixVideoFullscreen = document.getElementById("fixVideoFullscreen");
+const fixVideoFrame = document.getElementById("fixVideoFrame");
+const fixVideoReason = document.getElementById("fixVideoReason");
+const closeFixVideoBtn = document.getElementById("closeFixVideoBtn");
 
 function resetFixResults() {
-    fixResults.hidden = true;
-    fixSaveTipsBtn.hidden = true;
-    fixAdviceList.innerHTML = "";
-
-    const title = fixResults.querySelector(".fix-results-title");
-    if (title) {
-        title.remove();
-    }
+    closeFixVideoPlayer();
 }
 
-function ensureFixResultsTitle() {
-    if (fixResults.querySelector(".fix-results-title")) {
+function openFixVideoPlayer(video) {
+    if (!fixVideoFullscreen || !fixVideoFrame || !video || !video.embedUrl) {
         return;
     }
 
-    const title = document.createElement("h3");
-    title.className = "fix-results-title";
-    title.textContent = "What You Should Do ";
+    if (fixVideoReason) {
+        fixVideoReason.textContent = "Watch this moment.";
+    }
 
-    const hint = document.createElement("span");
-    hint.className = "fix-results-hint";
-    hint.textContent = "(choose 1-4 tips by clicking stars)";
-    title.appendChild(hint);
+    // Load with autoplay after a user click (submit) so browsers allow playback.
+    fixVideoFrame.src = video.embedUrl;
+    fixVideoFullscreen.hidden = false;
+    fixVideoFullscreen.classList.remove("fix-video-hidden");
+    document.body.classList.add("fix-video-open");
+    closeOverlay(fixOverlay);
+}
 
-    fixResults.insertBefore(title, fixAdviceList);
+function closeFixVideoPlayer() {
+    if (fixVideoFrame) {
+        fixVideoFrame.src = "";
+    }
+    if (fixVideoFullscreen) {
+        fixVideoFullscreen.hidden = true;
+        fixVideoFullscreen.classList.add("fix-video-hidden");
+    }
+    document.body.classList.remove("fix-video-open");
 }
 
 const openResetBtn = document.getElementById("openResetBtn");
@@ -300,11 +302,68 @@ function stopBreathingSession() {
         clearInterval(breathingIntervalId);
         breathingIntervalId = null;
     }
+    stopBreathingVoice();
+}
+
+function getBreathingCue(phase) {
+    if (!phase) {
+        return "";
+    }
+
+    if (phase.className === "breathe-in") {
+        return "Breathe in";
+    }
+
+    if (phase.className === "breathe-out") {
+        return "Breathe out";
+    }
+
+    if (phase.className === "breathe-hold") {
+        return "Hold";
+    }
+
+    return String(phase.label || "").replace(/\s+/g, " ").trim();
+}
+
+function stopBreathingVoice() {
+    if (!window.speechSynthesis) {
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+}
+
+function speakBreathingCue(text) {
+    if (!window.speechSynthesis || !text) {
+        return;
+    }
+
+    prepareMeditationSpeech();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voice = getMeditationVoice();
+
+    // Calm, steady pacing so the same coach voice stays consistent across exercises.
+    utterance.rate = 0.9;
+    utterance.pitch = 0.94;
+    utterance.volume = 1;
+
+    if (voice) {
+        utterance.voice = voice;
+        if (voice.lang) {
+            utterance.lang = voice.lang;
+        }
+    } else {
+        utterance.lang = "en-US";
+    }
+
+    window.speechSynthesis.speak(utterance);
 }
 
 function runBreathingPhase(phase) {
     breathingPhase.textContent = phase.label;
     breathingCircle.className = "breathing-circle " + phase.className;
+    speakBreathingCue(getBreathingCue(phase));
 }
 
 function startBreathingSession() {
@@ -313,6 +372,7 @@ function startBreathingSession() {
     }
 
     stopBreathingSession();
+    prepareMeditationSpeech();
     startBreathingBtn.disabled = true;
     finishBreathingBtn.hidden = true;
 
@@ -347,6 +407,7 @@ function startBreathingSession() {
             startBreathingBtn.disabled = false;
             startBreathingBtn.textContent = "Start Again";
             finishBreathingBtn.hidden = false;
+            speakBreathingCue("Nice work");
             return;
         }
 
@@ -401,6 +462,11 @@ function scoreMeditationVoice(voice) {
 }
 
 function loadMeditationVoices() {
+    // Keep the same voice for an active Meditation Journey session.
+    if (meditationSession.active && (meditationSession.lockedVoice || meditationVoiceCache)) {
+        return;
+    }
+
     const voices = window.speechSynthesis.getVoices();
     if (!voices.length) {
         return;
@@ -423,6 +489,10 @@ function loadMeditationVoices() {
 }
 
 function getMeditationVoice() {
+    if (meditationSession.lockedVoice) {
+        return meditationSession.lockedVoice;
+    }
+
     if (meditationVoiceCache) {
         return meditationVoiceCache;
     }
@@ -436,7 +506,9 @@ function prepareMeditationSpeech() {
         return;
     }
 
-    loadMeditationVoices();
+    if (!meditationSession.active) {
+        loadMeditationVoices();
+    }
     window.speechSynthesis.cancel();
     window.speechSynthesis.resume();
 }
@@ -524,6 +596,8 @@ function stopMeditationSession() {
     meditationSession.active = false;
     meditationSession.program = null;
     meditationSession.segmentIndex = 0;
+    meditationSession.engine = null;
+    meditationSession.lockedVoice = null;
 
     if (meditationSession.pauseTimeout) {
         clearTimeout(meditationSession.pauseTimeout);
@@ -566,6 +640,19 @@ function handleMeditationSegmentEnd(segment) {
     speakMeditationSegment();
 }
 
+function skipMeditationSegment(message) {
+    if (!meditationSession.active) {
+        return;
+    }
+
+    if (message) {
+        setMeditationVoiceStatus(message);
+    }
+
+    meditationSession.segmentIndex += 1;
+    speakMeditationSegment();
+}
+
 function speakMeditationSegmentWithBrowser(segment) {
     if (!window.speechSynthesis) {
         setMeditationVoiceStatus("Voice playback is not supported in this browser.");
@@ -575,26 +662,38 @@ function speakMeditationSegmentWithBrowser(segment) {
     prepareMeditationSpeech();
 
     const utterance = new SpeechSynthesisUtterance(softenMeditationText(segment.text));
-    const voice = getMeditationVoice();
-    utterance.rate = 1.1;
-    utterance.pitch = 0.96;
+    const voice = meditationSession.lockedVoice || getMeditationVoice();
+    utterance.rate = MEDITATION_BROWSER_RATE;
+    utterance.pitch = MEDITATION_BROWSER_PITCH;
     utterance.volume = 1;
     if (voice) {
         utterance.voice = voice;
+        if (voice.lang) {
+            utterance.lang = voice.lang;
+        }
+    } else {
+        utterance.lang = "en-US";
     }
 
     setMeditationVoiceStatus("");
     setMeditationCircleState("speaking");
 
+    let handled = false;
+
     utterance.onend = function () {
+        if (handled || !meditationSession.active) {
+            return;
+        }
+        handled = true;
         handleMeditationSegmentEnd(segment);
     };
 
     utterance.onerror = function () {
-        if (meditationSession.active) {
-            setMeditationVoiceStatus("Could not play audio. Try again.");
-            setMeditationCircleState("");
+        if (handled || !meditationSession.active) {
+            return;
         }
+        handled = true;
+        skipMeditationSegment("Could not play that line. Continuing...");
     };
 
     window.speechSynthesis.speak(utterance);
@@ -629,6 +728,10 @@ function prefetchNextMeditationSegment() {
         return;
     }
 
+    if (meditationSession.engine !== "gemini") {
+        return;
+    }
+
     const nextSegment = meditationSession.program.segments[meditationSession.segmentIndex + 1];
     if (!nextSegment || meditationAudioCache.has(nextSegment.text)) {
         return;
@@ -637,53 +740,61 @@ function prefetchNextMeditationSegment() {
     fetchMeditationAudio(nextSegment.text).catch(function () {});
 }
 
-async function speakMeditationSegmentWithGemini(segment) {
+async function playGeminiMeditationAudio(segment, data) {
+    if (!meditationSession.active) {
+        return;
+    }
+
+    if (meditationAudio) {
+        meditationAudio.pause();
+        meditationAudio.onended = null;
+        meditationAudio.onerror = null;
+        meditationAudio.src = "";
+        meditationAudio = null;
+    }
+
+    meditationAudio = new Audio("data:" + data.mimeType + ";base64," + data.audioBase64);
+    meditationAudio.playbackRate = MEDITATION_AUDIO_PLAYBACK_RATE;
+
+    meditationAudio.onended = function () {
+        handleMeditationSegmentEnd(segment);
+    };
+
+    meditationAudio.onplaying = function () {
+        prefetchNextMeditationSegment();
+    };
+
+    meditationAudio.onerror = function () {
+        if (!meditationSession.active) {
+            return;
+        }
+        // Stay on Gemini for the whole program — never switch to browser mid-session.
+        skipMeditationSegment("Could not play that line. Continuing...");
+    };
+
+    await meditationAudio.play();
+}
+
+async function speakMeditationSegmentWithGemini(segment, isRetry) {
     setMeditationVoiceStatus("");
     setMeditationCircleState("speaking");
 
     try {
         const data = await fetchMeditationAudio(segment.text);
-
-        if (!meditationSession.active) {
-            return;
-        }
-
-        if (meditationAudio) {
-            meditationAudio.pause();
-            meditationAudio.onended = null;
-            meditationAudio.onerror = null;
-            meditationAudio.src = "";
-            meditationAudio = null;
-        }
-
-        meditationAudio = new Audio("data:" + data.mimeType + ";base64," + data.audioBase64);
-        meditationAudio.playbackRate = MEDITATION_AUDIO_PLAYBACK_RATE;
-
-        meditationAudio.onended = function () {
-            handleMeditationSegmentEnd(segment);
-        };
-
-        meditationAudio.onplaying = function () {
-            prefetchNextMeditationSegment();
-        };
-
-        meditationAudio.onerror = function () {
-            if (!meditationSession.active) {
-                return;
-            }
-
-            meditationUseGeminiVoice = false;
-            speakMeditationSegmentWithBrowser(segment);
-        };
-
-        await meditationAudio.play();
+        await playGeminiMeditationAudio(segment, data);
     } catch (error) {
         if (!meditationSession.active) {
             return;
         }
 
-        meditationUseGeminiVoice = false;
-        speakMeditationSegmentWithBrowser(segment);
+        if (!isRetry) {
+            // Clear a bad cache entry and retry Gemini once — do not fall back to browser.
+            meditationAudioCache.delete(segment.text);
+            await speakMeditationSegmentWithGemini(segment, true);
+            return;
+        }
+
+        skipMeditationSegment("Could not play that line. Continuing...");
     }
 }
 
@@ -698,27 +809,48 @@ function speakMeditationSegment() {
         return;
     }
 
-    if (meditationUseGeminiVoice) {
-        speakMeditationSegmentWithGemini(segment);
+    if (meditationSession.engine === "gemini") {
+        speakMeditationSegmentWithGemini(segment, false);
         return;
     }
 
     speakMeditationSegmentWithBrowser(segment);
 }
 
-function startMeditationProgram(program) {
+async function startMeditationProgram(program) {
     stopMeditationSession();
     prepareMeditationSpeech();
-    meditationUseGeminiVoice = true;
+
+    loadMeditationVoices();
+    meditationSession.lockedVoice = getMeditationVoice();
     meditationSession.active = true;
     meditationSession.program = program;
     meditationSession.segmentIndex = 0;
+    meditationSession.engine = "browser";
     showMeditationActiveView(program);
+    setMeditationVoiceStatus("Preparing your coach voice...");
 
-    if (program.segments[0]) {
-        fetchMeditationAudio(program.segments[0].text).catch(function () {});
+    const firstSegment = program.segments[0];
+    if (firstSegment) {
+        try {
+            await fetchMeditationAudio(firstSegment.text);
+            if (!meditationSession.active || meditationSession.program !== program) {
+                return;
+            }
+            meditationSession.engine = "gemini";
+        } catch (error) {
+            if (!meditationSession.active || meditationSession.program !== program) {
+                return;
+            }
+            meditationSession.engine = "browser";
+        }
     }
 
+    if (!meditationSession.active || meditationSession.program !== program) {
+        return;
+    }
+
+    setMeditationVoiceStatus("");
     speakMeditationSegment();
 }
 
@@ -748,25 +880,6 @@ openFixBtn.addEventListener("click", function () {
     resetFixResults();
     openOverlay(fixOverlay);
 });
-
-if (openSavedTipsBtn) {
-    openSavedTipsBtn.addEventListener("click", function () {
-        renderSavedTips();
-        openOverlay(savedTipsOverlay);
-    });
-}
-
-if (closeSavedTipsBtn) {
-    closeSavedTipsBtn.addEventListener("click", function () {
-        closeOverlay(savedTipsOverlay);
-    });
-}
-
-if (savedTipsBackdrop) {
-    savedTipsBackdrop.addEventListener("click", function () {
-        closeOverlay(savedTipsOverlay);
-    });
-}
 
 openResetBtn.addEventListener("click", function () {
     resetBreathingView();
@@ -882,18 +995,22 @@ fixOverlayBackdrop.addEventListener("click", function () {
     closeOverlay(fixOverlay);
 });
 
+if (closeFixVideoBtn) {
+    closeFixVideoBtn.addEventListener("click", function () {
+        closeFixVideoPlayer();
+        completeMeditationActivity();
+    });
+}
+
 fixSubmitBtn.addEventListener("click", async function () {
     const text = fixWhatWentWrongInput.value.trim();
     if (!text) {
-        alert("Type something that went wrong before you submit.");
+        alert("Type what happened wrong today in sports before you submit.");
         return;
     }
 
     fixSubmitBtn.disabled = true;
-    fixSubmitBtn.textContent = "Getting advice...";
-    fixResults.hidden = true;
-    fixSaveTipsBtn.hidden = true;
-    fixAdviceList.innerHTML = "";
+    fixSubmitBtn.textContent = "Finding a 30s clip...";
 
     try {
         const response = await fetch("/api/fix-advice", {
@@ -905,68 +1022,22 @@ fixSubmitBtn.addEventListener("click", async function () {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || "Could not get advice right now. Try again.");
+            alert(data.message || "Could not find a video right now. Try again.");
             return;
         }
 
-        data.advice.forEach(function (tip) {
-            const item = document.createElement("li");
-            item.className = "fix-advice-item";
+        if (!data.video || !data.video.embedUrl) {
+            alert("Could not load a matching video. Please try again.");
+            return;
+        }
 
-            const starBtn = document.createElement("button");
-            starBtn.type = "button";
-            starBtn.className = "fix-tip-star";
-            starBtn.setAttribute("aria-label", "Select this tip");
-            starBtn.textContent = "☆";
-
-            const tipText = document.createElement("span");
-            tipText.className = "fix-tip-text";
-            tipText.textContent = tip;
-
-            starBtn.addEventListener("click", function () {
-                toggleFixTipStar(starBtn);
-            });
-
-            item.appendChild(starBtn);
-            item.appendChild(tipText);
-            fixAdviceList.appendChild(item);
-        });
-
-        ensureFixResultsTitle();
-        fixResults.hidden = false;
-        fixSaveTipsBtn.hidden = false;
+        openFixVideoPlayer(data.video);
     } catch (error) {
         alert("Something went wrong. Please try again.");
     } finally {
         fixSubmitBtn.disabled = false;
-        fixSubmitBtn.textContent = "Submit";
+        fixSubmitBtn.textContent = "Show Matching Clip";
     }
-});
-
-fixSaveTipsBtn.addEventListener("click", function () {
-    const selectedTips = [];
-
-    fixAdviceList.querySelectorAll(".fix-advice-item").forEach(function (item) {
-        const starBtn = item.querySelector(".fix-tip-star");
-        if (starBtn && starBtn.classList.contains("selected")) {
-            selectedTips.push(item.querySelector(".fix-tip-text").textContent);
-        }
-    });
-
-    if (selectedTips.length < 1) {
-        alert("Choose at least 1 tip by clicking the stars.");
-        return;
-    }
-
-    const savedTips = JSON.parse(localStorage.getItem("savedFixTips") || "[]");
-    savedTips.push({
-        savedAt: new Date().toISOString(),
-        problem: fixWhatWentWrongInput.value.trim(),
-        tips: selectedTips
-    });
-    localStorage.setItem("savedFixTips", JSON.stringify(savedTips));
-    completeMeditationActivity();
-    alert("Your tips were saved!");
 });
 
 closeResetBtn.addEventListener("click", function () {
@@ -1011,23 +1082,6 @@ function syncBodyOverlayState() {
     document.body.classList.toggle("overlay-open", anyOpen);
 }
 
-function getSelectedFixTipCount() {
-    return fixAdviceList.querySelectorAll(".fix-tip-star.selected").length;
-}
-
-function toggleFixTipStar(starBtn) {
-    const isSelected = starBtn.classList.contains("selected");
-
-    if (!isSelected && getSelectedFixTipCount() >= 4) {
-        alert("You can only choose up to 4 tips.");
-        return;
-    }
-
-    starBtn.classList.toggle("selected", !isSelected);
-    starBtn.textContent = isSelected ? "☆" : "⭐";
-    starBtn.setAttribute("aria-label", isSelected ? "Select this tip" : "Unselect this tip");
-}
-
 function completeMeditationActivity() {
     if (typeof window.addRewardProgress === "function") {
         window.addRewardProgress({
@@ -1038,41 +1092,3 @@ function completeMeditationActivity() {
     }
 }
 
-function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function renderSavedTips() {
-    const savedTips = JSON.parse(localStorage.getItem("savedFixTips") || "[]");
-
-    if (savedTips.length === 0) {
-        savedTipsList.innerHTML = `
-            <p class="saved-tips-empty">No saved tips yet. Use Fix What Went Wrong to save tips.</p>
-        `;
-        return;
-    }
-
-    const cards = savedTips.slice().reverse().map(function (entry) {
-        const date = new Date(entry.savedAt).toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
-        });
-
-        const tipsHtml = entry.tips.map(function (tip) {
-            return `<li class="saved-tip-item">${escapeHtml(tip)}</li>`;
-        }).join("");
-
-        return `
-            <article class="saved-tips-card">
-                <p class="saved-tips-date">${date}</p>
-                <p class="saved-tips-problem"><span>What went wrong:</span> ${escapeHtml(entry.problem)}</p>
-                <ul class="saved-tips-items">${tipsHtml}</ul>
-            </article>
-        `;
-    }).join("");
-
-    savedTipsList.innerHTML = cards;
-}

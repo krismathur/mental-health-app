@@ -1379,6 +1379,18 @@ body::after {
     line-height: 1.5;
 }
 
+.fix-sport-note {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(229, 62, 62, 0.18);
+    border: 1px solid rgba(252, 129, 129, 0.55);
+    color: #fed7d7;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
 .fix-input {
     flex: 1;
     width: 100%;
@@ -1748,6 +1760,96 @@ body::after {
     cursor: wait;
 }
 
+.fix-video-fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background:
+        radial-gradient(circle at 20% 15%, rgba(229, 62, 62, 0.28) 0%, transparent 40%),
+        radial-gradient(circle at 80% 85%, rgba(49, 130, 206, 0.25) 0%, transparent 42%),
+        rgba(5, 8, 16, 0.96);
+}
+
+.fix-video-fullscreen.fix-video-hidden,
+.fix-video-fullscreen[hidden] {
+    display: none !important;
+}
+
+body.fix-video-open {
+    overflow: hidden;
+}
+
+.fix-video-shell {
+    width: min(1100px, 100%);
+    height: min(92vh, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fix-video-close {
+    align-self: flex-end;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.fix-video-close:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.fix-video-reason {
+    margin: 0;
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.45;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+}
+
+.fix-video-frame-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #000;
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.fix-video-frame {
+    position: absolute;
+    /* Crop YouTube title bar, bottom logo, and residual chrome */
+    top: -90px;
+    left: -4%;
+    width: 108%;
+    height: calc(100% + 180px);
+    border: 0;
+    display: block;
+    background: #000;
+    pointer-events: none;
+}
+
+.fix-video-shield {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: transparent;
+    cursor: default;
+}
+
 @media (max-width: 640px) {
     .reset-exercise-list {
         grid-template-columns: 1fr;
@@ -1757,5 +1859,13 @@ body::after {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(4, minmax(160px, 1fr));
         height: auto;
+    }
+
+    .fix-video-fullscreen {
+        padding: 12px;
+    }
+
+    .fix-video-reason {
+        font-size: 0.92rem;
     }
 }

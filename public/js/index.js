@@ -30,3 +30,18 @@ async function checkLoginStatus() {
 }
 
 checkLoginStatus();
+
+(function () {
+    const scrollCue = document.querySelector(".scroll-cue");
+    if (!scrollCue) {
+        return;
+    }
+
+    function updateScrollCue() {
+        const scrolled = window.scrollY > 80;
+        scrollCue.classList.toggle("is-hidden", scrolled);
+    }
+
+    window.addEventListener("scroll", updateScrollCue, { passive: true });
+    updateScrollCue();
+})();

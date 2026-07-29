@@ -1,14 +1,12 @@
 :root {
-    --site-nav-top: 10px;
-    --site-nav-height: 46px;
-    --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 10px);
-    --nav-btn-height: 32px;
-    --nav-glass: rgba(255, 255, 255, 0.16);
-    --nav-glass-strong: rgba(255, 255, 255, 0.28);
-    --nav-border: rgba(255, 255, 255, 0.38);
+    --site-nav-top: 6px;
+    --site-nav-height: 30px;
+    --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 8px);
+    --nav-btn-height: 24px;
     --nav-text: #f8fbff;
     --nav-accent: #63b3ed;
     --nav-accent-deep: #2b6cb0;
+    --page-brand-glow: rgba(99, 179, 237, 0.45);
 }
 
 body.has-site-nav {
@@ -20,28 +18,28 @@ nav.site-nav {
     top: var(--site-nav-top);
     left: 50%;
     transform: translateX(-50%);
-    width: min(1120px, calc(100% - 32px));
+    width: min(920px, calc(100% - 140px));
     min-height: var(--site-nav-height);
+    height: var(--site-nav-height);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 4px 10px 4px 16px;
+    justify-content: center;
+    gap: 0;
+    padding: 0 28px;
     background:
         linear-gradient(
             135deg,
-            rgba(255, 255, 255, 0.22) 0%,
-            rgba(255, 255, 255, 0.08) 45%,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0.07) 48%,
             rgba(255, 255, 255, 0.14) 100%
         );
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
-    border: 1px solid var(--nav-border);
+    backdrop-filter: blur(18px) saturate(175%);
+    -webkit-backdrop-filter: blur(18px) saturate(175%);
+    border: none;
     border-radius: 999px;
     box-shadow:
-        0 12px 40px rgba(8, 20, 40, 0.22),
-        0 2px 0 rgba(255, 255, 255, 0.45) inset,
-        0 -1px 0 rgba(255, 255, 255, 0.12) inset;
+        0 4px 16px rgba(8, 20, 40, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
     z-index: 1000;
     transition:
         opacity 0.28s ease,
@@ -77,55 +75,66 @@ body.avatar-page nav.site-nav {
     transform: translateX(-50%) translateY(-16px);
 }
 
-nav.site-nav::before {
-    content: "";
-    position: absolute;
-    inset: 1px;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.18) 0%,
-        rgba(255, 255, 255, 0) 42%
-    );
-}
-
-.site-nav .nav-logo {
-    position: relative;
-    z-index: 1;
-    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    font-size: 1.08rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    text-decoration: none;
-    white-space: nowrap;
-    flex-shrink: 0;
-    color: #fff;
-    text-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.35),
-        0 0 18px rgba(99, 179, 237, 0.35);
-    transition: transform 0.2s ease, text-shadow 0.2s ease;
-}
-
-.site-nav .nav-logo:hover {
-    transform: translateY(-1px);
-    text-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.35),
-        0 0 24px rgba(99, 179, 237, 0.55);
-}
-
 .site-nav .nav-links {
     position: relative;
     z-index: 1;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 6px;
-    padding: 2px;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.08);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    width: 100%;
+    gap: 4px;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.page-brand {
+    position: fixed;
+    top: 10px;
+    left: 16px;
+    z-index: 1001;
+    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    color: #fff;
+    background: linear-gradient(180deg, #ffffff 20%, #c6e3f8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 12px var(--page-brand-glow));
+    transition:
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+.page-brand:hover {
+    transform: translateY(-1px);
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgba(99, 179, 237, 0.65));
+}
+
+body.overlay-open .page-brand,
+body.avatar-page .page-brand {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+body.admin-page .page-brand {
+    background: none;
+    -webkit-text-fill-color: #2b6cb0;
+    color: #2b6cb0;
+    filter: none;
+}
+
+body.admin-page .page-brand:hover {
+    filter: none;
+    opacity: 0.85;
 }
 
 .site-nav .nav-btn {
@@ -137,34 +146,24 @@ nav.site-nav::before {
     min-height: var(--nav-btn-height);
     max-height: var(--nav-btn-height);
     min-width: 0;
-    padding: 0 12px;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    border-radius: 999px;
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.24) 0%,
-            rgba(255, 255, 255, 0.08) 100%
-        );
+    flex: 1 1 auto;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    border-radius: 0;
+    background: transparent;
     color: var(--nav-text);
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 800;
     line-height: 1;
-    letter-spacing: 0;
+    letter-spacing: 0.01em;
     text-decoration: none;
     cursor: pointer;
     white-space: nowrap;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-    box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: none;
+    transition: opacity 0.2s ease, color 0.2s ease;
 }
 
 .site-nav a.nav-btn,
@@ -172,9 +171,13 @@ nav.site-nav::before {
     height: var(--nav-btn-height);
     min-height: var(--nav-btn-height);
     max-height: var(--nav-btn-height);
-    padding: 0 12px;
-    font-size: 0.78rem;
+    padding: 0 10px;
+    font-size: 0.72rem;
     line-height: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    box-shadow: none;
 }
 
 .site-nav button.nav-btn {
@@ -183,76 +186,52 @@ nav.site-nav::before {
 }
 
 .site-nav .nav-btn:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.5);
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.34) 0%,
-            rgba(255, 255, 255, 0.14) 100%
-        );
-    box-shadow:
-        0 8px 22px rgba(43, 108, 176, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    opacity: 0.8;
+    transform: none;
+    border: none;
+    background: transparent;
+    box-shadow: none;
 }
 
 .site-nav .nav-btn:active {
-    transform: translateY(0);
+    opacity: 0.7;
+}
+
+.site-nav .nav-btn:focus,
+.site-nav .nav-btn:focus-visible {
+    outline: none;
+    box-shadow: none;
 }
 
 .site-nav .nav-btn-fill,
 .site-nav .nav-btn.btn-fill,
 .site-nav .nav-links .btn-fill {
-    border-color: rgba(255, 255, 255, 0.42);
-    background:
-        linear-gradient(
-            135deg,
-            rgba(49, 130, 206, 0.92) 0%,
-            rgba(66, 153, 225, 0.78) 55%,
-            rgba(99, 179, 237, 0.72) 100%
-        );
-    color: #fff;
+    border: none;
+    background: transparent;
+    color: var(--nav-accent);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    box-shadow:
-        0 6px 20px rgba(43, 108, 176, 0.42),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
-        inset 0 -1px 0 rgba(26, 79, 138, 0.25);
+    box-shadow: none;
 }
 
 .site-nav .nav-btn-fill:hover,
 .site-nav .nav-btn.btn-fill:hover,
 .site-nav .nav-links .btn-fill:hover {
-    border-color: rgba(255, 255, 255, 0.55);
-    background:
-        linear-gradient(
-            135deg,
-            rgba(37, 99, 168, 0.96) 0%,
-            rgba(49, 130, 206, 0.88) 55%,
-            rgba(99, 179, 237, 0.82) 100%
-        );
-    box-shadow:
-        0 10px 28px rgba(43, 108, 176, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border: none;
+    background: transparent;
+    color: #90cdf4;
+    box-shadow: none;
+    opacity: 1;
 }
 
 .site-nav .nav-btn.active {
-    border-color: rgba(255, 255, 255, 0.48);
-    background:
-        linear-gradient(
-            135deg,
-            rgba(43, 108, 176, 0.88) 0%,
-            rgba(66, 153, 225, 0.72) 100%
-        );
-    color: #fff;
-    box-shadow:
-        0 6px 18px rgba(43, 108, 176, 0.38),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border: none;
+    background: transparent;
+    color: var(--nav-accent);
+    box-shadow: none;
 }
 
 .site-nav .nav-btn.active:hover {
-    box-shadow:
-        0 8px 24px rgba(43, 108, 176, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    box-shadow: none;
 }
 
 /* Light pages (admin) — darker text, slightly stronger glass */
@@ -267,14 +246,7 @@ body.admin-page nav.site-nav {
             rgba(255, 255, 255, 0.55) 0%,
             rgba(255, 255, 255, 0.28) 100%
         );
-    box-shadow:
-        0 12px 40px rgba(8, 20, 40, 0.1),
-        0 2px 0 rgba(255, 255, 255, 0.75) inset;
-}
-
-body.admin-page .site-nav .nav-logo {
-    color: #2b6cb0;
-    text-shadow: none;
+    box-shadow: 0 6px 20px rgba(8, 20, 40, 0.08);
 }
 
 body.admin-page .site-nav .nav-btn {
@@ -282,33 +254,38 @@ body.admin-page .site-nav .nav-btn {
     color: #1a365d;
 }
 
+body.admin-page .site-nav .nav-btn-fill {
+    color: #2b6cb0;
+}
+
 @media (max-width: 760px) {
     :root {
-        --site-nav-height: 44px;
-        --nav-btn-height: 30px;
-        --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 8px);
+        --site-nav-height: 28px;
+        --nav-btn-height: 22px;
+        --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 6px);
     }
 
     nav.site-nav {
-        width: calc(100% - 18px);
-        padding: 5px 8px 5px 14px;
-        gap: 10px;
+        width: min(100%, calc(100% - 110px));
+        padding: 0 12px;
+        left: calc(50% + 18px);
     }
 
-    .site-nav .nav-logo {
-        font-size: 1rem;
+    .page-brand {
+        left: 10px;
+        top: 8px;
+        font-size: 1.1rem;
     }
 
     .site-nav .nav-links {
-        gap: 5px;
-        padding: 2px;
+        gap: 0;
     }
 
     .site-nav .nav-btn,
     .site-nav a.nav-btn,
     .site-nav button.nav-btn {
-        padding: 0 10px;
-        font-size: 0.72rem;
+        padding: 0 6px;
+        font-size: 0.64rem;
         height: var(--nav-btn-height);
         min-height: var(--nav-btn-height);
         max-height: var(--nav-btn-height);

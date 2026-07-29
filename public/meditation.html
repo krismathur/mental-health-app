@@ -12,12 +12,13 @@
     </head>
     <body class="has-site-nav">
 
+        <a class="page-brand" href="index.html">MindZone</a>
+
         <nav class="site-nav">
-            <a class="nav-logo" href="index.html">🧠 MindZone</a>
             <div class="nav-links">
-                <button type="button" id="openSavedTipsBtn" class="nav-btn saved-tips-btn">Saved Tips</button>
-                <a class="nav-btn video-library-btn" href="#">🎬 Videos</a>
-                <a class="nav-btn rewards-btn" href="#">⭐ Rewards</a>
+                <a class="nav-btn" href="index.html">Home</a>
+                <a class="nav-btn video-library-btn" href="#">Videos</a>
+                <a class="nav-btn rewards-btn" href="#">Rewards</a>
             </div>
         </nav>
 
@@ -290,20 +291,36 @@
 
                 <div class="fix-feature-area">
                     <label for="fixWhatWentWrongInput" class="fix-prompt">
-                        Type here something that mentally went wrong today — it can be anything.
+                        What happened wrong today in sports.
                     </label>
+                    <p class="fix-sport-note">
+                        Important: say your sport and the exact mistake. We will play a short clip (30 seconds max) of a pro athlete doing that same thing.
+                    </p>
                     <textarea
                         id="fixWhatWentWrongInput"
                         class="fix-input"
                         rows="8"
-                        placeholder="Example: I got nervous before my free throw and kept thinking don't miss..."
+                        placeholder="Example: Soccer — I missed an easy penalty kick"
                     ></textarea>
-                    <button type="button" id="fixSubmitBtn" class="fix-submit-btn">Submit</button>
+                    <button type="button" id="fixSubmitBtn" class="fix-submit-btn">Show Matching Clip</button>
+                </div>
+            </div>
+        </div>
 
-                    <div id="fixResults" class="fix-results" hidden>
-                        <ol id="fixAdviceList" class="fix-advice-list"></ol>
-                        <button type="button" id="fixSaveTipsBtn" class="fix-save-tips-btn" hidden>Keep and Save Tips</button>
-                    </div>
+        <!-- Fullscreen pro athlete video after Fix submit -->
+        <div id="fixVideoFullscreen" class="fix-video-fullscreen fix-video-hidden" hidden>
+            <div class="fix-video-shell">
+                <button type="button" id="closeFixVideoBtn" class="fix-video-close" aria-label="Close video">&times;</button>
+                <p id="fixVideoReason" class="fix-video-reason">Watch this moment.</p>
+                <div class="fix-video-frame-wrap">
+                    <iframe
+                        id="fixVideoFrame"
+                        class="fix-video-frame"
+                        title="Sports moment"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                    ></iframe>
+                    <div class="fix-video-shield" aria-hidden="true"></div>
                 </div>
             </div>
         </div>
@@ -315,7 +332,7 @@
                 <div class="med-header reset-header">
                     <div class="reset-title-wrap">
                         <h2>Reset Mind</h2>
-                        <p class="reset-subtitle">Click a breathing exercise to calm yourself</p>
+                        <p class="reset-subtitle">A calm voice guides each breath with the visual</p>
                     </div>
                     <button type="button" id="closeResetBtn" class="close-btn reset-close-btn">&times;</button>
                 </div>
@@ -341,19 +358,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Saved Tips overlay -->
-        <div id="savedTipsOverlay" class="overlay overlay-hidden">
-            <div class="overlay-backdrop" id="savedTipsBackdrop"></div>
-            <div class="med-panel saved-tips-panel">
-                <div class="med-header saved-tips-header">
-                    <h2>Saved Tips</h2>
-                    <button type="button" id="closeSavedTipsBtn" class="close-btn saved-tips-close-btn">&times;</button>
-                </div>
-
-                <div id="savedTipsList" class="saved-tips-list"></div>
             </div>
         </div>
 

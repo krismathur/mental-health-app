@@ -8,8 +8,16 @@ const GEMSTONE_STORAGE_KEY = "mindzone_login_gemstones";
 const GEMSTONE_DISPLAY_COUNT = 10;
 let activeRewardType = "";
 
-function getTodayDateString() {
-    return new Date().toISOString().slice(0, 10);
+function getAppToday() {
+    if (window.AppTime && typeof window.AppTime.getToday === "function") {
+        return window.AppTime.getToday();
+    }
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return year + "-" + month + "-" + day;
 }
 
 function getGemstoneData() {
@@ -36,7 +44,7 @@ function saveGemstoneData(data) {
 
 function awardLoginGemstone() {
     const data = getGemstoneData();
-    const today = getTodayDateString();
+    const today = getAppToday();
 
     if (data.loginDates.includes(today)) {
         return false;
@@ -141,11 +149,21 @@ function resetAllUserProgress() {
 
 function openRewards(event) {
     event.preventDefault();
-    rewardsOverlay.classList.remove("rewards-hidden");
+
+    if (rewardsOverlay) {
+        rewardsOverlay.classList.remove("rewards-hidden");
+        return;
+    }
+
+    if (typeof window.scrollToDashboardSection === "function") {
+        window.scrollToDashboardSection("rewardsSection");
+    }
 }
 
 function closeRewards() {
-    rewardsOverlay.classList.add("rewards-hidden");
+    if (rewardsOverlay) {
+        rewardsOverlay.classList.add("rewards-hidden");
+    }
 }
 
 for (const button of rewardsButtons) {
@@ -158,8 +176,10 @@ for (const card of rewardCards) {
     });
 }
 
-closeRewardsBtn.addEventListener("click", closeRewards);
-rewardsBackdrop.addEventListener("click", closeRewards);
+if (closeRewardsBtn && rewardsBackdrop) {
+    closeRewardsBtn.addEventListener("click", closeRewards);
+    rewardsBackdrop.addEventListener("click", closeRewards);
+}
 
 function showRewardDetails(type) {
     rewardDetails.hidden = false;

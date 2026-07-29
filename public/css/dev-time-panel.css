@@ -1,0 +1,88 @@
+.dev-time-panel {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 950;
+    width: min(260px, calc(100vw - 32px));
+    padding: 14px 16px 16px;
+    border-radius: 16px;
+    background: rgba(15, 43, 74, 0.94);
+    border: 2px solid rgba(99, 179, 237, 0.45);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+    color: #f8fbff;
+    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+}
+
+.dev-time-kicker {
+    margin: 0 0 6px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #63b3ed;
+}
+
+.dev-time-date {
+    margin: 0 0 4px;
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1.3;
+}
+
+.dev-time-offset {
+    margin: 0 0 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #bee3f8;
+    line-height: 1.4;
+}
+
+.dev-time-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dev-time-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+    color: white;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dev-time-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.35);
+}
+
+.dev-time-btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.dev-time-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: none;
+}
+
+@media (max-width: 700px) {
+    .dev-time-panel {
+        bottom: 16px;
+        left: 16px;
+        width: min(220px, calc(100vw - 24px));
+        padding: 12px 14px 14px;
+    }
+
+    .dev-time-btn {
+        padding: 9px 10px;
+        font-size: 0.82rem;
+    }
+}

@@ -5,16 +5,31 @@ const closeVideoLibraryBtn = document.getElementById("closeVideoLibraryBtn");
 
 function openVideoLibrary(event) {
     event.preventDefault();
-    videoLibraryOverlay.classList.remove("video-hidden");
+
+    if (videoLibraryOverlay) {
+        videoLibraryOverlay.classList.remove("video-hidden");
+        return;
+    }
+
+    if (typeof window.scrollToDashboardSection === "function") {
+        window.scrollToDashboardSection("videoLibrarySection");
+    }
 }
 
 function closeVideoLibrary() {
-    videoLibraryOverlay.classList.add("video-hidden");
+    if (videoLibraryOverlay) {
+        videoLibraryOverlay.classList.add("video-hidden");
+    }
 }
 
 for (const button of videoLibraryButtons) {
     button.addEventListener("click", openVideoLibrary);
 }
 
-closeVideoLibraryBtn.addEventListener("click", closeVideoLibrary);
-videoLibraryBackdrop.addEventListener("click", closeVideoLibrary);
+if (closeVideoLibraryBtn) {
+    closeVideoLibraryBtn.addEventListener("click", closeVideoLibrary);
+}
+
+if (videoLibraryBackdrop) {
+    videoLibraryBackdrop.addEventListener("click", closeVideoLibrary);
+}
