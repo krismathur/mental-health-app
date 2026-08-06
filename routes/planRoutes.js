@@ -297,7 +297,8 @@ Return ONLY valid JSON in this exact shape (no markdown, no extra text):
       ],
       "whatToDo": [
         "Write 8 to 12 full sentences. Each sentence is one clear step with timing or reps when helpful.",
-        "Example: Sit somewhere quiet and take 5 slow breaths in through your nose and out through your mouth."
+        "Must include one step for Visualisation for Athletes, one for Reset Mind, one for Fix What Went Wrong, and one for Your Mental Choices.",
+        "Example: Open Visualisation for Athletes and complete today's guided session about staying calm under pressure."
       ],
       "sportTryIt": [
         "Write 3 to 5 full sentences showing how to use today's skill in ${sport} at practice or in a game."
@@ -305,7 +306,7 @@ Return ONLY valid JSON in this exact shape (no markdown, no extra text):
       "thinkAboutIt": [
         "Write 2 to 4 full sentences with simple reflection questions or journal prompts."
       ],
-      "youAreDoneWhen": "Write 2 or 3 full sentences that clearly say how they know they finished today."
+      "youAreDoneWhen": "Write 2 or 3 full sentences that say they finished when they used all four MindZone tools and completed today's steps."
     }
   ]
 }
@@ -314,6 +315,11 @@ Writing rules (very important):
 - Include exactly ${days} day objects (day 1 through day ${days}).
 - Every string must be a complete sentence with a subject and verb. Never write fragments like "Breathe more" or "Stay focused."
 - daySummary must have exactly 3 or 4 full sentences for each day.
+- Every day MUST include these 4 MindZone features in whatToDo (tie each one to today's theme):
+  1) Visualisation for Athletes — open Activities and finish a guided visualisation session
+  2) Reset Mind — do a breathing exercise to calm down
+  3) Fix What Went Wrong — describe a sports mistake and watch the matching clip
+  4) Your Mental Choices — practice good vs bad mental choices with their athlete avatar
 - Use words a ${age}-year-old can easily understand.
 - Be very detailed and specific, but still sound friendly and encouraging.
 - Tie each day to their challenge: "${challenge}" and their goal: "${goal}".

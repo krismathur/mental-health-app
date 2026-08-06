@@ -1270,7 +1270,7 @@ async function loadCurrentPlan(profileLoaded) {
         } else if (data.status === "rejected") {
             showPlanMessage(data.message, "rejected");
         } else {
-            showPlanMessage("Hit the button below and we'll build your daily mental training plan.", "none");
+            showPlanMessage("Visualization, Understanding your mistakes, Resetting your mind, and Good mental choices are the four steps to great mental strength.", "none");
         }
     } catch (error) {
         showPlanMessage("Could not load your plan right now.", "none");
@@ -1645,6 +1645,69 @@ function appendPlanParagraphs(card, title, items) {
     card.appendChild(section);
 }
 
+function appendMindZoneFeatures(card, dayEntry) {
+    const titleTheme = String(dayEntry && dayEntry.title ? dayEntry.title : "today's focus").trim();
+    const features = [
+        {
+            name: "Visualization",
+            detail: "Complete a guided session connected to " + titleTheme + ".",
+            href: "meditation.html?open=visualization",
+            tone: "viz"
+        },
+        {
+            name: "Understanding your mistakes",
+            detail: "Write one sports mistake from practice or a game and watch the matching clip.",
+            href: "meditation.html?open=fix",
+            tone: "fix"
+        },
+        {
+            name: "Resetting your mind",
+            detail: "Do one breathing exercise to calm your body and clear your head.",
+            href: "meditation.html?open=reset",
+            tone: "reset"
+        },
+        {
+            name: "Good mental choices",
+            detail: "Practice the good mental choice with your athlete avatar.",
+            href: "meditation.html?open=choices",
+            tone: "choices"
+        }
+    ];
+
+    const section = document.createElement("div");
+    section.className = "plan-section plan-features-section";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "Today's 4 Features";
+    section.appendChild(heading);
+
+    const intro = document.createElement("p");
+    intro.className = "plan-sentence plan-features-intro";
+    intro.textContent = "Click each feature below to open it and train your mind.";
+    section.appendChild(intro);
+
+    const list = document.createElement("div");
+    list.className = "plan-features-list";
+
+    features.forEach(function (feature) {
+        const item = document.createElement("a");
+        item.className = "plan-feature-item plan-feature-" + feature.tone;
+        item.href = feature.href;
+        item.setAttribute("aria-label", "Open " + feature.name);
+        item.innerHTML =
+            "<span class=\"plan-feature-copy\">" +
+                "<strong>" + escapeHtml(feature.name) + "</strong>" +
+                "<span>" + escapeHtml(feature.detail) + "</span>" +
+                "<em class=\"plan-feature-cta\">Click to open →</em>" +
+            "</span>" +
+            "<span class=\"plan-feature-arrow\" aria-hidden=\"true\">→</span>";
+        list.appendChild(item);
+    });
+
+    section.appendChild(list);
+    card.appendChild(section);
+}
+
 function createWaitingCard(completedDay, nextDay) {
     const card = document.createElement("section");
     card.className = "plan-waiting-card";
@@ -1679,37 +1742,7 @@ function createDailyPlanCard(dayEntry, progress) {
     `;
     card.appendChild(header);
 
-    if (dayEntry.daySummary && dayEntry.daySummary.length) {
-        const summaryLines = Array.isArray(dayEntry.daySummary)
-            ? dayEntry.daySummary
-            : [String(dayEntry.daySummary)];
-        const summarySection = document.createElement("div");
-        summarySection.className = "plan-section plan-summary-section";
-        summaryLines.slice(0, 2).forEach(function (sentence) {
-            const paragraph = document.createElement("p");
-            paragraph.className = "plan-sentence plan-summary-sentence";
-            paragraph.textContent = formatPlanStepText(sentence);
-            summarySection.appendChild(paragraph);
-        });
-        card.appendChild(summarySection);
-    }
-
-    const allSteps = []
-        .concat(dayEntry.whatToDo || [])
-        .concat(dayEntry.sportTryIt || [])
-        .concat(dayEntry.thinkAboutIt || []);
-
-    appendPlanParagraphs(card, "Today's Steps", allSteps);
-    appendPlanVideoHint(card, dayEntry);
-
-    if (dayEntry.youAreDoneWhen) {
-        const doneLine = document.createElement("p");
-        doneLine.className = "plan-done-line";
-        doneLine.textContent = Array.isArray(dayEntry.youAreDoneWhen)
-            ? dayEntry.youAreDoneWhen.join(" ")
-            : String(dayEntry.youAreDoneWhen);
-        card.appendChild(doneLine);
-    }
+    appendMindZoneFeatures(card, dayEntry);
 
     const completeWrap = document.createElement("label");
     completeWrap.className = "daily-complete-row";

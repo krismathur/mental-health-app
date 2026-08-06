@@ -99,8 +99,10 @@ const ACTION_GROUPS = [
 
 const SPORT_ALIASES = [
     { key: "basketball", patterns: ["basketball", "bball", "hoops", "hoop"] },
-    { key: "soccer", patterns: ["soccer", "futbol", "football club", "fifa", "premier league"] },
-    { key: "football", patterns: ["american football", "nfl", "qb", "quarterback", "touchdown", "gridiron"] },
+    // Soccer first so phrases like "football club" / "fifa" stay soccer.
+    { key: "soccer", patterns: ["soccer", "futbol", "football club", "fifa", "premier league", "la liga", "mls"] },
+    // Plain "football" means American football.
+    { key: "football", patterns: ["american football", "football", "nfl", "qb", "quarterback", "touchdown", "gridiron", "field goal", "fumble"] },
     { key: "baseball", patterns: ["baseball", "mlb", "softball"] },
     { key: "tennis", patterns: ["tennis"] },
     { key: "swimming", patterns: ["swim", "swimming"] },
@@ -131,10 +133,6 @@ function normalizeSport(raw) {
                 return entry.key;
             }
         }
-    }
-
-    if (/\bfootball\b/.test(text) && !/american|nfl|qb|touchdown|gridiron/.test(text)) {
-        return "soccer";
     }
 
     return "";
@@ -247,7 +245,7 @@ function titleMatchesAction(title, meta) {
 
 function softTitleOk(title) {
     const lower = String(title || "").toLowerCase();
-    return !/tutorial|how to|form breakdown|workout|drill|podcast|full game highlights|extended highlights/.test(lower);
+    return !/tutorial|how to|form breakdown|workout|drill|podcast|full game highlights|extended highlights|reaction|reacts|narrat|voice over|explained|breaks down/.test(lower);
 }
 
 function parseClockToSeconds(label) {
@@ -283,9 +281,31 @@ function parseClockToSeconds(label) {
     return 9999;
 }
 
+function sportSearchLabel(sport) {
+    const key = String(sport || "").toLowerCase().trim();
+    if (key === "football") {
+        return "NFL american football";
+    }
+    if (key === "basketball") {
+        return "NBA basketball";
+    }
+    if (key === "baseball") {
+        return "MLB baseball";
+    }
+    if (key === "soccer") {
+        return "Premier League soccer";
+    }
+    if (key === "tennis") {
+        return "ATP Wimbledon tennis";
+    }
+    return key || "sports";
+}
+
 function buildFallbackSearchQuery(problem, sport, actionGroup) {
+    const sportLabel = sportSearchLabel(sport);
+
     if (actionGroup) {
-        return sport + " " + actionGroup.searchTerms[0];
+        return sportLabel + " " + actionGroup.searchTerms[0] + " pro game no commentary";
     }
 
     const cleaned = String(problem || "")
@@ -293,7 +313,7 @@ function buildFallbackSearchQuery(problem, sport, actionGroup) {
         .replace(/\s+/g, " ")
         .trim();
 
-    return (sport + " " + cleaned + " professional athlete highlight clip").trim();
+    return (sportLabel + " " + cleaned + " pro athlete real game clip no commentary").trim();
 }
 
 async function buildSearchMeta(problem, profileSport) {
@@ -305,7 +325,7 @@ async function buildSearchMeta(problem, profileSport) {
         return {
             searchQuery: buildFallbackSearchQuery(problem, sport, actionGroup),
             altQueries: actionGroup ? actionGroup.searchTerms.map(function (term) {
-                return sport + " " + term;
+                return sportSearchLabel(sport) + " " + term;
             }) : [],
             sport: sport,
             action: problem,
@@ -322,15 +342,21 @@ Athlete wrote: "${problem}"
 Sport: "${profileSport || sport}"
 Detected action type: "${actionGroup ? actionGroup.id : "unknown"}"
 
+Important sport meanings:
+- "football" means American football / NFL (NOT soccer).
+- Use "soccer" only when they mean soccer/futbol.
+
 Rules:
 1. The search MUST keep the exact action (if they said penalty, search penalty; if free throw, search free throw).
-2. Prefer famous pros in that sport.
+2. Prefer famous pros in that sport in REAL professional games (NBA, NFL, MLB, Premier League, etc.).
 3. Add: clip OR highlight OR miss.
-4. Prefer silent in-game footage with NO narrator, NO commentary, NO reaction channels.
+4. Prefer RAW in-game broadcast footage with stadium sound only — NO narrator, NO commentary, NO reaction channels, NO talking.
 5. Never search tutorials, drills, workouts, form breakdowns, compilations, or full matches.
+6. If sport is football/American football, search NFL clips (Mahomes, Brady, etc.), never soccer.
+7. Prefer short clips under 45 seconds from real pro games.
 
 Return ONLY JSON:
-{"searchQuery":"Messi missed penalty kick clip no commentary","altQueries":["Ronaldo missed penalty silent clip","soccer missed penalty highlight"],"sport":"soccer","action":"missed an easy penalty kick","athleteHint":"Lionel Messi","mustHaveInTitle":["penalty","miss"]}`;
+{"searchQuery":"NFL fumble real game clip no commentary","altQueries":["Patrick Mahomes fumble NFL broadcast","american football turnover pro game clip"],"sport":"football","action":"fumbled the ball","athleteHint":"Patrick Mahomes","mustHaveInTitle":["fumble","turnover"]}`;
 
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
@@ -353,7 +379,7 @@ Return ONLY JSON:
         return {
             searchQuery: String(parsed.searchQuery || "").trim() || buildFallbackSearchQuery(problem, sport, actionGroup),
             altQueries: altQueries,
-            sport: String(parsed.sport || sport).trim(),
+            sport: sport,
             action: String(parsed.action || problem).trim(),
             athleteHint: String(parsed.athleteHint || "").trim(),
             mustHaveInTitle: Array.isArray(parsed.mustHaveInTitle)
@@ -367,7 +393,7 @@ Return ONLY JSON:
         return {
             searchQuery: buildFallbackSearchQuery(problem, sport, actionGroup),
             altQueries: actionGroup ? actionGroup.searchTerms.map(function (term) {
-                return sport + " " + term;
+                return sportSearchLabel(sport) + " " + term;
             }) : [],
             sport: sport,
             action: problem,
@@ -496,6 +522,14 @@ function scoreCandidate(item, meta) {
         score += 8;
     }
 
+    if (sport === "football" && /(nfl|touchdown|quarterback|fumble|field goal)/.test(title)) {
+        score += 10;
+    }
+
+    if (sport === "soccer" && /(soccer|fifa|premier league|goalkeeper|penalty)/.test(title)) {
+        score += 8;
+    }
+
     const keywords = meta.actionKeywords || extractActionKeywords(problem + " " + action);
     let keywordHits = 0;
     keywords.forEach(function (word) {
@@ -509,12 +543,17 @@ function scoreCandidate(item, meta) {
         score -= 6;
     }
 
-    if (/tutorial|how to|form breakdown|full game|extended|analysis|workout|drill|compilation|all \d+|narrat|commentary|reaction|explained|breaks down|voice over|podcast/.test(title)) {
-        score -= 35;
+    if (/tutorial|how to|form breakdown|full game|extended|analysis|workout|drill|compilation|all \d+|narrat|commentary|reaction|explained|breaks down|voice over|podcast|reacts|tiktok|shorts funny/.test(title)) {
+        score -= 45;
     }
 
-    if (/no commentary|silent|raw footage|in[- ]game only|no voice|no talking/.test(title)) {
-        score += 20;
+    if (/no commentary|silent|raw footage|in[- ]game|broadcast|stadium sound|no voice|no talking| pro game|nba|nfl|mlb|premier league/.test(title)) {
+        score += 28;
+    }
+
+    // Prefer real pro-league / famous athlete game clips
+    if (/\b(nba|nfl|mlb|nhl|fifa|uefa|premier league|world cup|playoffs|finals|super bowl|world series)\b/.test(title)) {
+        score += 16;
     }
 
     if (meta.athleteHint) {
@@ -592,7 +631,8 @@ ${top.map(function (entry, index) {
 
 Rules:
 - Choose the clip whose TITLE clearly shows the SAME action (penalty miss vs free throw miss are different).
-- Prefer silent in-game footage with NO narrator, NO commentary, NO reaction channels, NO talking heads.
+- Prefer REAL professional game footage of famous athletes (NBA/NFL/MLB/Premier League quality).
+- Prefer clips with NO narrator, NO commentary, NO reaction channels, NO talking heads — stadium/game sound only.
 - Reject tutorials/compilations/narrated/explained videos.
 - startSecond = the exact second the sports ACTION begins (skip intros, logos, talking).
 - We play ONLY startSecond through startSecond+30, then stop. Do not include lead-in talking.
@@ -656,7 +696,7 @@ function buildEmbedUrl(youtubeId, start, end) {
         "start=" + start,
         "end=" + end
     ];
-    // nocookie + no controls reduces YouTube chrome; CSS crop hides residual logo/title.
+    // Autoplay with sound after user click; no controls / captions / keyboard.
     return "https://www.youtube-nocookie.com/embed/" + youtubeId + "?" + params.join("&");
 }
 
@@ -675,16 +715,17 @@ function uniqueById(list) {
 
 async function findClipForProblem(problem, profileSport) {
     const meta = await buildSearchMeta(problem, profileSport);
+    const sportLabel = sportSearchLabel(meta.sport);
     const actionWords = (meta.actionKeywords || []).slice(0, 6).join(" ");
     const queries = [meta.searchQuery]
         .concat(meta.altQueries || [])
         .concat([
-            meta.sport + " " + meta.action + " clip",
-            meta.sport + " " + meta.action + " highlight",
-            meta.actionGroup ? (meta.sport + " " + meta.actionGroup.searchTerms[0]) : "",
-            meta.actionGroup ? (meta.sport + " " + meta.actionGroup.searchTerms[0] + " no commentary") : "",
-            (meta.sport + " " + actionWords + " miss clip").trim(),
-            (meta.sport + " " + actionWords + " highlight clip").trim()
+            sportLabel + " " + meta.action + " real game clip no commentary",
+            sportLabel + " " + meta.action + " broadcast highlight",
+            meta.actionGroup ? (sportLabel + " " + meta.actionGroup.searchTerms[0] + " pro game") : "",
+            meta.actionGroup ? (sportLabel + " " + meta.actionGroup.searchTerms[0] + " no commentary") : "",
+            (sportLabel + " " + actionWords + " in game clip no commentary").trim(),
+            (sportLabel + " " + actionWords + " professional game highlight").trim()
         ])
         .filter(Boolean);
 
@@ -708,7 +749,7 @@ async function findClipForProblem(problem, profileSport) {
 
     if (!ranked.length && meta.actionGroup) {
         for (let i = 0; i < meta.actionGroup.searchTerms.length; i += 1) {
-            const forcedQuery = meta.sport + " " + meta.actionGroup.searchTerms[i];
+            const forcedQuery = sportLabel + " " + meta.actionGroup.searchTerms[i];
             try {
                 candidates = uniqueById(candidates.concat(await searchYouTubeHtml(forcedQuery)));
             } catch (error) {

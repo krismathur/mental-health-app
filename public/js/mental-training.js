@@ -19,6 +19,238 @@ if (closeMentalTrainingBtn) {
 
 const PROGRESS_STEP = 5;
 
+const PROGRESS_THEME_BY_LEAGUE = {
+    NBA: {
+        sport: "basketball",
+        action: "shoot",
+        actionLabel: "Shoot",
+        finishLabel: "Hoop",
+        finishClass: "finish-hoop",
+        scoreLabel: "Swish!",
+        ballClass: "ball-basketball"
+    },
+    MLB: {
+        sport: "baseball",
+        action: "swing",
+        actionLabel: "Swing",
+        finishLabel: "Crown",
+        finishClass: "finish-crown",
+        scoreLabel: "Home run!",
+        ballClass: "ball-baseball"
+    },
+    MLS: {
+        sport: "soccer",
+        action: "kick",
+        actionLabel: "Kick",
+        finishLabel: "Goal",
+        finishClass: "finish-goal",
+        scoreLabel: "GOOOAL!",
+        ballClass: "ball-soccer"
+    },
+    NFL: {
+        sport: "football",
+        action: "kick",
+        actionLabel: "Kick",
+        finishLabel: "Field Goal",
+        finishClass: "finish-fieldgoal",
+        scoreLabel: "It's good!",
+        ballClass: "ball-football"
+    }
+};
+
+let hasCelebratedScore = false;
+let hasPlayedFirstAction = false;
+let scoreAudioContext = null;
+
+function getProgressTheme() {
+    const league = String(savedAvatar && savedAvatar.league ? savedAvatar.league : "").trim().toUpperCase();
+    return PROGRESS_THEME_BY_LEAGUE[league] || {
+        sport: "general",
+        action: "shoot",
+        actionLabel: "Go",
+        finishLabel: "Finish",
+        finishClass: "finish-default",
+        scoreLabel: "Nice!",
+        ballClass: "ball-default"
+    };
+}
+
+function getProgressFinishTarget() {
+    const theme = getProgressTheme();
+    return {
+        label: theme.finishLabel,
+        className: theme.finishClass
+    };
+}
+
+function getScoreAudioContext() {
+    if (!scoreAudioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) {
+            return null;
+        }
+        scoreAudioContext = new AudioCtx();
+    }
+    return scoreAudioContext;
+}
+
+function playToneBurst(frequencies, duration, type, volume) {
+    const ctx = getScoreAudioContext();
+    if (!ctx) {
+        return;
+    }
+
+    if (ctx.state === "suspended") {
+        ctx.resume();
+    }
+
+    const now = ctx.currentTime;
+    frequencies.forEach(function (freq, index) {
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = type || "sine";
+        oscillator.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime((volume || 0.08) / frequencies.length, now + 0.02 + index * 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start(now);
+        oscillator.stop(now + duration + 0.02);
+    });
+}
+
+function playCrowdCheer() {
+    const ctx = getScoreAudioContext();
+    if (!ctx) {
+        return;
+    }
+
+    if (ctx.state === "suspended") {
+        ctx.resume();
+    }
+
+    const now = ctx.currentTime;
+    const bufferSize = Math.floor(ctx.sampleRate * 1.4);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+
+    for (let i = 0; i < bufferSize; i += 1) {
+        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+    }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(1200, now);
+    filter.Q.setValueAtTime(0.7, now);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.22, now + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.35);
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start(now);
+    noise.stop(now + 1.4);
+
+    playToneBurst([523, 659, 784, 1046], 0.55, "triangle", 0.12);
+}
+
+function playCrowdOhh() {
+    const ctx = getScoreAudioContext();
+    if (!ctx) {
+        return;
+    }
+
+    if (ctx.state === "suspended") {
+        ctx.resume();
+    }
+
+    const now = ctx.currentTime;
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(420, now);
+    oscillator.frequency.exponentialRampToValueAtTime(180, now + 0.85);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.95);
+
+    // Soft crowd "ohh" texture
+    const bufferSize = Math.floor(ctx.sampleRate * 0.9);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i += 1) {
+        data[i] = (Math.random() * 2 - 1) * 0.35 * (1 - i / bufferSize);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(500, now);
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.0001, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.1, now + 0.1);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    noise.start(now);
+    noise.stop(now + 0.9);
+}
+
+function launchConfetti() {
+    const layer = document.createElement("div");
+    layer.className = "mental-training-confetti-layer";
+    layer.setAttribute("aria-hidden", "true");
+
+    for (let i = 0; i < 42; i += 1) {
+        const piece = document.createElement("span");
+        piece.className = "mental-training-confetti-piece";
+        piece.style.left = Math.random() * 100 + "%";
+        piece.style.animationDelay = (Math.random() * 0.45) + "s";
+        piece.style.animationDuration = (1.4 + Math.random() * 1.1) + "s";
+        piece.style.background = ["#f6e05e", "#fc8181", "#63b3ed", "#68d391", "#f687b3", "#fff"][i % 6];
+        layer.appendChild(piece);
+    }
+
+    document.body.appendChild(layer);
+    setTimeout(function () {
+        layer.remove();
+    }, 2800);
+}
+
+function celebrateScore() {
+    if (hasCelebratedScore || barProgress < 100) {
+        return;
+    }
+
+    hasCelebratedScore = true;
+    const theme = getProgressTheme();
+    launchConfetti();
+    playCrowdCheer();
+    flashTrainingResult(theme.scoreLabel, "mental-training-flash-good");
+
+    const track = mentalTrainingBottom && mentalTrainingBottom.querySelector(".mental-training-progress-track");
+    if (track) {
+        track.classList.add("is-scored", "score-" + theme.sport);
+    }
+}
+
+function playMissReaction() {
+    if (hasCelebratedScore || barProgress >= 100) {
+        return;
+    }
+
+    playCrowdOhh();
+}
+
 const QUESTION_TIERS = [
     [
         { wrong: "Sleep in till 8", right: "Wake up at 5 to go work-out" },
@@ -204,6 +436,8 @@ function startNewSession(level) {
     currentQuestionIndex = 0;
     sessionCorrectCount = 0;
     barProgress = 0;
+    hasCelebratedScore = false;
+    hasPlayedFirstAction = false;
     missedQuestions = [];
     reviewQuestions = [];
     reviewIndex = 0;
@@ -217,11 +451,18 @@ function startNewSession(level) {
 }
 
 function updateBarProgress(isCorrect) {
+    const before = barProgress;
     if (isCorrect) {
         saveTrainingProgress(barProgress + PROGRESS_STEP);
     } else {
         saveTrainingProgress(barProgress - PROGRESS_STEP);
     }
+
+    return {
+        before: before,
+        after: barProgress,
+        scored: before < 100 && barProgress >= 100
+    };
 }
 
 function showTrainingContent() {
@@ -240,18 +481,129 @@ function hideIntroMessage() {
     }, { once: true });
 }
 
-function renderProgressBar() {
+function renderFinishTarget(theme, finish, reachedFinish) {
+    if (theme.finishClass === "finish-hoop") {
+        return `
+            <div class="mental-training-progress-finish finish-hoop${reachedFinish ? " is-reached" : ""}" title="${finish.label}">
+                <div class="goal-graphic hoop-graphic" aria-hidden="true">
+                    <span class="hoop-backboard"></span>
+                    <span class="hoop-rim"></span>
+                    <span class="hoop-net"></span>
+                </div>
+                <span class="mental-training-progress-finish-label">${finish.label}</span>
+            </div>
+        `;
+    }
+
+    if (theme.finishClass === "finish-goal") {
+        return `
+            <div class="mental-training-progress-finish finish-goal${reachedFinish ? " is-reached" : ""}" title="${finish.label}">
+                <div class="goal-graphic soccer-goal-graphic" aria-hidden="true">
+                    <span class="soccer-goal-frame"></span>
+                    <span class="soccer-goal-net"></span>
+                </div>
+                <span class="mental-training-progress-finish-label">${finish.label}</span>
+            </div>
+        `;
+    }
+
+    if (theme.finishClass === "finish-fieldgoal") {
+        return `
+            <div class="mental-training-progress-finish finish-fieldgoal${reachedFinish ? " is-reached" : ""}" title="${finish.label}">
+                <div class="goal-graphic fieldgoal-graphic" aria-hidden="true">
+                    <span class="fg-upright fg-left"></span>
+                    <span class="fg-upright fg-right"></span>
+                    <span class="fg-crossbar"></span>
+                    <span class="fg-base"></span>
+                </div>
+                <span class="mental-training-progress-finish-label">${finish.label}</span>
+            </div>
+        `;
+    }
+
+    if (theme.finishClass === "finish-crown") {
+        return `
+            <div class="mental-training-progress-finish finish-crown${reachedFinish ? " is-reached" : ""}" title="${finish.label}">
+                <div class="goal-graphic crown-graphic" aria-hidden="true">
+                    <span class="crown-band"></span>
+                    <span class="crown-point crown-point-1"></span>
+                    <span class="crown-point crown-point-2"></span>
+                    <span class="crown-point crown-point-3"></span>
+                    <span class="crown-jewel"></span>
+                </div>
+                <span class="mental-training-progress-finish-label">${finish.label}</span>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="mental-training-progress-finish finish-default${reachedFinish ? " is-reached" : ""}" title="${finish.label}">
+            <div class="goal-graphic default-graphic" aria-hidden="true"></div>
+            <span class="mental-training-progress-finish-label">${finish.label}</span>
+        </div>
+    `;
+}
+
+function playFirstActionAnimation() {
+    if (hasPlayedFirstAction) {
+        return;
+    }
+
+    hasPlayedFirstAction = true;
+    const theme = getProgressTheme();
+    const athlete = mentalTrainingBottom && mentalTrainingBottom.querySelector(".mental-training-progress-athlete");
+    const ball = mentalTrainingBottom && mentalTrainingBottom.querySelector(".mental-training-progress-marker");
+
+    if (athlete) {
+        athlete.classList.add("is-acting", "action-" + theme.action);
+        setTimeout(function () {
+            athlete.classList.remove("is-acting", "action-shoot", "action-kick", "action-swing");
+        }, 900);
+    }
+
+    if (ball) {
+        ball.classList.add("is-launched", "launch-" + theme.sport);
+        setTimeout(function () {
+            ball.classList.remove("is-launched", "launch-basketball", "launch-soccer", "launch-baseball", "launch-football");
+        }, 900);
+    }
+}
+
+function renderProgressBar(options) {
+    options = options || {};
+    const theme = getProgressTheme();
+    const finish = getProgressFinishTarget();
+    const reachedFinish = barProgress >= 100;
+    const avatarSrc = savedAvatar && savedAvatar.image ? savedAvatar.image : "";
+    const avatarAlt = (savedAvatar && (savedAvatar.alt || savedAvatar.name)) || "Athlete";
+
     mentalTrainingBottom.innerHTML = `
         <p class="mental-training-progress-label">${barProgress}% Mental Training Complete</p>
-        <div class="mental-training-progress-bar">
-            <div class="mental-training-progress-track">
+        <div class="mental-training-progress-bar sport-${theme.sport}">
+            <div class="mental-training-progress-athlete" title="${avatarAlt}">
+                <img src="${avatarSrc}" alt="${avatarAlt}">
+                <span class="athlete-action-burst" aria-hidden="true"></span>
+            </div>
+            <div class="mental-training-progress-track${reachedFinish ? " is-scored score-" + theme.sport : ""}">
                 <div class="mental-training-progress-fill" style="width: ${barProgress}%"></div>
-                <div class="mental-training-progress-avatar" style="left: ${barProgress}%">
-                    <img src="${savedAvatar.image}" alt="${savedAvatar.alt || savedAvatar.name}">
+                <div class="mental-training-progress-marker ${theme.ballClass}" style="left: ${barProgress}%">
+                    <span class="progress-ball-shape" aria-hidden="true"></span>
                 </div>
+                ${renderFinishTarget(theme, finish, reachedFinish)}
             </div>
         </div>
     `;
+
+    if (options.playAction) {
+        // Wait one frame so CSS can apply before animating.
+        requestAnimationFrame(function () {
+            playFirstActionAnimation();
+        });
+    }
+
+    if (reachedFinish) {
+        celebrateScore();
+    }
 }
 
 function shuffleChoices(question) {
@@ -296,8 +648,11 @@ function renderQuestionSet(question, label, countText, onChoice) {
 function renderSummaryScreen(extraMessage) {
     const total = activeQuestions.length;
     const passed = sessionCorrectCount >= 10;
-    const resultMessage = passed ? "Great choices today." : "You can make better choices.";
-    const resultClass = passed ? "mental-training-result-pass" : "mental-training-result-fail";
+    const scored = barProgress >= 100;
+    const resultMessage = scored
+        ? "You scored! Great choices today."
+        : (passed ? "Great choices today." : "You can make better choices.");
+    const resultClass = (scored || passed) ? "mental-training-result-pass" : "mental-training-result-fail";
     const currentLevel = getSessionLevel();
     const nextLevel = Math.min(QUESTION_TIERS.length - 1, currentLevel + 1);
 
@@ -328,6 +683,12 @@ function renderSummaryScreen(extraMessage) {
     `;
 
     renderProgressBar();
+
+    if (scored) {
+        celebrateScore();
+    } else {
+        playMissReaction();
+    }
 }
 
 function startMissedReview() {
@@ -429,11 +790,15 @@ function handleAnswer(choiceBtn, options) {
         flashTrainingResult("Wrong", "mental-training-flash-wrong");
     }
 
-    updateBarProgress(isCorrect);
+    const progressResult = updateBarProgress(isCorrect);
+    const playAction = isCorrect && !hasPlayedFirstAction && !isReviewMode;
 
     setTimeout(function () {
         isAnswering = false;
-        renderProgressBar();
+        renderProgressBar({ playAction: playAction });
+        if (progressResult.after >= 100) {
+            celebrateScore();
+        }
         options.onResult(isCorrect);
     }, 1700);
 }
@@ -483,6 +848,8 @@ function loadMentalTrainingPage() {
     currentQuestionIndex = getQuestionIndex();
     sessionCorrectCount = getSessionCorrectCount();
     barProgress = getTrainingProgress();
+    hasCelebratedScore = barProgress >= 100;
+    hasPlayedFirstAction = barProgress > 0;
 
     if (currentQuestionIndex >= QUESTION_TIERS[sessionLevel].length) {
         startNewSession(sessionLevel);

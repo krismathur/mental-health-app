@@ -78,12 +78,17 @@ function openFixVideoPlayer(video) {
         fixVideoReason.textContent = "Watch this moment.";
     }
 
-    // Load with autoplay after a user click (submit) so browsers allow playback.
+    fixVideoFullscreen.classList.remove("is-playing");
+    // Load with autoplay after a user click (submit) so browsers allow sound + playback.
     fixVideoFrame.src = video.embedUrl;
     fixVideoFullscreen.hidden = false;
     fixVideoFullscreen.classList.remove("fix-video-hidden");
     document.body.classList.add("fix-video-open");
     closeOverlay(fixOverlay);
+
+    requestAnimationFrame(function () {
+        fixVideoFullscreen.classList.add("is-playing");
+    });
 }
 
 function closeFixVideoPlayer() {
@@ -93,6 +98,7 @@ function closeFixVideoPlayer() {
     if (fixVideoFullscreen) {
         fixVideoFullscreen.hidden = true;
         fixVideoFullscreen.classList.add("fix-video-hidden");
+        fixVideoFullscreen.classList.remove("is-playing");
     }
     document.body.classList.remove("fix-video-open");
 }
@@ -1091,4 +1097,43 @@ function completeMeditationActivity() {
         });
     }
 }
+
+(function openFeatureFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const open = String(params.get("open") || "").toLowerCase();
+    if (!open) {
+        return;
+    }
+
+    function launch() {
+        if (open === "visualization" || open === "visualisation" || open === "meditation") {
+            prepareMeditationSpeech();
+            resetMeditationView();
+            openOverlay(meditationOverlay);
+            return;
+        }
+        if (open === "fix" || open === "mistakes") {
+            resetFixResults();
+            openOverlay(fixOverlay);
+            return;
+        }
+        if (open === "reset") {
+            resetBreathingView();
+            openOverlay(resetOverlay);
+            return;
+        }
+        if (open === "choices" || open === "avatar" || open === "mental-choices") {
+            restoreAvatarSelection();
+            openOverlay(avatarOverlay);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(launch, 50);
+        });
+    } else {
+        setTimeout(launch, 50);
+    }
+})();
 

@@ -142,8 +142,8 @@ const VIDEOS = [
 
 const SPORT_ALIASES = [
     { key: "basketball", patterns: ["basketball", "bball", "hoop"] },
-    { key: "soccer", patterns: ["soccer", "futbol", "football club", "fifa"] },
-    { key: "football", patterns: ["american football", "nfl", "qb", "quarterback", "touchdown"] },
+    { key: "soccer", patterns: ["soccer", "futbol", "football club", "fifa", "premier league", "mls"] },
+    { key: "football", patterns: ["american football", "football", "nfl", "qb", "quarterback", "touchdown", "gridiron", "field goal", "fumble"] },
     { key: "baseball", patterns: ["baseball", "mlb", "softball"] },
     { key: "tennis", patterns: ["tennis"] },
     { key: "swimming", patterns: ["swim", "swimming"] },
@@ -166,10 +166,6 @@ function normalizeSport(raw) {
                 return entry.key;
             }
         }
-    }
-
-    if (/\bfootball\b/.test(text) && !/american|nfl|qb|touchdown/.test(text)) {
-        return "soccer";
     }
 
     return text.split(/[\s,/]+/)[0] || "";
