@@ -1,8 +1,8 @@
 :root {
-    --site-nav-top: 6px;
-    --site-nav-height: 30px;
-    --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 8px);
-    --nav-btn-height: 24px;
+    --site-nav-top: 12px;
+    --site-nav-height: 48px;
+    --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 12px);
+    --nav-btn-height: 36px;
     --nav-text: #f8fbff;
     --nav-accent: #63b3ed;
     --nav-accent-deep: #2b6cb0;
@@ -18,14 +18,14 @@ nav.site-nav {
     top: var(--site-nav-top);
     left: 50%;
     transform: translateX(-50%);
-    width: min(920px, calc(100% - 140px));
+    width: min(1000px, calc(100% - 120px));
     min-height: var(--site-nav-height);
     height: var(--site-nav-height);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0;
-    padding: 0 28px;
+    padding: 0 14px;
     background:
         linear-gradient(
             135deg,
@@ -35,11 +35,11 @@ nav.site-nav {
         );
     backdrop-filter: blur(18px) saturate(175%);
     -webkit-backdrop-filter: blur(18px) saturate(175%);
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 999px;
     box-shadow:
-        0 4px 16px rgba(8, 20, 40, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+        0 8px 28px rgba(8, 20, 40, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
     z-index: 1000;
     transition:
         opacity 0.28s ease,
@@ -83,7 +83,7 @@ body.avatar-page nav.site-nav {
     flex-wrap: nowrap;
     justify-content: space-evenly;
     width: 100%;
-    gap: 4px;
+    gap: 6px;
     padding: 0;
     border-radius: 0;
     background: transparent;
@@ -125,6 +125,74 @@ body.avatar-page .page-brand {
     pointer-events: none;
 }
 
+/* Settings gear — fixed top-right, mirrors the glass nav */
+.settings-gear {
+    position: fixed;
+    top: 10px;
+    right: 16px;
+    z-index: 1001;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    color: var(--nav-text);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0.07) 48%,
+            rgba(255, 255, 255, 0.14) 100%
+        );
+    backdrop-filter: blur(18px) saturate(175%);
+    -webkit-backdrop-filter: blur(18px) saturate(175%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    box-shadow:
+        0 8px 28px rgba(8, 20, 40, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+        transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.settings-gear svg {
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.settings-gear:hover {
+    transform: scale(1.12);
+    box-shadow:
+        0 10px 26px rgba(8, 20, 40, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.settings-gear:hover svg {
+    transform: rotate(90deg);
+}
+
+.settings-gear:active {
+    transform: scale(1.04);
+}
+
+.settings-gear:focus-visible {
+    outline: 2px solid var(--nav-accent);
+    outline-offset: 2px;
+}
+
+body.overlay-open .settings-gear,
+body.avatar-page .settings-gear {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 body.admin-page .page-brand {
     background: none;
     -webkit-text-fill-color: #2b6cb0;
@@ -147,14 +215,14 @@ body.admin-page .page-brand:hover {
     max-height: var(--nav-btn-height);
     min-width: 0;
     flex: 1 1 auto;
-    padding: 0 10px;
+    padding: 0 16px;
     border: none;
     outline: none;
-    border-radius: 0;
+    border-radius: 999px;
     background: transparent;
     color: var(--nav-text);
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.86rem;
     font-weight: 800;
     line-height: 1;
     letter-spacing: 0.01em;
@@ -163,7 +231,14 @@ body.admin-page .page-brand:hover {
     white-space: nowrap;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     box-shadow: none;
-    transition: opacity 0.2s ease, color 0.2s ease;
+    transform: scale(1);
+    transform-origin: center center;
+    transition:
+        transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1),
+        color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
 }
 
 .site-nav a.nav-btn,
@@ -171,8 +246,8 @@ body.admin-page .page-brand:hover {
     height: var(--nav-btn-height);
     min-height: var(--nav-btn-height);
     max-height: var(--nav-btn-height);
-    padding: 0 10px;
-    font-size: 0.72rem;
+    padding: 0 16px;
+    font-size: 0.86rem;
     line-height: 1;
     border: none;
     outline: none;
@@ -186,15 +261,17 @@ body.admin-page .page-brand:hover {
 }
 
 .site-nav .nav-btn:hover {
-    opacity: 0.8;
-    transform: none;
+    opacity: 1;
+    transform: scale(1.14);
+    color: #ffffff;
     border: none;
-    background: transparent;
-    box-shadow: none;
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 6px 18px rgba(8, 20, 40, 0.28);
 }
 
 .site-nav .nav-btn:active {
-    opacity: 0.7;
+    transform: scale(1.06);
+    opacity: 1;
 }
 
 .site-nav .nav-btn:focus,
@@ -206,28 +283,29 @@ body.admin-page .page-brand:hover {
 .site-nav .nav-btn-fill,
 .site-nav .nav-btn.btn-fill,
 .site-nav .nav-links .btn-fill {
+    flex: 0 0 auto;
     border: none;
-    background: transparent;
-    color: var(--nav-accent);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    box-shadow: none;
+    background: linear-gradient(135deg, var(--nav-accent) 0%, var(--nav-accent-deep) 100%);
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(8, 20, 40, 0.35);
+    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.4);
 }
 
 .site-nav .nav-btn-fill:hover,
 .site-nav .nav-btn.btn-fill:hover,
 .site-nav .nav-links .btn-fill:hover {
     border: none;
-    background: transparent;
-    color: #90cdf4;
-    box-shadow: none;
+    background: linear-gradient(135deg, #7cc4f5 0%, #3178c0 100%);
+    color: #ffffff;
+    box-shadow: 0 10px 22px rgba(43, 108, 176, 0.5);
     opacity: 1;
 }
 
 .site-nav .nav-btn.active {
     border: none;
-    background: transparent;
-    color: var(--nav-accent);
-    box-shadow: none;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 
 .site-nav .nav-btn.active:hover {
@@ -254,20 +332,34 @@ body.admin-page .site-nav .nav-btn {
     color: #1a365d;
 }
 
-body.admin-page .site-nav .nav-btn-fill {
-    color: #2b6cb0;
+body.admin-page .site-nav .nav-btn:hover {
+    color: #1a365d;
+    background: rgba(26, 54, 93, 0.1);
+    box-shadow: 0 8px 18px rgba(8, 20, 40, 0.14);
+}
+
+body.admin-page .site-nav .nav-btn.active {
+    color: #1a365d;
+    background: rgba(26, 54, 93, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(26, 54, 93, 0.18);
+}
+
+body.admin-page .site-nav .nav-btn-fill,
+body.admin-page .site-nav .nav-btn-fill:hover {
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(8, 20, 40, 0.35);
 }
 
 @media (max-width: 760px) {
     :root {
-        --site-nav-height: 28px;
-        --nav-btn-height: 22px;
-        --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 6px);
+        --site-nav-height: 40px;
+        --nav-btn-height: 30px;
+        --site-nav-space: calc(var(--site-nav-top) + var(--site-nav-height) + 8px);
     }
 
     nav.site-nav {
-        width: min(100%, calc(100% - 110px));
-        padding: 0 12px;
+        width: min(100%, calc(100% - 96px));
+        padding: 0 10px;
         left: calc(50% + 18px);
     }
 
@@ -277,17 +369,34 @@ body.admin-page .site-nav .nav-btn-fill {
         font-size: 1.1rem;
     }
 
+    .settings-gear {
+        top: 7px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .settings-gear svg {
+        width: 19px;
+        height: 19px;
+    }
+
     .site-nav .nav-links {
-        gap: 0;
+        gap: 3px;
     }
 
     .site-nav .nav-btn,
     .site-nav a.nav-btn,
     .site-nav button.nav-btn {
-        padding: 0 6px;
-        font-size: 0.64rem;
+        padding: 0 10px;
+        font-size: 0.74rem;
         height: var(--nav-btn-height);
         min-height: var(--nav-btn-height);
         max-height: var(--nav-btn-height);
+    }
+
+    /* Slightly gentler pop on small screens so buttons don't collide */
+    .site-nav .nav-btn:hover {
+        transform: scale(1.08);
     }
 }

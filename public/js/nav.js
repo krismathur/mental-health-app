@@ -28,4 +28,22 @@
             window.location.href = "index.html";
         });
     }
+
+    // Logged-in users don't need a Home link in the nav — the brand still
+    // points home. Drop it once we confirm there's an active session.
+    async function hideHomeWhenLoggedIn() {
+        try {
+            const res = await fetch("/api/me");
+            if (!res.ok) return;
+        } catch (err) {
+            return;
+        }
+        document.querySelectorAll(".site-nav .nav-links a.nav-btn").forEach(function (link) {
+            if (link.textContent.trim() === "Home") {
+                link.remove();
+            }
+        });
+    }
+
+    hideHomeWhenLoggedIn();
 })();

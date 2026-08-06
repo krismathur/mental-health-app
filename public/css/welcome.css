@@ -2477,6 +2477,25 @@ body.welcome-page .site-nav .nav-links {
     color: white;
 }
 
+.settings-account {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 2px dashed #e2e8f0;
+}
+
+.settings-logout-btn {
+    margin-top: 0;
+    background: #fff5f5;
+    color: #c53030;
+    border: 2px solid #feb2b2;
+}
+
+.settings-logout-btn:hover {
+    opacity: 1;
+    background: #fed7d7;
+    border-color: #fc8181;
+}
+
 .settings-panel .star-section {
     margin-top: 24px;
     padding-top: 20px;
