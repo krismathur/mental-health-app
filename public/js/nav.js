@@ -29,21 +29,34 @@
         });
     }
 
-    // Logged-in users don't need a Home link in the nav — the brand still
-    // points home. Drop it once we confirm there's an active session.
-    async function hideHomeWhenLoggedIn() {
+    // Tailor the nav to context:
+    //  - Home is redundant when you're already on the home page or signed in
+    //    (the brand always links home anyway).
+    //  - Rewards only makes sense once you're signed in.
+    async function applyNavRules() {
+        let loggedIn = false;
         try {
             const res = await fetch("/api/me");
-            if (!res.ok) return;
+            loggedIn = res.ok;
         } catch (err) {
-            return;
+            loggedIn = false;
         }
-        document.querySelectorAll(".site-nav .nav-links a.nav-btn").forEach(function (link) {
-            if (link.textContent.trim() === "Home") {
-                link.remove();
+
+        const path = window.location.pathname;
+        const onHomePage = path === "/" || /\/index\.html$/.test(path);
+
+        document.querySelectorAll(".site-nav .nav-links .nav-btn").forEach(function (btn) {
+            const label = btn.textContent.trim();
+
+            if (label === "Home" && (onHomePage || loggedIn)) {
+                btn.remove();
+            }
+
+            if (btn.classList.contains("rewards-btn") && !loggedIn) {
+                btn.remove();
             }
         });
     }
 
-    hideHomeWhenLoggedIn();
+    applyNavRules();
 })();

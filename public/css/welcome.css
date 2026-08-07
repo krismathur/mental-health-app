@@ -124,17 +124,19 @@ body::before {
 
 .top-row {
     display: grid;
-    grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
-    gap: 32px;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 28px;
     align-items: start;
     width: 100%;
+    max-width: 1060px;
+    margin: 0 auto;
 }
 
 .top-left {
     min-width: 0;
-    justify-self: start;
+    justify-self: stretch;
     width: 100%;
-    max-width: 560px;
+    max-width: none;
 }
 
 .top-right {
@@ -147,17 +149,17 @@ body::before {
 }
 
 .top-right-stack {
-    justify-self: center;
+    justify-self: stretch;
     align-self: start;
-    width: min(100%, 440px);
-    max-width: 440px;
-    margin-top: 28px;
+    width: 100%;
+    max-width: none;
+    margin-top: 0;
     position: sticky;
     top: calc(var(--site-nav-space, 66px) + 8px);
     display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 24px;
-    min-height: 760px;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    min-height: 0;
 }
 
 .top-right-stack > .tool-card {
@@ -165,6 +167,13 @@ body::before {
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+/* The class rule above sets display:flex, which would otherwise override the
+   [hidden] attribute — this keeps a hidden card (e.g. after saving a mood)
+   actually removed from view. */
+.top-right-stack > .tool-card[hidden] {
+    display: none;
 }
 
 .top-right-secondary {
@@ -2143,11 +2152,48 @@ body.welcome-page .site-nav .nav-links {
     animation: moodSavedPopIn 0.28s ease;
 }
 
+.mood-saved-popup-box {
+    pointer-events: auto;
+}
+
+.mood-saved-emoji {
+    display: block;
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
 .mood-saved-popup-box p {
     margin: 0;
     font-size: 1.08rem;
     font-weight: 900;
     line-height: 1.4;
+}
+
+.mood-saved-sub {
+    margin-top: 4px !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    opacity: 0.92;
+}
+
+.mood-saved-view-btn {
+    margin-top: 16px;
+    padding: 9px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.mood-saved-view-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
 }
 
 @keyframes moodSavedPopIn {
@@ -2589,4 +2635,126 @@ body.welcome-page .site-nav .nav-links {
     .plan-intro--in-card h1 {
         font-size: 1.65rem;
     }
+}
+
+/* =========================================================================
+   WELCOME DASHBOARD OVERHAUL
+   One cohesive dark "liquid glass" system in the brand blue/navy family,
+   replacing the clashing navy / purple / teal / orange card themes.
+   ========================================================================= */
+
+/* Calmer canvas so the cards read as the focal point */
+body.welcome-page::before {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(9, 18, 32, 0.72) 0%,
+            rgba(9, 17, 30, 0.82) 55%,
+            rgba(7, 14, 25, 0.9) 100%
+        );
+}
+
+/* Shared card surface for all three dashboard cards */
+body.welcome-page .tool-plan,
+body.welcome-page .tool-checkin,
+body.welcome-page .tool-daily {
+    border-radius: 24px;
+    background:
+        linear-gradient(
+            165deg,
+            rgba(26, 45, 76, 0.975) 0%,
+            rgba(14, 27, 47, 0.985) 100%
+        );
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow:
+        0 18px 44px rgba(8, 20, 40, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+body.welcome-page .tool-plan:hover,
+body.welcome-page .tool-checkin:hover,
+body.welcome-page .tool-daily:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 26px 56px rgba(8, 20, 40, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+/* Strip the per-card background images / clashing colour overlays */
+body.welcome-page .tool-plan::before,
+body.welcome-page .tool-plan::after,
+body.welcome-page .tool-checkin::before,
+body.welcome-page .tool-checkin::after,
+body.welcome-page .tool-daily::before,
+body.welcome-page .tool-daily::after {
+    display: none;
+}
+
+/* Consistent internal padding + spacing */
+body.welcome-page .tool-plan,
+body.welcome-page .tool-checkin,
+body.welcome-page .tool-daily {
+    padding: 24px 22px;
+}
+
+/* Robust stacking for the right column — grid + height:100% + sticky was
+   letting the two cards collapse/overlap. A plain flex column can't overlap. */
+body.welcome-page .top-right-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: static;
+    min-height: 0;
+}
+
+body.welcome-page .top-right-stack > .tool-card {
+    height: auto;
+    min-height: 0;
+}
+
+/* One accent for every primary button on the page */
+body.welcome-page .emotion-save-btn,
+body.welcome-page .daily-reflection-save-btn,
+body.welcome-page .continue-btn,
+body.welcome-page .top-left .plan-actions button {
+    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+    box-shadow: 0 10px 24px rgba(43, 108, 176, 0.42);
+}
+
+body.welcome-page .emotion-save-btn:hover:not(:disabled),
+body.welcome-page .daily-reflection-save-btn:hover:not(:disabled),
+body.welcome-page .continue-btn:hover,
+body.welcome-page .top-left .plan-actions button:hover {
+    box-shadow: 0 14px 30px rgba(43, 108, 176, 0.52);
+}
+
+/* Daily review input: neutral instead of teal/green */
+body.welcome-page .daily-reflection-input {
+    border: 2px solid rgba(66, 153, 225, 0.3);
+    background: #ffffff;
+    color: #1a365d;
+}
+
+body.welcome-page .daily-reflection-input:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.2);
+    background: #ffffff;
+}
+
+/* Continue CTA: full-width closing action beneath the plan card */
+body.welcome-page .continue-btn-floating {
+    position: static;
+    inset: auto;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 20px 0 0;
+    font-size: 1.02rem;
+    padding: 16px 34px;
+}
+
+body.welcome-page .page {
+    padding-bottom: 48px;
 }

@@ -1009,11 +1009,22 @@ function showMoodSavedPopup() {
     clearTimeout(moodSavedPopupTimer);
     moodSavedPopupTimer = setTimeout(function () {
         moodSavedPopup.classList.add("mood-saved-popup-hidden");
-    }, 2600);
+    }, 1600);
 }
 
 if (saveMoodBtn) {
     saveMoodBtn.addEventListener("click", saveMoodToday);
+}
+
+const viewMoodTrendBtn = document.getElementById("viewMoodTrendBtn");
+if (viewMoodTrendBtn) {
+    viewMoodTrendBtn.addEventListener("click", function () {
+        clearTimeout(moodSavedPopupTimer);
+        if (moodSavedPopup) {
+            moodSavedPopup.classList.add("mood-saved-popup-hidden");
+        }
+        openMoodTrend();
+    });
 }
 
 if (moodTrendBtn) {

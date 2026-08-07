@@ -1,5 +1,5 @@
-const loginLink = document.getElementById("loginLink");
-const signupLink = document.getElementById("signupLink");
+const authLink = document.getElementById("authLink");
+const heroBtn = document.querySelector(".hero-btn");
 
 async function checkLoginStatus() {
     try {
@@ -9,23 +9,18 @@ async function checkLoginStatus() {
             return;
         }
 
-        loginLink.textContent = "Dashboard";
-        loginLink.href = "welcome.html";
+        // Logged in: the single auth item becomes a shortcut to the dashboard,
+        // and the hero's "Get Logged-In" call-to-action is no longer needed.
+        if (authLink) {
+            authLink.textContent = "Dashboard";
+            authLink.href = "welcome.html";
+        }
 
-        signupLink.textContent = "Log Out";
-        signupLink.href = "#";
-
-        signupLink.addEventListener("click", async function (event) {
-            event.preventDefault();
-
-            await fetch("/api/logout", {
-                method: "POST"
-            });
-
-            window.location.href = "index.html";
-        });
+        if (heroBtn) {
+            heroBtn.remove();
+        }
     } catch (error) {
-        // Keep the default Log In / Sign Up buttons if the server is unreachable.
+        // Keep the default Log In / Sign Up button if the server is unreachable.
     }
 }
 

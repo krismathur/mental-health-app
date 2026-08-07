@@ -19,8 +19,6 @@
                 <a class="nav-btn" href="index.html">Home</a>
                 <a class="nav-btn video-library-btn" href="#">Videos</a>
                 <a class="nav-btn rewards-btn" href="#">Rewards</a>
-                <a class="nav-btn" id="navLogin" href="#" onclick="showTab('login'); return false;">Log In</a>
-                <a class="nav-btn nav-btn-fill" id="navSignup" href="#" onclick="showTab('signup'); return false;">Sign Up</a>
             </div>
         </nav>
 
@@ -93,8 +91,6 @@
                 const login = document.getElementById("loginForm");
                 const tabSignup = document.getElementById("tabSignup");
                 const tabLogin = document.getElementById("tabLogin");
-                const navSignup = document.getElementById("navSignup");
-                const navLogin = document.getElementById("navLogin");
                 const message = document.getElementById("message");
 
                 message.textContent = "";
@@ -104,15 +100,11 @@
                     login.classList.add("hidden");
                     tabSignup.classList.add("active");
                     tabLogin.classList.remove("active");
-                    navSignup.classList.add("active");
-                    navLogin.classList.remove("active");
                 } else {
                     login.classList.remove("hidden");
                     signup.classList.add("hidden");
                     tabLogin.classList.add("active");
                     tabSignup.classList.remove("active");
-                    navLogin.classList.add("active");
-                    navSignup.classList.remove("active");
                 }
             }
 
