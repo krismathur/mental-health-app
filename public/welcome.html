@@ -315,29 +315,56 @@
                 </div>
 
                 <form id="settingsForm">
-                    <label for="settingsName">Name</label>
-                    <input id="settingsName" type="text" placeholder="Your name">
+                    <section class="settings-onboarding-section">
+                        <div class="settings-section-heading">
+                            <div>
+                                <p class="settings-section-kicker">ATHLETE PROFILE</p>
+                                <h3>Edit Onboarding Info</h3>
+                            </div>
+                            <p>Update the information MindZone uses to personalize your training plan.</p>
+                        </div>
 
-                    <label for="settingsAge">Age</label>
-                    <input id="settingsAge" type="number" min="10" max="18" placeholder="10–18">
+                        <div class="settings-fields-grid">
+                            <div class="settings-field">
+                                <label for="settingsName">Name</label>
+                                <input id="settingsName" type="text" placeholder="Your name">
+                            </div>
 
-                    <label for="settingsSport">Sport</label>
-                    <input id="settingsSport" type="text" placeholder="e.g. Soccer, Basketball">
+                            <div class="settings-field">
+                                <label for="settingsAge">Age</label>
+                                <input id="settingsAge" type="number" min="10" max="18" placeholder="10–18">
+                            </div>
 
-                    <label for="settingsGoal">Main Goal</label>
-                    <input id="settingsGoal" type="text" placeholder="What do you want to improve?">
+                            <div class="settings-field">
+                                <label for="settingsSport">Sport</label>
+                                <input id="settingsSport" type="text" placeholder="e.g. Soccer, Basketball">
+                            </div>
 
-                    <label for="settingsChallenge">Biggest Challenge</label>
-                    <input id="settingsChallenge" type="text" placeholder="What holds you back?">
+                            <div class="settings-field">
+                                <label for="settingsGoal">Main Goal</label>
+                                <input id="settingsGoal" type="text" placeholder="What do you want to improve?">
+                            </div>
 
-                    <label for="settingsMentalSkill">Time spent on mental prep (1–10)</label>
-                    <input id="settingsMentalSkill" type="number" min="1" max="10" placeholder="1–10">
+                            <div class="settings-field">
+                                <label for="settingsChallenge">Biggest Challenge</label>
+                                <input id="settingsChallenge" type="text" placeholder="What holds you back?">
+                            </div>
 
-                    <label for="settingsGoalCommitment">Willingness to work on goal (1–10)</label>
-                    <input id="settingsGoalCommitment" type="number" min="1" max="10" placeholder="1–10">
+                            <div class="settings-field">
+                                <label for="settingsMentalSkill">Mental Prep (1–10)</label>
+                                <input id="settingsMentalSkill" type="number" min="1" max="10" placeholder="1–10">
+                            </div>
 
-                    <label for="settingsWeeks">Plan Length (weeks)</label>
-                    <input id="settingsWeeks" type="number" min="1" max="4" placeholder="e.g. 2">
+                            <div class="settings-field">
+                                <label for="settingsGoalCommitment">Goal Commitment (1–10)</label>
+                                <input id="settingsGoalCommitment" type="number" min="1" max="10" placeholder="1–10">
+                            </div>
+
+                            <div class="settings-field">
+                                <label for="settingsWeeks">Plan Length (weeks)</label>
+                                <input id="settingsWeeks" type="number" min="1" max="4" placeholder="e.g. 2">
+                            </div>
+                        </div>
 
                     <div class="star-section">
                         <h3>⭐ Quick Check-In</h3>
@@ -388,9 +415,12 @@
                             </div>
                         </div>
                     </div>
+                    </section>
 
-                    <button type="button" id="saveSettingsBtn" class="settings-action-btn">Save Changes 💾</button>
-                    <button type="button" id="regenerateBtn" class="settings-action-btn secondary" hidden>Regenerate Plan 🔄</button>
+                    <div class="settings-form-actions">
+                        <button type="button" id="saveSettingsBtn" class="settings-action-btn">Save Changes 💾</button>
+                        <button type="button" id="regenerateBtn" class="settings-action-btn secondary" hidden>Regenerate Plan 🔄</button>
+                    </div>
 
                     <div class="settings-account">
                         <button type="button" id="logoutBtn" class="settings-action-btn settings-logout-btn">Log Out</button>

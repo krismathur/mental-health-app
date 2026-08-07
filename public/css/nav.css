@@ -9,6 +9,7 @@
     --nav-accent: #63b3ed;
     --nav-accent-deep: #2b6cb0;
     --page-brand-glow: rgba(99, 179, 237, 0.45);
+    --site-nav-width: 640px;
 
     /* Liquid-glass surface shared by the nav, brand pill and gear */
     --glass-bg:
@@ -39,7 +40,7 @@ nav.site-nav {
     left: auto;
     transform: none;
     /* Right-aligned pill that hugs its buttons; never grows under the brand. */
-    width: auto;
+    width: min(var(--site-nav-width), calc(100% - var(--nav-inset)));
     max-width: calc(100% - var(--nav-inset));
     min-height: var(--site-nav-height);
     height: var(--site-nav-height);
@@ -62,8 +63,9 @@ nav.site-nav {
 }
 
 /* Welcome carries the gear on the right, so shift the bar clear of it */
-body.welcome-page nav.site-nav {
+body.has-settings nav.site-nav {
     right: calc(16px + var(--gear-size) + 12px);
+    width: min(var(--site-nav-width), calc(100% - var(--nav-inset) - var(--gear-size) - 12px));
 }
 
 body.overlay-open nav.site-nav {
@@ -98,14 +100,14 @@ body.overlay-open {
 
 /* Mental Choices full pages + immersive overlays: no floating nav */
 body.avatar-page.has-site-nav {
-    padding-top: 0;
+    padding-top: var(--site-nav-space);
 }
 
 body.avatar-page nav.site-nav {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(-16px);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
 }
 
 .site-nav .nav-links {
@@ -115,7 +117,7 @@ body.avatar-page nav.site-nav {
     align-items: center;
     flex-wrap: nowrap;
     justify-content: flex-end;
-    width: auto;
+    width: 100%;
     gap: 10px;
     padding: 0;
     border-radius: 0;
@@ -160,8 +162,7 @@ body.avatar-page nav.site-nav {
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
-body.overlay-open .page-brand,
-body.avatar-page .page-brand {
+body.overlay-open .page-brand {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -231,11 +232,6 @@ body.avatar-page .settings-gear {
     pointer-events: none;
 }
 
-body.admin-page .page-brand {
-    color: #1a365d;
-    text-shadow: none;
-}
-
 .site-nav .nav-btn {
     display: inline-flex;
     align-items: center;
@@ -246,7 +242,7 @@ body.admin-page .page-brand {
     max-height: var(--nav-btn-height);
     /* content-width, right-aligned; min-width keeps the boxes uniform */
     flex: 0 0 auto;
-    min-width: 190px;
+    min-width: 0;
     padding: 0 30px;
     border: none;
     outline: none;
@@ -345,42 +341,28 @@ body.admin-page .page-brand {
     box-shadow: none;
 }
 
-/* Light pages (admin) — darker text, slightly stronger glass */
-body.admin-page {
-    --nav-text: #1a365d;
+body.user-logged-in .site-nav .nav-btn {
+    flex: 1 1 0;
 }
 
-body.admin-page nav.site-nav {
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.55) 0%,
-            rgba(255, 255, 255, 0.28) 100%
-        );
-    box-shadow: 0 6px 20px rgba(8, 20, 40, 0.08);
+body.user-logged-out nav.site-nav {
+    width: fit-content;
 }
 
-body.admin-page .site-nav .nav-btn {
-    text-shadow: none;
-    color: #1a365d;
+body.user-logged-out .site-nav .nav-links {
+    justify-content: center;
+    width: auto;
 }
 
-body.admin-page .site-nav .nav-btn:hover {
-    color: #1a365d;
-    background: rgba(26, 54, 93, 0.1);
-    box-shadow: 0 8px 18px rgba(8, 20, 40, 0.14);
+body.user-logged-out .site-nav .nav-btn {
+    min-width: 140px;
 }
 
-body.admin-page .site-nav .nav-btn.active {
-    color: #1a365d;
-    background: rgba(26, 54, 93, 0.1);
-    box-shadow: inset 0 0 0 1px rgba(26, 54, 93, 0.18);
-}
-
-body.admin-page .site-nav .nav-btn-fill,
-body.admin-page .site-nav .nav-btn-fill:hover {
-    color: #ffffff;
-    text-shadow: 0 1px 2px rgba(8, 20, 40, 0.35);
+.page-brand.active {
+    box-shadow:
+        0 14px 38px rgba(8, 20, 40, 0.34),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 @media (max-width: 760px) {
@@ -428,5 +410,9 @@ body.admin-page .site-nav .nav-btn-fill:hover {
     /* Slightly gentler pop on small screens so buttons don't collide */
     .site-nav .nav-btn:hover {
         transform: scale(1.08);
+    }
+
+    body.user-logged-out .site-nav .nav-btn {
+        min-width: 118px;
     }
 }

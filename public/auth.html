@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Sign Up / Login - MindZone</title>
+        <title>Log In / Sign Up - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -16,25 +16,22 @@
 
         <nav class="site-nav">
             <div class="nav-links">
-                <a class="nav-btn" href="index.html">Home</a>
-                <a class="nav-btn video-library-btn" href="#">Videos</a>
-                <a class="nav-btn rewards-btn" href="#">Rewards</a>
+                <a class="nav-btn active" href="auth.html">Get Started</a>
             </div>
         </nav>
 
         <div class="auth-layout">
             <div class="auth-hero">
                 <div class="auth-hero-text">
-                    <span class="badge">For athletes ages 10–18</span>
-                    <h1>Hey, future champ! 👋</h1>
+                    <span class="badge">MENTAL TRAINING FOR ATHLETES</span>
+                    <h1>Build the mindset behind your best performance.</h1>
                     <p>
-                        Your mind is just as important as your game.
-                        Sign up and start building confidence, focus, and calm.
+                        Train focus, confidence, calm, and resilience with a plan built around your sport.
                     </p>
                     <ul class="perks">
-                        <li>🧠 Train your mind</li>
-                        <li>🏆 Earn points and rewards</li>
-                        <li>🎉 Have fun!</li>
+                        <li>🧠 Personalized mental training</li>
+                        <li>🎯 Short exercises for pressure moments</li>
+                        <li>🏆 Progress, streaks, and rewards</li>
                     </ul>
                 </div>
             </div>
@@ -44,44 +41,41 @@
                     <div class="card-header">
                         <img src="images/step-signup.jpg" alt="" class="card-thumb">
                         <div>
-                            <h2>Join the team!</h2>
-                            <p class="card-sub">Create your free account below.</p>
+                            <h2 id="authCardTitle">Welcome back</h2>
+                            <p id="authCardSubtitle" class="card-sub">Log in to continue your mental training.</p>
                         </div>
                     </div>
 
                     <div class="tabs">
-                        <button class="tab active" id="tabSignup" onclick="showTab('signup')">🚀 Sign Up</button>
-                        <button class="tab" id="tabLogin" onclick="showTab('login')">👋 Log In</button>
+                        <button class="tab active" id="tabLogin" onclick="showTab('login')">👋 Log In</button>
+                        <button class="tab" id="tabSignup" onclick="showTab('signup')">🚀 Sign Up</button>
                     </div>
 
                     <!-- Sign Up Form -->
-                    <form id="signupForm" class="auth-form">
+                    <form id="signupForm" class="auth-form hidden">
                         <label>Email <span class="req">*</span></label>
                         <input id="signupEmail" type="email" placeholder="you@email.com" required>
 
                         <label>Password <span class="req">*</span></label>
                         <input id="signupPassword" type="password" placeholder="At least 6 characters" required>
 
-                        <button type="submit" class="submit-btn">Let's Go! 🎉</button>
+                        <button type="submit" class="submit-btn">Create My Account</button>
                     </form>
 
                     <!-- Login Form -->
-                    <form id="loginForm" class="auth-form hidden">
+                    <form id="loginForm" class="auth-form">
                         <label>Email <span class="req">*</span></label>
                         <input id="loginEmail" type="email" placeholder="you@email.com" required>
 
                         <label>Password <span class="req">*</span></label>
                         <input id="loginPassword" type="password" placeholder="Your password" required>
 
-                        <button type="submit" class="submit-btn">Come and Answer a Few Questions</button>
+                        <button type="submit" class="submit-btn">Log In</button>
                     </form>
 
                     <p id="message"></p>
                 </div>
 
-                <p class="admin-link">
-                    <a href="admin.html">Admin Login</a>
-                </p>
             </div>
         </div>
 
@@ -92,6 +86,8 @@
                 const tabSignup = document.getElementById("tabSignup");
                 const tabLogin = document.getElementById("tabLogin");
                 const message = document.getElementById("message");
+                const cardTitle = document.getElementById("authCardTitle");
+                const cardSubtitle = document.getElementById("authCardSubtitle");
 
                 message.textContent = "";
 
@@ -100,17 +96,21 @@
                     login.classList.add("hidden");
                     tabSignup.classList.add("active");
                     tabLogin.classList.remove("active");
+                    cardTitle.textContent = "Create your account";
+                    cardSubtitle.textContent = "Start building your personalized mental-training plan.";
                 } else {
                     login.classList.remove("hidden");
                     signup.classList.add("hidden");
                     tabLogin.classList.add("active");
                     tabSignup.classList.remove("active");
+                    cardTitle.textContent = "Welcome back";
+                    cardSubtitle.textContent = "Log in to continue your mental training.";
                 }
             }
 
             const params = new URLSearchParams(window.location.search);
-            if (params.get("tab") === "login") {
-                showTab("login");
+            if (params.get("tab") === "signup") {
+                showTab("signup");
             }
         </script>
         <script src="js/auth.js"></script>

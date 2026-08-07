@@ -6,7 +6,6 @@ const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const sqlite3 = require("sqlite3").verbose();
 const createPlanRoutes = require("./routes/planRoutes");
-const createAdminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -54,7 +53,7 @@ db.serialize(function () {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             plan_text TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
+            status TEXT NOT NULL DEFAULT 'approved',
             created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
             reviewed_at TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id)
@@ -78,6 +77,10 @@ db.serialize(function () {
             db.run("ALTER TABLE profiles ADD COLUMN goal_commitment INTEGER");
         }
     });
+
+    db.run(
+        "UPDATE plans SET status = 'approved', reviewed_at = COALESCE(reviewed_at, CURRENT_TIMESTAMP) WHERE status != 'approved'"
+    );
 });
 
 app.use(express.json());
@@ -249,7 +252,6 @@ app.post("/api/profile", function (req, res) {
 });
 
 app.use(createPlanRoutes(db));
-app.use(createAdminRoutes(db));
 
 app.listen(PORT, function () {
     console.log(`MindZone is running at http://localhost:${PORT}`);

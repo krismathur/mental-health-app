@@ -1,4 +1,3 @@
-const rewardsButtons = document.querySelectorAll(".rewards-btn");
 const rewardsOverlay = document.getElementById("rewardsOverlay");
 const rewardsBackdrop = document.getElementById("rewardsBackdrop");
 const closeRewardsBtn = document.getElementById("closeRewardsBtn");
@@ -85,29 +84,14 @@ function getLoginStreak(loginDates) {
     return streak;
 }
 
-function setupRewardsStreakLink() {
-    const rewardsGrid = document.querySelector(".rewards-grid");
-    if (!rewardsGrid || document.getElementById("rewardsStreakBtn")) {
-        return;
-    }
-
-    const streakButton = document.createElement("button");
-    streakButton.type = "button";
-    streakButton.id = "rewardsStreakBtn";
-    streakButton.className = "rewards-streak-btn";
-    streakButton.textContent = "Your Streak";
-    rewardsGrid.insertAdjacentElement("afterend", streakButton);
-    streakButton.addEventListener("click", function () {
-        showRewardDetails("streak");
-    });
-}
-
 function initLoginGemstones() {
-    setupRewardsStreakLink();
-
     if (sessionStorage.getItem("mindzone_record_login_gem") === "1") {
         sessionStorage.removeItem("mindzone_record_login_gem");
         awardLoginGemstone();
+    }
+
+    if (rewardDetails) {
+        showRewardDetails("streak");
     }
 }
 
@@ -151,6 +135,7 @@ function openRewards(event) {
     event.preventDefault();
 
     if (rewardsOverlay) {
+        showRewardDetails("streak");
         rewardsOverlay.classList.remove("rewards-hidden");
         return;
     }
@@ -166,9 +151,12 @@ function closeRewards() {
     }
 }
 
-for (const button of rewardsButtons) {
-    button.addEventListener("click", openRewards);
-}
+document.addEventListener("click", function (event) {
+    const button = event.target.closest(".rewards-btn");
+    if (button) {
+        openRewards(event);
+    }
+});
 
 for (const card of rewardCards) {
     card.addEventListener("click", function () {
@@ -182,7 +170,12 @@ if (closeRewardsBtn && rewardsBackdrop) {
 }
 
 function showRewardDetails(type) {
+    if (!rewardDetails) {
+        return;
+    }
+
     rewardDetails.hidden = false;
+    rewardDetails.classList.toggle("streak-details", type === "streak");
     activeRewardType = type;
     const rewards = getRewards();
     const badgesEarned = Math.min(10, Math.floor(rewards.activityCompletions / 3));

@@ -130,6 +130,13 @@ if (overlayBackdrop) {
     overlayBackdrop.addEventListener("click", closeSettings);
 }
 
+const welcomePageParams = new URLSearchParams(window.location.search);
+if (welcomePageParams.get("open") === "settings" && settingsBtn) {
+    setTimeout(function () {
+        settingsBtn.click();
+    }, 0);
+}
+
 function closeSettings() {
     settingsOverlay.classList.add("overlay-hidden");
 }
@@ -1254,11 +1261,6 @@ if (saveSettingsBtn) {
 
 if (regenerateBtn) {
     regenerateBtn.addEventListener("click", async function () {
-        if (currentPlanStatus !== "approved") {
-            alert("You can regenerate after your first plan is approved.");
-            return;
-        }
-
         if (!await saveSettingsFromForm()) {
             return;
         }
@@ -1301,10 +1303,6 @@ async function loadCurrentPlan(profileLoaded) {
             } catch (error) {
                 showPlanMessage("We loaded your plan but could not show it. Tap below to generate a fresh one.", "none");
             }
-        } else if (data.status === "pending") {
-            showPlanMessage(data.message, "pending");
-        } else if (data.status === "rejected") {
-            showPlanMessage(data.message, "rejected");
         } else {
             showPlanMessage("Visualization, Understanding your mistakes, Resetting your mind, and Good mental choices are the four steps to great mental strength.", "none");
         }
@@ -1415,11 +1413,6 @@ function setGenerateButtonState(status, isLoading) {
 
     generateButton.disabled = false;
 
-    if (status === "pending") {
-        generateButton.textContent = "Check If Plan Is Ready 🔄";
-        return;
-    }
-
     if (status === "approved") {
         generateButton.textContent = "Regenerate My Plan 🔄";
         return;
@@ -1428,7 +1421,7 @@ function setGenerateButtonState(status, isLoading) {
     generateButton.textContent = "Generate My Plan 🚀";
 }
 
-// Generate plan from localStorage data and wait for admin approval
+// Generate a plan from the saved onboarding profile.
 async function generatePlan(loadingMessage) {
     if (isGeneratingPlan) {
         return;
@@ -1446,18 +1439,6 @@ async function generatePlan(loadingMessage) {
     if (!profileIsComplete(profile)) {
         alert("Please finish onboarding first so we know your sport, goals, and ratings.");
         window.location.href = "onboarding.html";
-        return;
-    }
-
-    if (currentPlanStatus === "pending") {
-        mainCard.classList.remove("hidden");
-        planText.textContent = "Checking if your plan is ready...";
-        setGenerateButtonState("pending", true);
-        try {
-            await loadCurrentPlan(true);
-        } finally {
-            setGenerateButtonState(currentPlanStatus, false);
-        }
         return;
     }
 
@@ -1502,11 +1483,6 @@ async function generatePlan(loadingMessage) {
             } catch (renderError) {
                 showPlanMessage("Your plan was created but could not be shown. Please refresh and try again.", "none");
             }
-            return;
-        }
-
-        if (data.status === "pending") {
-            showPlanMessage(data.message, "pending");
             return;
         }
 

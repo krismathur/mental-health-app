@@ -140,27 +140,16 @@ function createPlanRoutes(db) {
         return null;
     }
 
-    function plansRequireApproval() {
-        return String(process.env.REQUIRE_PLAN_APPROVAL || "").trim().toLowerCase() === "true";
-    }
-
     router.get("/api/my-plan", function (req, res) {
         if (!req.session.userId) {
             return res.status(401).json({ message: "Please log in first." });
         }
 
         db.get(
-            `SELECT id, plan_text, status, created_at, reviewed_at
+            `SELECT id, plan_text
             FROM plans
             WHERE user_id = ?
-            ORDER BY
-                CASE status
-                    WHEN 'pending' THEN 1
-                    WHEN 'approved' THEN 2
-                    WHEN 'rejected' THEN 3
-                    ELSE 4
-                END,
-                id DESC
+            ORDER BY id DESC
             LIMIT 1`,
             [req.session.userId],
             function (error, plan) {
@@ -172,38 +161,11 @@ function createPlanRoutes(db) {
                     return res.json({ status: "none" });
                 }
 
-                if (plan.status === "approved") {
-                    return res.json({
-                        status: "approved",
-                        planId: plan.id,
-                        plan: plan.plan_text
-                    });
-                }
-
-                if (plan.status === "pending" && !plansRequireApproval()) {
-                    db.run(
-                        "UPDATE plans SET status = 'approved', reviewed_at = CURRENT_TIMESTAMP WHERE id = ?",
-                        [plan.id],
-                        function (updateError) {
-                            if (updateError) {
-                                return res.status(500).json({ message: "Could not load your plan." });
-                            }
-
-                            return res.json({
-                                status: "approved",
-                                planId: plan.id,
-                                plan: plan.plan_text
-                            });
-                        }
-                    );
-                    return;
-                }
-
-                if (plan.status === "rejected") {
-                    return res.json({ status: "rejected", message: "Your plan needs to be regenerated. Please update anything you want and try again." });
-                }
-
-                res.json({ status: "pending", message: "Your plan is waiting for admin approval. You will have it within 24 hours or sooner." });
+                res.json({
+                    status: "approved",
+                    planId: plan.id,
+                    plan: plan.plan_text
+                });
             }
         );
     });
@@ -228,41 +190,7 @@ function createPlanRoutes(db) {
             return res.status(500).json({ message: "Gemini is not set up. Add GEMINI_API_KEY and GEMINI_MODEL to your .env file." });
         }
 
-        db.get(
-            "SELECT id, plan_text FROM plans WHERE user_id = ? AND status = 'pending' ORDER BY created_at DESC LIMIT 1",
-            [req.session.userId],
-            async function (error, pendingPlan) {
-                if (error) {
-                    return res.status(500).json({ message: "Could not check your current plan status." });
-                }
-
-                if (pendingPlan) {
-                    if (!plansRequireApproval()) {
-                        db.run(
-                            "UPDATE plans SET status = 'approved', reviewed_at = CURRENT_TIMESTAMP WHERE id = ?",
-                            [pendingPlan.id],
-                            function (updateError) {
-                                if (updateError) {
-                                    return res.status(500).json({ message: "Could not approve your pending plan." });
-                                }
-
-                                return res.json({
-                                    status: "approved",
-                                    planId: pendingPlan.id,
-                                    plan: pendingPlan.plan_text,
-                                    message: "Your plan is ready!"
-                                });
-                            }
-                        );
-                        return;
-                    }
-
-                    return res.json({ status: "pending", message: "Your plan is already waiting for admin approval. You will have it within 24 hours or sooner." });
-                }
-
-                await generateAndSavePlan();
-            }
-        );
+        await generateAndSavePlan();
 
         async function generateAndSavePlan() {
             const prompt = `You are a mental performance coach writing for a young athlete who is ${age} years old. They play ${sport}.
@@ -356,7 +284,7 @@ Good example: "Sit on your bed, set a timer for 3 minutes, and breathe in for 4 
                         hasRawPlan: !!rawPlan,
                         rawPlanLength: rawPlan ? rawPlan.length : 0,
                         normalizeOk: !!plan,
-                        planStatus: plansRequireApproval() ? "pending" : "approved"
+                        planStatus: "approved"
                     }, "F");
                     // #endregion
                 }
@@ -365,34 +293,19 @@ Good example: "Sit on your bed, set a timer for 3 minutes, and breathe in for 4 
                     return res.status(500).json({ message: "Gemini could not generate a valid plan. Please try again in a moment." });
                 }
 
-                const planStatus = plansRequireApproval() ? "pending" : "approved";
-                const insertSql = planStatus === "approved"
-                    ? "INSERT INTO plans (user_id, plan_text, status, reviewed_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)"
-                    : "INSERT INTO plans (user_id, plan_text, status) VALUES (?, ?, ?)";
-                const insertParams = planStatus === "approved"
-                    ? [req.session.userId, plan, planStatus]
-                    : [req.session.userId, plan, planStatus];
-
                 db.run(
-                    insertSql,
-                    insertParams,
+                    "INSERT INTO plans (user_id, plan_text, status, reviewed_at) VALUES (?, ?, 'approved', CURRENT_TIMESTAMP)",
+                    [req.session.userId, plan],
                     function (error) {
                         if (error) {
                             return res.status(500).json({ message: "Could not save the generated plan." });
                         }
 
-                        if (planStatus === "approved") {
-                            return res.json({
-                                status: "approved",
-                                planId: this.lastID,
-                                plan: plan,
-                                message: "Your plan is ready!"
-                            });
-                        }
-
                         res.json({
-                            status: "pending",
-                            message: "Your plan was generated and is waiting for admin approval. You will have it within 24 hours or sooner."
+                            status: "approved",
+                            planId: this.lastID,
+                            plan: plan,
+                            message: "Your plan is ready!"
                         });
                     }
                 );

@@ -989,22 +989,6 @@ body::before {
     margin-bottom: 4px;
 }
 
-.tool-extras .rewards-streak-btn {
-    margin-top: 10px;
-    padding: 10px 14px;
-    background: #ebf8ff;
-    border: 2px solid #bee3f8;
-    border-radius: 10px;
-    color: #2b6cb0;
-    font-size: 0.88rem;
-    box-shadow: none;
-}
-
-.tool-extras .rewards-streak-btn:hover {
-    background: #d6ecff;
-    color: #1a4f8a;
-}
-
 .tool-extras .reward-details {
     margin-top: 12px;
     padding: 14px;
@@ -1059,16 +1043,6 @@ body::before {
 .tool-extras .locked-gemstone {
     background: #edf2f7;
     border-color: #cbd5e0;
-}
-
-/* Welcome page — keep nav compact */
-body.welcome-page .site-nav .nav-btn {
-    padding: 0 10px;
-    font-size: 0.72rem;
-}
-
-body.welcome-page .site-nav .nav-links {
-    gap: 4px;
 }
 
 .continue-btn-floating {
@@ -1814,13 +1788,13 @@ body.welcome-page .site-nav .nav-links {
     z-index: 1;
     background: white;
     border-radius: 20px;
-    max-width: 500px;
+    max-width: 920px;
     width: 100%;
-    max-height: 90vh;
+    max-height: 94vh;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    padding: 24px 28px 28px;
+    padding: 28px 32px 30px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     text-align: left;
 }
@@ -1834,7 +1808,7 @@ body.welcome-page .site-nav .nav-links {
 
 .settings-header h2 {
     color: #2b6cb0;
-    font-size: 1.3rem;
+    font-size: 1.65rem;
     font-weight: 900;
     margin: 0;
 }
@@ -2460,6 +2434,57 @@ body.welcome-page .site-nav .nav-links {
     margin-top: 14px;
 }
 
+.settings-onboarding-section {
+    padding: 22px;
+    border: 1px solid #dbe7f3;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #f8fbff 0%, #edf5fc 100%);
+}
+
+.settings-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 16px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #dbe7f3;
+}
+
+.settings-section-kicker {
+    margin: 0 0 4px;
+    color: #2b6cb0;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+}
+
+.settings-section-heading h3 {
+    margin: 0;
+    color: #1a365d;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.settings-section-heading > p {
+    max-width: 390px;
+    margin: 0;
+    color: #718096;
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.settings-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 16px;
+}
+
+.settings-field {
+    min-width: 0;
+}
+
 .settings-panel input[type="text"],
 .settings-panel input[type="number"] {
     display: block;
@@ -2543,12 +2568,16 @@ body.welcome-page .site-nav .nav-links {
 }
 
 .settings-panel .star-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
     margin-top: 24px;
     padding-top: 20px;
     border-top: 2px dashed #e2e8f0;
 }
 
 .settings-panel .star-section h3 {
+    grid-column: 1 / -1;
     color: #2b6cb0;
     font-size: 1rem;
     font-weight: 900;
@@ -2556,6 +2585,7 @@ body.welcome-page .site-nav .nav-links {
 }
 
 .settings-panel .star-hint {
+    grid-column: 1 / -1;
     color: #718096;
     font-size: 0.85rem;
     font-weight: 600;
@@ -2563,7 +2593,7 @@ body.welcome-page .site-nav .nav-links {
 }
 
 .settings-panel .star-row {
-    margin-top: 18px;
+    margin-top: 0;
     background: #f8fafc;
     padding: 12px;
     border-radius: 12px;
@@ -2614,6 +2644,15 @@ body.welcome-page .site-nav .nav-links {
     background: linear-gradient(135deg, #2b6cb0, #4299e1);
     border-color: #2b6cb0;
     color: white;
+}
+
+.settings-form-actions {
+    display: flex;
+    gap: 14px;
+}
+
+.settings-form-actions .settings-action-btn {
+    flex: 1;
 }
 
 @media (max-width: 700px) {
@@ -2996,5 +3035,24 @@ body.welcome-page .tool-daily:hover {
 
     .dashboard-flow span {
         justify-content: flex-start;
+    }
+
+    .settings-panel {
+        padding: 22px 18px 24px;
+    }
+
+    .settings-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .settings-fields-grid,
+    .settings-panel .star-section {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-form-actions {
+        flex-direction: column;
     }
 }

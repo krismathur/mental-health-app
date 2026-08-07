@@ -1,4 +1,3 @@
-const videoLibraryButtons = document.querySelectorAll(".video-library-btn");
 const videoLibraryOverlay = document.getElementById("videoLibraryOverlay");
 const videoLibraryBackdrop = document.getElementById("videoLibraryBackdrop");
 const closeVideoLibraryBtn = document.getElementById("closeVideoLibraryBtn");
@@ -98,7 +97,10 @@ function openVideoLibrary(event) {
 
     if (typeof window.scrollToDashboardSection === "function") {
         window.scrollToDashboardSection("videoLibrarySection");
+        return;
     }
+
+    window.location.href = "welcome.html?open=videos";
 }
 
 function closeVideoLibrary() {
@@ -109,9 +111,12 @@ function closeVideoLibrary() {
     }
 }
 
-for (const button of videoLibraryButtons) {
-    button.addEventListener("click", openVideoLibrary);
-}
+document.addEventListener("click", function (event) {
+    const button = event.target.closest(".video-library-btn");
+    if (button) {
+        openVideoLibrary(event);
+    }
+});
 
 for (const videoItem of videoItems) {
     videoItem.addEventListener("click", openVideoPlayer);
@@ -137,3 +142,10 @@ document.addEventListener("keydown", function (event) {
 
     closeVideoLibrary();
 });
+
+(function openVideoLibraryFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("open") === "videos" && videoLibraryOverlay) {
+        videoLibraryOverlay.classList.remove("video-hidden");
+    }
+})();
