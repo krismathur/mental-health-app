@@ -73,10 +73,24 @@ body.overlay-open nav.site-nav {
     transform: translateY(-16px);
 }
 
+/* Lock the page behind any open overlay: the background can't scroll and the
+   window scrollbar disappears, so the only scrollbar is the panel's own. */
+body.overlay-open {
+    overflow: hidden;
+}
+
+/* Every overlay dims + blurs the page behind it the same way */
+.overlay-backdrop,
+.video-backdrop,
+.rewards-backdrop {
+    background: rgba(6, 14, 26, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
 /* Every overlay shell can scroll when content is taller than the viewport */
 .overlay,
-.video-overlay,
-.rewards-overlay {
+.video-overlay {
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -303,10 +317,10 @@ body.admin-page .page-brand {
 .site-nav .nav-links a.btn-fill,
 .site-nav .nav-links button.btn-fill {
     border: none;
-    background: linear-gradient(135deg, var(--nav-accent) 0%, var(--nav-accent-deep) 100%);
-    color: #ffffff;
-    text-shadow: 0 1px 2px rgba(8, 20, 40, 0.35);
-    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.4);
+    background: transparent;
+    color: var(--nav-text);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: none;
 }
 
 .site-nav .nav-links a.nav-btn-fill:hover,
@@ -314,9 +328,9 @@ body.admin-page .page-brand {
 .site-nav .nav-links a.btn-fill:hover,
 .site-nav .nav-links button.btn-fill:hover {
     border: none;
-    background: linear-gradient(135deg, #7cc4f5 0%, #3178c0 100%);
+    background: rgba(255, 255, 255, 0.16);
     color: #ffffff;
-    box-shadow: 0 10px 22px rgba(43, 108, 176, 0.5);
+    box-shadow: 0 6px 18px rgba(8, 20, 40, 0.28);
     opacity: 1;
 }
 

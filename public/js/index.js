@@ -10,7 +10,7 @@ async function checkLoginStatus() {
         }
 
         // Logged in: the single auth item becomes a shortcut to the dashboard,
-        // and the hero's "Get Logged-In" call-to-action is no longer needed.
+        // and the hero's "Start Training" call-to-action is no longer needed.
         if (authLink) {
             authLink.textContent = "Dashboard";
             authLink.href = "welcome.html";
@@ -20,7 +20,7 @@ async function checkLoginStatus() {
             heroBtn.remove();
         }
     } catch (error) {
-        // Keep the default Log In / Sign Up button if the server is unreachable.
+        // Keep the default Get Started button if the server is unreachable.
     }
 }
 

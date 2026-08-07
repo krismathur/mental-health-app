@@ -1,3 +1,28 @@
+// Reflow the dashboard layout: Mood Check-in becomes a full-width strip on
+// top, and the Continue button sits directly under Daily Review.
+(function reflowWelcomeLayout() {
+    const page = document.querySelector(".page");
+    const topRow = document.querySelector(".top-row");
+    const mood = document.getElementById("emotionCheckinSection");
+    const stack = document.querySelector(".top-right-stack");
+    const continueBtn = document.querySelector(".continue-btn-floating");
+    const dashboardName = document.getElementById("dashboardName");
+
+    if (dashboardName) {
+        const savedName = localStorage.getItem("mindzone_name");
+        if (savedName) {
+            dashboardName.textContent = savedName;
+        }
+    }
+
+    if (page && topRow && mood) {
+        page.insertBefore(mood, topRow);
+    }
+    if (stack && continueBtn) {
+        stack.appendChild(continueBtn);
+    }
+})();
+
 const generateButton = document.getElementById("generatePlanButton");
 const planText = document.getElementById("planText");
 const planView = document.getElementById("planView");

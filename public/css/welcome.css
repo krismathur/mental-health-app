@@ -2219,9 +2219,9 @@ body.welcome-page .site-nav .nav-links {
     isolation: isolate;
     background: #2b1d4e;
     border-radius: 24px;
-    max-width: 720px;
+    max-width: 780px;
     width: 100%;
-    max-height: 90vh;
+    max-height: 94vh;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -2743,18 +2743,258 @@ body.welcome-page .daily-reflection-input:focus {
     background: #ffffff;
 }
 
-/* Continue CTA: full-width closing action beneath the plan card */
+/* Continue CTA: full-width, sits under the Daily Review card (right column) */
 body.welcome-page .continue-btn-floating {
     position: static;
     inset: auto;
     display: flex;
+    justify-content: center;
     width: 100%;
     box-sizing: border-box;
-    margin: 20px 0 0;
-    font-size: 1.02rem;
-    padding: 16px 34px;
+    margin: 0;
+    font-size: 1rem;
+    padding: 15px 28px;
 }
 
 body.welcome-page .page {
     padding-bottom: 48px;
+}
+
+/* Mood Check-in: compact full-width strip on top of the dashboard */
+body.welcome-page .page > #emotionCheckinSection {
+    width: 100%;
+    max-width: 1060px;
+    margin: 0 auto 24px;
+    padding: 16px 22px 18px;
+    box-sizing: border-box;
+}
+
+body.welcome-page #emotionCheckinSection .tool-title {
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-grid--compact {
+    grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+    gap: 8px;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-cell {
+    padding: 8px 4px;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-circle,
+body.welcome-page #emotionCheckinSection .emotion-blob-wrap {
+    width: 42px;
+    height: 42px;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-label {
+    font-size: 0.72rem;
+}
+
+/* Extra breathing room above the Save Mood button */
+body.welcome-page #emotionCheckinSection .emotion-save-btn {
+    width: 100%;
+    max-width: 340px;
+    margin: 22px auto 0;
+}
+
+/* Welcome dashboard hierarchy and neutral glass surfaces */
+body.welcome-page::before {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8, 18, 30, 0.54) 0%,
+            rgba(8, 17, 29, 0.66) 58%,
+            rgba(7, 14, 24, 0.78) 100%
+        );
+}
+
+body.welcome-page .page {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 28px 24px 64px;
+}
+
+.dashboard-welcome {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    max-width: 1120px;
+    margin: 0 auto 24px;
+    padding: 26px 30px;
+    background: rgba(12, 16, 22, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    border-radius: 24px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+}
+
+.dashboard-kicker {
+    margin: 0 0 8px;
+    color: #b9d9ff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+}
+
+.dashboard-welcome h1 {
+    margin: 0 0 8px;
+    color: #fff;
+    font-size: clamp(1.8rem, 3vw, 2.45rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+}
+
+.dashboard-welcome-copy > p:last-child {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.dashboard-flow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 440px;
+}
+
+.dashboard-flow span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 11px;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.dashboard-flow b {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: #173a63;
+    background: #b9d9ff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+}
+
+body.welcome-page .top-row,
+body.welcome-page .page > #emotionCheckinSection {
+    max-width: 1120px;
+}
+
+body.welcome-page .top-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+}
+
+body.welcome-page .top-left,
+body.welcome-page .top-right-stack {
+    width: 100%;
+    min-width: 0;
+}
+
+body.welcome-page .tool-plan,
+body.welcome-page .tool-daily {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body.welcome-page .continue-btn-floating {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+body.welcome-page .page > #emotionCheckinSection {
+    padding: 14px 18px 16px;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-grid--compact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 8px;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-cell {
+    flex: 0 1 92px;
+    width: 92px;
+    min-height: 72px;
+    padding: 6px 3px;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-save-btn {
+    margin-top: 14px;
+}
+
+body.welcome-page .tool-plan,
+body.welcome-page .tool-checkin,
+body.welcome-page .tool-daily {
+    background: rgba(12, 16, 22, 0.46);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+        0 16px 38px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+body.welcome-page .tool-plan:hover,
+body.welcome-page .tool-checkin:hover,
+body.welcome-page .tool-daily:hover {
+    box-shadow:
+        0 22px 46px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+@media (max-width: 900px) {
+    .dashboard-welcome {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .dashboard-flow {
+        justify-content: flex-start;
+        max-width: none;
+    }
+
+    body.welcome-page .top-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    body.welcome-page .page {
+        padding: 18px 14px 48px;
+    }
+
+    .dashboard-welcome {
+        padding: 22px 20px;
+        border-radius: 20px;
+    }
+
+    .dashboard-flow {
+        display: grid;
+        width: 100%;
+    }
+
+    .dashboard-flow span {
+        justify-content: flex-start;
+    }
 }

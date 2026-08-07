@@ -4,9 +4,17 @@
     box-sizing: border-box;
 }
 
+/* Dark root fallback: Safari fails to paint the body background behind a
+   fixed, negative z-index pseudo-element, exposing the white page root
+   (broken white band under the nav). Painting html dark prevents that. */
+html {
+    background-color: #08213b;
+}
+
 body {
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    background:
+    background-color: #08213b;
+    background-image:
         radial-gradient(circle at 18% 18%, rgba(99, 179, 237, 0.32), transparent 24%),
         radial-gradient(circle at 82% 14%, rgba(251, 211, 141, 0.22), transparent 22%),
         radial-gradient(circle at 50% 92%, rgba(104, 211, 145, 0.18), transparent 28%),
@@ -284,6 +292,11 @@ body::after {
     box-shadow: 0 0 36px rgba(43, 108, 176, 0.28);
     display: flex;
     flex-direction: column;
+    padding: 16px 18px 18px;
+}
+
+.meditation-journey-header {
+    margin-bottom: 8px;
 }
 
 .meditation-journey-header h2 {
@@ -302,55 +315,53 @@ body::after {
     flex: 1;
     min-height: 0;
     border-radius: 14px;
-    padding: 20px;
+    padding: 12px 14px 14px;
     background: rgba(6, 43, 58, 0.55);
     border: 2px solid rgba(129, 230, 217, 0.3);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
 }
 
 .meditation-intro {
     color: #bee3f8;
-    font-size: 1rem;
+    font-size: 0.92rem;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 18px;
-    line-height: 1.5;
+    margin: 0 0 10px;
+    line-height: 1.35;
 }
 
 .meditation-program-list {
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 10px;
 }
 
 .meditation-program-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 7px;
 }
 
 .meditation-program-section-title {
-    font-size: 1.05rem;
+    font-size: 0.88rem;
     font-weight: 900;
     color: #81e6d9;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    padding-bottom: 4px;
+    padding-bottom: 3px;
     border-bottom: 2px solid rgba(129, 230, 217, 0.35);
 }
 
 .meditation-program-section-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    gap: 10px;
 }
 
 .meditation-program-card {
-    padding: 18px 16px;
-    border-radius: 14px;
-    border: 2px solid rgba(129, 230, 217, 0.45);
+    padding: 11px 14px;
+    border-radius: 13px;
+    border: 1px solid rgba(129, 230, 217, 0.45);
     background: rgba(15, 95, 115, 0.55);
     color: #e6fffa;
     text-align: left;
@@ -367,26 +378,26 @@ body::after {
 }
 
 .meditation-program-card h3 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 900;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .meditation-program-card p {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: #bee3f8;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
 .meditation-program-duration {
     display: inline-block;
-    margin-top: 10px;
-    padding: 4px 10px;
+    margin-top: 6px;
+    padding: 3px 8px;
     border-radius: 999px;
     background: rgba(129, 230, 217, 0.2);
     color: #81e6d9;
-    font-size: 0.78rem;
+    font-size: 0.7rem;
     font-weight: 900;
 }
 
@@ -498,7 +509,7 @@ body::after {
 
 @media (max-width: 720px) {
     .meditation-program-section-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
