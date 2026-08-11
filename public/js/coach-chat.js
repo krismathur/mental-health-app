@@ -1,8 +1,4 @@
 (function () {
-    const startBtn = document.getElementById("startCoachChatBtn");
-    const overlay = document.getElementById("coachOverlay");
-    const backdrop = document.getElementById("coachOverlayBackdrop");
-    const closeBtn = document.getElementById("closeCoachBtn");
     const clearBtn = document.getElementById("clearChatBtn");
     const messagesBox = document.getElementById("coachMessages");
     const form = document.getElementById("coachForm");
@@ -10,13 +6,12 @@
     const sendBtn = document.getElementById("coachSendBtn");
     const notice = document.getElementById("coachNotice");
 
-    if (!startBtn || !overlay || !form || !input || !messagesBox) {
+    if (!form || !input || !messagesBox) {
         return;
     }
 
     const WELCOME_MESSAGE = "Hey! I'm your MindZone coach. Tell me what's going on with your training, your last game, or anything on your mind.";
 
-    let historyLoaded = false;
     let sending = false;
 
     function showNotice(message) {
@@ -73,10 +68,6 @@
     }
 
     async function loadHistory() {
-        if (historyLoaded) {
-            return;
-        }
-
         try {
             const response = await fetch("/api/coach-history");
 
@@ -98,7 +89,6 @@
                 });
             }
 
-            historyLoaded = true;
             showNotice("");
         } catch (error) {
             showNotice("Could not load your past messages.");
@@ -134,19 +124,6 @@
         } finally {
             setSending(false);
         }
-    }
-
-    function openChat() {
-        overlay.classList.remove("overlay-hidden");
-        document.body.classList.add("overlay-open");
-        loadHistory().then(function () {
-            input.focus();
-        });
-    }
-
-    function closeChat() {
-        overlay.classList.add("overlay-hidden");
-        document.body.classList.remove("overlay-open");
     }
 
     form.addEventListener("submit", function (event) {
@@ -194,19 +171,5 @@
         });
     }
 
-    startBtn.addEventListener("click", openChat);
-
-    if (closeBtn) {
-        closeBtn.addEventListener("click", closeChat);
-    }
-
-    if (backdrop) {
-        backdrop.addEventListener("click", closeChat);
-    }
-
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape" && !overlay.classList.contains("overlay-hidden")) {
-            closeChat();
-        }
-    });
+    loadHistory();
 })();

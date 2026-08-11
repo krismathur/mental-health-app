@@ -505,27 +505,15 @@ body::before {
     isolation: isolate;
     border: none;
     border-radius: 20px;
-    min-height: 220px;
+    min-height: 520px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 28px 24px;
+    padding: 22px 20px 20px;
     background: #102a43;
     box-shadow:
         0 14px 36px rgba(16, 42, 67, 0.4),
         0 0 0 1px rgba(255, 255, 255, 0.28) inset,
         0 0 40px rgba(56, 178, 172, 0.18);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.tool-ai-coach:hover {
-    transform: translateY(-2px);
-    box-shadow:
-        0 18px 44px rgba(16, 42, 67, 0.48),
-        0 0 0 1px rgba(255, 255, 255, 0.38) inset,
-        0 0 52px rgba(56, 178, 172, 0.28);
 }
 
 .tool-ai-coach > * {
@@ -564,92 +552,32 @@ body::before {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
+/* AI Coach chat, shown right inside the dashboard card */
+.coach-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
 .tool-ai-coach .tool-title {
+    margin: 0 0 4px;
     color: #fff;
-    font-size: 1.55rem;
+    font-size: 1.45rem;
     font-weight: 900;
     letter-spacing: -0.02em;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
-    margin-bottom: 12px;
 }
 
 .ai-coach-subtitle {
     margin: 0;
     max-width: 320px;
-    color: rgba(255, 255, 255, 0.96);
-    font-size: 0.98rem;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.86rem;
     font-weight: 700;
-    line-height: 1.5;
+    line-height: 1.45;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
-}
-
-.ai-coach-start-btn {
-    margin-top: 18px;
-    padding: 14px 30px;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #319795 0%, #38b2ac 45%, #4fd1c5 100%);
-    color: #fff;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: 0.01em;
-    cursor: pointer;
-    box-shadow: 0 10px 26px rgba(49, 151, 149, 0.45);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.ai-coach-start-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 32px rgba(49, 151, 149, 0.55);
-}
-
-/* AI Coach text chat overlay */
-.coach-panel {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 560px;
-    height: 88vh;
-    max-height: 720px;
-    display: flex;
-    flex-direction: column;
-    padding: 24px 22px 20px;
-    border-radius: 24px;
-    background: linear-gradient(165deg, #12263f 0%, #10394a 55%, #0d2035 100%);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
-    color: #fff;
-}
-
-.coach-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 16px;
-}
-
-.coach-kicker {
-    margin: 0 0 2px;
-    font-size: 0.7rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #81e6d9;
-}
-
-.coach-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 900;
-}
-
-.coach-header-actions {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .coach-clear-btn {
@@ -670,32 +598,16 @@ body::before {
     transform: translateY(-1px);
 }
 
-.coach-close-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.24);
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 1.4rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.coach-close-btn:hover {
-    background: rgba(255, 255, 255, 0.22);
-}
-
 .coach-messages {
     flex: 1;
+    min-height: 200px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 16px;
     border-radius: 18px;
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(9, 26, 43, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.14);
     scroll-behavior: smooth;
 }
@@ -858,9 +770,8 @@ body::before {
 }
 
 @media (max-width: 600px) {
-    .coach-panel {
-        height: 92vh;
-        padding: 18px 14px 14px;
+    .tool-ai-coach {
+        min-height: 460px;
     }
 
     .coach-send-btn {
@@ -1376,6 +1287,22 @@ body::before {
 .continue-btn {
     background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
     box-shadow: 0 6px 20px rgba(237, 137, 54, 0.35);
+}
+
+/* Game entry, sized like the Continue button but in mountain blue so the two
+   calls to action stay easy to tell apart. */
+.game-btn {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px 28px;
+    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 55%, #63b3ed 100%);
+    box-shadow: 0 8px 22px rgba(43, 108, 176, 0.42);
+    text-align: center;
+}
+
+.game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(43, 108, 176, 0.5);
 }
 
 .continue-btn:hover {
@@ -2904,7 +2831,7 @@ body.welcome-page .tool-checkin {
 
 body.welcome-page .tool-ai-coach {
     border-radius: 24px;
-    padding: 32px 26px;
+    padding: 24px 22px 20px;
 }
 
 /* Robust stacking for the right column — grid + height:100% + sticky was
@@ -2922,15 +2849,22 @@ body.welcome-page .top-right-stack > .tool-card {
     min-height: 0;
 }
 
-/* Continue CTA: full-width, sits under the AI Coach card (right column) */
+/* The coach card holds a scrolling chat, so it keeps a real height instead of
+   shrinking to fit its content like the other cards in this column. */
+body.welcome-page .top-right-stack > .tool-ai-coach {
+    min-height: 520px;
+}
+
+/* Continue CTA: full-width strip across the very bottom of the dashboard */
 body.welcome-page .continue-btn-floating {
     position: static;
     inset: auto;
     display: flex;
     justify-content: center;
     width: 100%;
+    max-width: 1060px;
     box-sizing: border-box;
-    margin: 0;
+    margin: 28px auto 0;
     font-size: 1rem;
     padding: 15px 28px;
 }
@@ -3094,8 +3028,8 @@ body.welcome-page .tool-ai-coach {
 
 body.welcome-page .continue-btn-floating {
     width: 100%;
-    max-width: none;
-    margin: 0;
+    max-width: 1120px;
+    margin: 28px auto 0;
 }
 
 body.welcome-page .page > #emotionCheckinSection {

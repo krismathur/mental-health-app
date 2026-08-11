@@ -74,8 +74,6 @@
                         <button id="generatePlanButton" type="button">Generate My Plan 🚀</button>
                     </div>
                     </section>
-
-                    <a href="meditation.html" class="continue-btn-floating welcome-action-btn continue-btn">Continue Building Mental Strength 🧘</a>
                 </div>
 
                 <div class="top-right-stack">
@@ -253,14 +251,33 @@
                 </section>
 
                 <section id="aiCoachSection" class="tool-card tool-block tool-ai-coach top-right">
-                    <h2 class="tool-title">AI Coach</h2>
-                    <p class="ai-coach-subtitle">
-                        Need someone to talk to? Message a private AI coach that answers your questions and gives you feedback.
-                    </p>
-                    <button type="button" id="startCoachChatBtn" class="ai-coach-start-btn">Start Chatting</button>
+                    <div class="coach-card-header">
+                        <div>
+                            <h2 class="tool-title">AI Coach</h2>
+                            <p class="ai-coach-subtitle">
+                                Ask a question or say what's on your mind — your coach answers right here.
+                            </p>
+                        </div>
+                        <button type="button" id="clearChatBtn" class="coach-clear-btn">Clear Chat</button>
+                    </div>
+
+                    <div id="coachMessages" class="coach-messages" aria-live="polite"></div>
+
+                    <p id="coachNotice" class="coach-notice" hidden></p>
+
+                    <form id="coachForm" class="coach-form">
+                        <label class="visually-hidden" for="coachInput">Message your coach</label>
+                        <textarea id="coachInput" class="coach-input" rows="1" maxlength="2000"
+                            placeholder="Type what's on your mind..." autocomplete="off"></textarea>
+                        <button type="submit" id="coachSendBtn" class="coach-send-btn">Send</button>
+                    </form>
                 </section>
+
+                <a href="game/index.html" class="welcome-action-btn game-btn">Play: The Impossible Mountain 🏔️</a>
                 </div>
             </div>
+
+            <a href="meditation.html" class="continue-btn-floating welcome-action-btn continue-btn">Continue Building Mental Strength 🧘</a>
         </div>
 
         <div id="moodSavedPopup" class="mood-saved-popup mood-saved-popup-hidden" role="status" aria-live="polite">
@@ -588,34 +605,6 @@
                 </div>
 
                 <div id="rewardDetails" class="reward-details" hidden></div>
-            </div>
-        </div>
-
-        <!-- AI Coach text chat overlay -->
-        <div id="coachOverlay" class="overlay overlay-hidden">
-            <div class="overlay-backdrop" id="coachOverlayBackdrop"></div>
-            <div class="coach-panel" role="dialog" aria-labelledby="coachPanelTitle">
-                <div class="coach-header">
-                    <div>
-                        <p class="coach-kicker">Private Chat</p>
-                        <h2 id="coachPanelTitle">MindZone Coach</h2>
-                    </div>
-                    <div class="coach-header-actions">
-                        <button type="button" id="clearChatBtn" class="coach-clear-btn">Clear Chat</button>
-                        <button type="button" id="closeCoachBtn" class="coach-close-btn" aria-label="Close chat">&times;</button>
-                    </div>
-                </div>
-
-                <div id="coachMessages" class="coach-messages" aria-live="polite"></div>
-
-                <p id="coachNotice" class="coach-notice" hidden></p>
-
-                <form id="coachForm" class="coach-form">
-                    <label class="visually-hidden" for="coachInput">Message your coach</label>
-                    <textarea id="coachInput" class="coach-input" rows="1" maxlength="2000"
-                        placeholder="Type what's on your mind..." autocomplete="off"></textarea>
-                    <button type="submit" id="coachSendBtn" class="coach-send-btn">Send</button>
-                </form>
             </div>
         </div>
 
