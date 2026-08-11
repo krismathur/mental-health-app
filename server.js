@@ -60,6 +60,20 @@ db.serialize(function () {
         )
     `);
 
+    // One row per chat message so the coach conversation survives a page refresh.
+    db.run(`
+        CREATE TABLE IF NOT EXISTS conversations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            role TEXT NOT NULL,
+            message TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    `);
+
+    db.run("CREATE INDEX IF NOT EXISTS idx_conversations_user ON conversations(user_id, id)");
+
     db.all("PRAGMA table_info(profiles)", function (pragmaError, columns) {
         if (pragmaError) {
             return;
@@ -87,6 +101,16 @@ app.use(express.json());
 app.use(function (req, res, next) {
     if (req.path.startsWith("/data") || req.path.startsWith("/node_modules")) {
         return res.status(404).send("Not found");
+    }
+
+    next();
+});
+
+// Pages and scripts change often while the app is being built, and a cached copy
+// makes it look like edits did nothing.
+app.use(function (req, res, next) {
+    if (/\.html$|\.js$/.test(req.path)) {
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     }
 
     next();

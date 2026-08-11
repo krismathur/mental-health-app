@@ -1,5 +1,5 @@
 // Reflow the dashboard layout: Mood Check-in becomes a full-width strip on
-// top, and the Continue button sits directly under Daily Review.
+// top, and the Continue button sits directly under AI Coach.
 (function reflowWelcomeLayout() {
     const page = document.querySelector(".page");
     const topRow = document.querySelector(".top-row");
@@ -40,9 +40,6 @@ const emotionCheckinSection = document.getElementById("emotionCheckinSection");
 const weeklyReflectionSection = document.getElementById("weeklyReflectionSection");
 const weeklyReflectionDueBadge = document.getElementById("weeklyReflectionDueBadge");
 const weeklyReflectionWaitNotice = document.getElementById("weeklyReflectionWaitNotice");
-const dailyReflectionSection = document.getElementById("dailyReflectionSection");
-const dailyReflectionDueBadge = document.getElementById("dailyReflectionDueBadge");
-const dailyReflectionWaitNotice = document.getElementById("dailyReflectionWaitNotice");
 const saveMoodBtn = document.getElementById("saveMoodBtn");
 const emotionCells = document.querySelectorAll(".emotion-cell");
 const moodSavedPopup = document.getElementById("moodSavedPopup");
@@ -55,21 +52,15 @@ const moodTrendWeek = document.getElementById("moodTrendWeek");
 const weeklyReflectionInput = document.getElementById("weeklyReflectionInput");
 const weeklyReflectionNotice = document.getElementById("weeklyReflectionNotice");
 const saveWeeklyReflectionBtn = document.getElementById("saveWeeklyReflectionBtn");
-const dailyReflectionInput = document.getElementById("dailyReflectionInput");
-const dailyReflectionNotice = document.getElementById("dailyReflectionNotice");
-const saveDailyReflectionBtn = document.getElementById("saveDailyReflectionBtn");
 const MOOD_STORAGE_KEY = "mindzone_mood_today";
 const MOOD_HISTORY_KEY = "mindzone_mood_history";
 const WEEKLY_REFLECTION_KEY = "mindzone_weekly_reflection";
 const WEEKLY_REFLECTION_SCHEDULE_KEY = "mindzone_weekly_reflection_schedule";
-const DAILY_REFLECTION_KEY = "mindzone_daily_reflection";
-const DAILY_REFLECTION_SCHEDULE_KEY = "mindzone_daily_reflection_schedule";
 const MOOD_DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const POSITIVE_MOODS = ["Happy", "Calm", "Excited", "Proud"];
 const TOUGH_MOODS = ["Anxious", "Sad", "Angry", "Stressed", "Tired"];
 const AFTER_LOGIN_FLAG = "mindzone_after_login";
 const PENDING_WEEKLY_REFLECTION_FLAG = "mindzone_pending_weekly_reflection";
-const PENDING_DAILY_REFLECTION_FLAG = "mindzone_pending_daily_reflection";
 const VIDEO_LIBRARY_MATCHES = [
     { number: 1, keywords: ["visualiz", "mental rehearsal", "imagery", "rehearsal", "picture in your mind", "see yourself", "imagine"] },
     { number: 2, keywords: ["pregame", "prepare", "mental prep", "before game", "before practice", "breath", "breathing", "warm up", "routine"] },
@@ -106,7 +97,6 @@ loadProfileFromServer()
     .finally(function () {
         finishWelcomeInit();
         updateMoodCheckinUI();
-        updateDailyReflectionUI();
         maybeOpenAfterLoginPrompts();
     });
 
@@ -211,37 +201,9 @@ function maybeOpenAfterLoginPrompts() {
     sessionStorage.removeItem(AFTER_LOGIN_FLAG);
     sessionStorage.setItem("mindzone_login_handled", "1");
 
-    const moodToday = getMoodForDate(getTodayDateString());
-    const dailyDue = isDailyReflectionDue() && !hasCompletedDailyReflectionForCurrentCycle();
-
-    if (dailyDue) {
-        sessionStorage.setItem(PENDING_DAILY_REFLECTION_FLAG, "1");
-    }
-
-    if (!moodToday) {
+    if (!getMoodForDate(getTodayDateString())) {
         setTimeout(openEmotionCheckin, 400);
     }
-
-    if (dailyDue && moodToday) {
-        setTimeout(function () {
-            sessionStorage.removeItem(PENDING_DAILY_REFLECTION_FLAG);
-            openDailyReflection();
-        }, 1200);
-    }
-}
-
-function maybeOpenPendingDailyReflection() {
-    if (sessionStorage.getItem(PENDING_DAILY_REFLECTION_FLAG) !== "1") {
-        return;
-    }
-
-    if (!isDailyReflectionDue() || hasCompletedDailyReflectionForCurrentCycle()) {
-        sessionStorage.removeItem(PENDING_DAILY_REFLECTION_FLAG);
-        return;
-    }
-
-    sessionStorage.removeItem(PENDING_DAILY_REFLECTION_FLAG);
-    setTimeout(openDailyReflection, 350);
 }
 
 function closeEmotionCheckin() {
@@ -249,7 +211,6 @@ function closeEmotionCheckin() {
         window.MeditationSpeech.cancel();
     }
     clearEmotionSpeakState();
-    maybeOpenPendingDailyReflection();
 }
 
 function clearEmotionSpeakState() {
@@ -546,140 +507,6 @@ function saveWeeklyReflection() {
     }
 }
 
-function getDailyReflectionSchedule() {
-    const saved = localStorage.getItem(DAILY_REFLECTION_SCHEDULE_KEY);
-    if (!saved) {
-        return {
-            firstCheckinDate: "",
-            nextDueDate: "",
-            lastReflectionDate: ""
-        };
-    }
-
-    try {
-        const parsed = JSON.parse(saved);
-        return {
-            firstCheckinDate: parsed.firstCheckinDate || "",
-            nextDueDate: parsed.nextDueDate || "",
-            lastReflectionDate: parsed.lastReflectionDate || ""
-        };
-    } catch (error) {
-        localStorage.removeItem(DAILY_REFLECTION_SCHEDULE_KEY);
-        return {
-            firstCheckinDate: "",
-            nextDueDate: "",
-            lastReflectionDate: ""
-        };
-    }
-}
-
-function saveDailyReflectionSchedule(schedule) {
-    localStorage.setItem(DAILY_REFLECTION_SCHEDULE_KEY, JSON.stringify(schedule));
-}
-
-function scheduleDailyReflectionAfterCheckin() {
-    const today = getTodayDateString();
-    const schedule = getDailyReflectionSchedule();
-    const doneToday = hasCompletedDailyReflectionForCurrentCycle();
-
-    if (!schedule.firstCheckinDate) {
-        schedule.firstCheckinDate = today;
-    }
-
-    if (!doneToday) {
-        schedule.nextDueDate = today;
-        sessionStorage.setItem(PENDING_DAILY_REFLECTION_FLAG, "1");
-    } else if (!schedule.nextDueDate) {
-        schedule.nextDueDate = addDaysToDateString(today, 1);
-    }
-
-    saveDailyReflectionSchedule(schedule);
-    updateDailyReflectionUI();
-}
-
-function getDailyReflectionEntry() {
-    const saved = localStorage.getItem(DAILY_REFLECTION_KEY);
-    if (!saved) {
-        return null;
-    }
-
-    try {
-        return JSON.parse(saved);
-    } catch (error) {
-        localStorage.removeItem(DAILY_REFLECTION_KEY);
-        return null;
-    }
-}
-
-function isDailyReflectionDue() {
-    const schedule = getDailyReflectionSchedule();
-    if (!schedule.nextDueDate) {
-        return false;
-    }
-
-    return getTodayDateString() >= schedule.nextDueDate;
-}
-
-function hasCompletedDailyReflectionForCurrentCycle() {
-    const entry = getDailyReflectionEntry();
-    if (!entry || !entry.savedOn) {
-        return false;
-    }
-
-    return entry.savedOn === getTodayDateString();
-}
-
-function setDailyReflectionNotice(message, visible) {
-    if (!dailyReflectionNotice) {
-        return;
-    }
-
-    if (message) {
-        dailyReflectionNotice.textContent = message;
-    }
-    dailyReflectionNotice.hidden = !visible;
-}
-
-function updateDailyReflectionUI() {
-    const due = isDailyReflectionDue();
-    const completed = hasCompletedDailyReflectionForCurrentCycle();
-    const schedule = getDailyReflectionSchedule();
-    const unlocked = !!schedule.firstCheckinDate || due;
-
-    if (dailyReflectionSection) {
-        dailyReflectionSection.hidden = completed;
-        dailyReflectionSection.classList.toggle("is-due", due && !completed);
-
-        if (dailyReflectionSection.tagName === "DETAILS" && due && !completed) {
-            dailyReflectionSection.open = true;
-        }
-    }
-
-    if (completed) {
-        return;
-    }
-
-    if (dailyReflectionDueBadge) {
-        dailyReflectionDueBadge.hidden = !(due && !completed);
-    }
-
-    if (dailyReflectionWaitNotice) {
-        dailyReflectionWaitNotice.hidden = unlocked;
-    }
-
-    if (dailyReflectionInput) {
-        dailyReflectionInput.disabled = !unlocked;
-        dailyReflectionInput.readOnly = false;
-    }
-
-    if (saveDailyReflectionBtn) {
-        saveDailyReflectionBtn.disabled = !due;
-        saveDailyReflectionBtn.textContent = "Save Review";
-    }
-
-    setDailyReflectionNotice("", false);
-}
-
 function hasCompletedMoodCheckinToday() {
     return !!getMoodForDate(getTodayDateString());
 }
@@ -695,62 +522,6 @@ function updateMoodCheckinUI() {
     if (!completed) {
         restoreSavedMoodSelection();
     }
-}
-
-function openDailyReflection() {
-    updateDailyReflectionUI();
-
-    if (hasCompletedDailyReflectionForCurrentCycle()) {
-        return;
-    }
-
-    if (dailyReflectionInput) {
-        dailyReflectionInput.value = "";
-    }
-
-    if (dailyReflectionSection && dailyReflectionSection.tagName === "DETAILS") {
-        dailyReflectionSection.open = true;
-    }
-
-    scrollToDashboardSection("dailyReflectionSection");
-}
-
-function saveDailyReflection() {
-    if (!dailyReflectionInput) {
-        return;
-    }
-
-    const text = dailyReflectionInput.value.trim();
-    if (!text) {
-        return;
-    }
-
-    if (!isDailyReflectionDue()) {
-        if (dailyReflectionWaitNotice) {
-            dailyReflectionWaitNotice.hidden = false;
-        }
-        return;
-    }
-
-    // One submission per calendar day.
-    if (hasCompletedDailyReflectionForCurrentCycle()) {
-        updateDailyReflectionUI();
-        return;
-    }
-
-    const today = getTodayDateString();
-    localStorage.setItem(DAILY_REFLECTION_KEY, JSON.stringify({
-        text: text,
-        savedOn: today
-    }));
-
-    const schedule = getDailyReflectionSchedule();
-    schedule.lastReflectionDate = today;
-    schedule.nextDueDate = addDaysToDateString(today, 1);
-    saveDailyReflectionSchedule(schedule);
-
-    sessionStorage.removeItem(PENDING_DAILY_REFLECTION_FLAG);
-    updateDailyReflectionUI();
 }
 
 function getWeekMoodEntries() {
@@ -1026,7 +797,6 @@ function saveMoodToday() {
     localStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(mood));
     saveMoodHistoryEntry(mood);
     scheduleWeeklyReflectionAfterCheckin();
-    scheduleDailyReflectionAfterCheckin();
     updateMoodCheckinUI();
     closeEmotionCheckin();
     showMoodSavedPopup();
@@ -1078,12 +848,7 @@ if (saveWeeklyReflectionBtn) {
     saveWeeklyReflectionBtn.addEventListener("click", saveWeeklyReflection);
 }
 
-if (saveDailyReflectionBtn) {
-    saveDailyReflectionBtn.addEventListener("click", saveDailyReflection);
-}
-
 updateMoodCheckinUI();
-updateDailyReflectionUI();
 
 emotionCells.forEach(function (cell) {
     const pickButton = cell.querySelector(".emotion-pick-btn");

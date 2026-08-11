@@ -252,28 +252,12 @@
                     <button type="button" id="saveMoodBtn" class="emotion-save-btn emotion-save-btn--compact" disabled>Save Mood</button>
                 </section>
 
-                <section id="dailyReflectionSection" class="tool-card tool-block tool-reflection tool-daily top-right">
-                    <h2 class="tool-title">Daily Review</h2>
-                    <p class="daily-reflection-prompt">How did your mental strength show up today?</p>
-                    <p class="daily-review-note">Your daily review will be looked over so we can support your progress.</p>
-                    <div class="daily-reflection-panel">
-                        <span id="dailyReflectionDueBadge" class="tool-due-badge" hidden>Due</span>
-                        <textarea
-                            id="dailyReflectionInput"
-                            class="daily-reflection-input"
-                            rows="5"
-                            placeholder="What went well today? What will you try tomorrow?"
-                        ></textarea>
-                        <p id="dailyReflectionNotice" class="daily-reflection-notice" hidden>
-                            Review saved. You can submit again tomorrow.
-                        </p>
-                        <p id="dailyReflectionWaitNotice" class="daily-reflection-wait-notice" hidden>
-                            Save a mood check-in first to unlock your daily review.
-                        </p>
-                        <button type="button" id="saveDailyReflectionBtn" class="daily-reflection-save-btn">
-                            Save Review
-                        </button>
-                    </div>
+                <section id="aiCoachSection" class="tool-card tool-block tool-ai-coach top-right">
+                    <h2 class="tool-title">AI Coach</h2>
+                    <p class="ai-coach-subtitle">
+                        Need someone to talk to? Message a private AI coach that answers your questions and gives you feedback.
+                    </p>
+                    <button type="button" id="startCoachChatBtn" class="ai-coach-start-btn">Start Chatting</button>
                 </section>
                 </div>
             </div>
@@ -607,12 +591,41 @@
             </div>
         </div>
 
+        <!-- AI Coach text chat overlay -->
+        <div id="coachOverlay" class="overlay overlay-hidden">
+            <div class="overlay-backdrop" id="coachOverlayBackdrop"></div>
+            <div class="coach-panel" role="dialog" aria-labelledby="coachPanelTitle">
+                <div class="coach-header">
+                    <div>
+                        <p class="coach-kicker">Private Chat</p>
+                        <h2 id="coachPanelTitle">MindZone Coach</h2>
+                    </div>
+                    <div class="coach-header-actions">
+                        <button type="button" id="clearChatBtn" class="coach-clear-btn">Clear Chat</button>
+                        <button type="button" id="closeCoachBtn" class="coach-close-btn" aria-label="Close chat">&times;</button>
+                    </div>
+                </div>
+
+                <div id="coachMessages" class="coach-messages" aria-live="polite"></div>
+
+                <p id="coachNotice" class="coach-notice" hidden></p>
+
+                <form id="coachForm" class="coach-form">
+                    <label class="visually-hidden" for="coachInput">Message your coach</label>
+                    <textarea id="coachInput" class="coach-input" rows="1" maxlength="2000"
+                        placeholder="Type what's on your mind..." autocomplete="off"></textarea>
+                    <button type="submit" id="coachSendBtn" class="coach-send-btn">Send</button>
+                </form>
+            </div>
+        </div>
+
         <script src="js/app-time.js"></script>
         <script src="js/meditation-speech.js"></script>
         <script src="js/video-library.js"></script>
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
         <script src="js/welcome.js"></script>
+        <script src="js/coach-chat.js"></script>
         <script src="js/dev-time-panel.js"></script>
     </body>
 </html>
