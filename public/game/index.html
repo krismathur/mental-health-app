@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+        <title>The Impossible Mountain - MindZone</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/css/rewards.css">
+        <link rel="stylesheet" href="game.css">
+    </head>
+    <body class="game-body">
+
+        <header class="game-topbar">
+            <a class="game-back" href="/welcome.html">← Dashboard</a>
+            <p class="game-wordmark">The Impossible Mountain</p>
+            <button type="button" id="muteBtn" class="game-icon-btn" aria-label="Turn sound off">🔊</button>
+        </header>
+
+        <main id="gameRoot" class="game-root">
+
+            <!-- Start -->
+            <section id="startScreen" class="game-screen is-active">
+                <div class="screen-card start-card">
+                    <p class="screen-kicker">Climb. Fall. Climb again.</p>
+                    <h1 class="screen-title">The Impossible Mountain</h1>
+                    <p class="screen-text">
+                        Nobody reaches the top on the first try. Every time you slip, you get
+                        to choose what happens next — and that choice makes you stronger.
+                    </p>
+
+                    <button type="button" id="playBtn" class="game-btn game-btn-primary">Start Climbing</button>
+
+                    <div class="start-stats" id="startStats"></div>
+                    <div class="start-badges" id="startBadges"></div>
+
+                    <p class="screen-hint">
+                        Move with the arrow keys or A and D. Jump with space or the up arrow.
+                        On a phone or tablet, use the buttons at the bottom.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Character select -->
+            <section id="characterScreen" class="game-screen">
+                <div class="screen-card">
+                    <h2 class="screen-title">Pick your climber</h2>
+                    <p class="screen-text">They all climb the same. Pick the one that feels like you.</p>
+
+                    <div class="character-grid" id="characterGrid"></div>
+
+                    <div class="screen-actions">
+                        <button type="button" id="backToStartBtn" class="game-btn game-btn-ghost">Back</button>
+                        <button type="button" id="confirmCharacterBtn" class="game-btn game-btn-primary">Let's Climb</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gameplay -->
+            <section id="playScreen" class="game-screen game-screen-play">
+                <div class="stage" id="stage">
+                    <canvas id="gameCanvas"></canvas>
+
+                    <div class="hud">
+                        <div class="hud-left">
+                            <span class="hud-chip hud-crystals">
+                                <span class="hud-gem" aria-hidden="true"></span>
+                                <span id="hudCrystals">0</span><span class="hud-dim" id="hudCrystalTotal">/0</span>
+                            </span>
+                            <span class="hud-chip hud-height"><span id="hudHeight">0</span>m</span>
+                        </div>
+
+                        <div class="hud-right">
+                            <span class="hud-chip hud-ability" id="hudAbility" hidden></span>
+                            <button type="button" id="pauseBtn" class="game-icon-btn" aria-label="Pause">⏸</button>
+                        </div>
+                    </div>
+
+                    <p class="stage-toast" id="stageToast" hidden></p>
+
+                    <div class="touch-controls" id="touchControls" hidden>
+                        <div class="touch-cluster">
+                            <button type="button" class="touch-btn" data-hold="left" aria-label="Move left">◀</button>
+                            <button type="button" class="touch-btn" data-hold="right" aria-label="Move right">▶</button>
+                        </div>
+                        <button type="button" class="touch-btn touch-jump" data-hold="jump" aria-label="Jump">JUMP</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Pause -->
+        <div id="pauseOverlay" class="game-overlay" hidden>
+            <div class="screen-card overlay-card">
+                <h2 class="screen-title">Paused</h2>
+                <div class="screen-actions screen-actions-stack">
+                    <button type="button" id="resumeBtn" class="game-btn game-btn-primary">Keep Climbing</button>
+                    <button type="button" id="restartBtn" class="game-btn game-btn-ghost">Restart Level</button>
+                    <button type="button" id="quitBtn" class="game-btn game-btn-ghost">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setback choice -->
+        <div id="setbackOverlay" class="game-overlay" hidden>
+            <div class="screen-card overlay-card setback-card">
+                <div class="setback-face" id="setbackFace" aria-hidden="true"></div>
+                <p class="screen-kicker" id="setbackKicker">Setback</p>
+                <h2 class="screen-title" id="setbackTitle">You slipped!</h2>
+                <p class="screen-text" id="setbackText">What do you want to do?</p>
+                <div class="choice-list" id="choiceList"></div>
+                <p class="setback-response" id="setbackResponse" hidden></p>
+            </div>
+        </div>
+
+        <!-- Level complete -->
+        <div id="completeOverlay" class="game-overlay" hidden>
+            <div class="screen-card overlay-card complete-card">
+                <div class="complete-burst" aria-hidden="true">🏔️</div>
+                <p class="screen-kicker">Summit reached</p>
+                <h2 class="screen-title" id="completeTitle">You made it!</h2>
+
+                <p class="reflection" id="completeReflection"></p>
+
+                <div class="complete-stats" id="completeStats"></div>
+                <div class="complete-badges" id="completeBadges"></div>
+
+                <div class="screen-actions">
+                    <button type="button" id="replayBtn" class="game-btn game-btn-ghost">Climb Again</button>
+                    <a href="/welcome.html" class="game-btn game-btn-primary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shared MindZone rewards, so game XP feeds the same meters as the rest of the app -->
+        <script src="/js/rewards.js"></script>
+        <script type="module" src="main.js"></script>
+    </body>
+</html>

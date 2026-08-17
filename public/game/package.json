@@ -1,0 +1,6 @@
+{
+    "name": "impossible-mountain",
+    "private": true,
+    "type": "module",
+    "description": "Marks the game sources as ES modules so level-check.mjs can import them in Node."
+}

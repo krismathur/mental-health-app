@@ -1,0 +1,8 @@
+{
+    "name": "city-missions",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "check": "node city-check.mjs"
+    }
+}

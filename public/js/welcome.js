@@ -1,10 +1,9 @@
 // Reflow the dashboard layout: Mood Check-in becomes a full-width strip on
-// top, and the Continue button sits directly under AI Coach.
+// top, and the Continue button ends up on its own row below everything else.
 (function reflowWelcomeLayout() {
     const page = document.querySelector(".page");
     const topRow = document.querySelector(".top-row");
     const mood = document.getElementById("emotionCheckinSection");
-    const stack = document.querySelector(".top-right-stack");
     const continueBtn = document.querySelector(".continue-btn-floating");
     const dashboardName = document.getElementById("dashboardName");
 
@@ -18,8 +17,8 @@
     if (page && topRow && mood) {
         page.insertBefore(mood, topRow);
     }
-    if (stack && continueBtn) {
-        stack.appendChild(continueBtn);
+    if (page && continueBtn) {
+        page.appendChild(continueBtn);
     }
 })();
 

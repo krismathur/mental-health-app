@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#080a0d">
+    <title>City Missions</title>
+    <link rel="stylesheet" href="city.css">
+    <link rel="stylesheet" href="/css/rewards.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="/css/rewards.css">
+    </noscript>
+</head>
+<body>
+    <div id="app">
+        <canvas id="scene"></canvas>
+
+        <!-- Loading -->
+        <section class="screen screen-loading" id="loadingScreen">
+            <div class="loading-inner">
+                <p class="eyebrow">Bayline District</p>
+                <h1 class="wordmark">CITY<span>MISSIONS</span></h1>
+                <div class="loading-bar is-waiting" id="loadingBar">
+                    <i id="loadingFill"></i>
+                </div>
+                <p class="loading-status" id="loadingStatus">Starting up</p>
+                <p class="loading-percent" id="loadingPercent"></p>
+                <p class="loading-hint" id="loadingHint">First launch can take a few seconds</p>
+            </div>
+        </section>
+
+        <!-- Main menu -->
+        <section class="screen screen-menu" id="menuScreen" hidden>
+            <div class="menu-grade"></div>
+            <div class="menu-inner">
+                <p class="eyebrow">Bayline District</p>
+                <h1 class="wordmark">CITY<span>MISSIONS</span></h1>
+                <p class="tagline">An open city, a team that needs you, and one shot at the Fulton Cup.</p>
+                <div class="menu-actions">
+                    <button class="btn btn-primary" id="continueButton" hidden>Continue<small id="continueDetail"></small></button>
+                    <button class="btn btn-primary" id="playButton">New game<small>Create your character</small></button>
+                    <button class="btn" id="freeRoamButton">Free roam<small>Explore with no missions</small></button>
+                    <button class="btn btn-ghost" id="controlsButton">Controls</button>
+                    <a class="btn btn-ghost" href="/welcome.html">Back to MindZone</a>
+                </div>
+            </div>
+            <div class="menu-credit">Real-time 3D · WebGL2 · no downloads</div>
+        </section>
+
+        <!-- Character creator -->
+        <section class="screen screen-creator" id="creatorScreen" hidden>
+            <div class="creator-layout">
+                <div class="creator-preview">
+                    <canvas id="previewCanvas"></canvas>
+                    <div class="preview-controls">
+                        <button type="button" class="icon-btn" id="rotateLeft" aria-label="Rotate left">&#8249;</button>
+                        <span>Rotate</span>
+                        <button type="button" class="icon-btn" id="rotateRight" aria-label="Rotate right">&#8250;</button>
+                    </div>
+                </div>
+                <form class="creator-panel" id="creatorForm">
+                    <header>
+                        <p class="eyebrow">Step 1</p>
+                        <h2>Who are you today?</h2>
+                    </header>
+                    <label class="field">
+                        <span>Name</span>
+                        <input type="text" name="playerName" maxlength="14" value="Rowan" autocomplete="off">
+                    </label>
+                    <div class="option-group" data-group="skin">
+                        <p class="option-label">Skin tone</p>
+                        <div class="swatches" id="skinOptions"></div>
+                    </div>
+                    <div class="option-group" data-group="hair">
+                        <p class="option-label">Hair</p>
+                        <div class="chips" id="hairOptions"></div>
+                        <div class="swatches" id="hairColorOptions"></div>
+                    </div>
+                    <div class="option-group" data-group="outfit">
+                        <p class="option-label">Outfit</p>
+                        <div class="chips" id="outfitOptions"></div>
+                    </div>
+                    <div class="option-group" data-group="jacket">
+                        <p class="option-label">Layer</p>
+                        <div class="chips" id="jacketOptions"></div>
+                    </div>
+                    <div class="option-group" data-group="backpack">
+                        <p class="option-label">Bag</p>
+                        <div class="chips" id="backpackOptions"></div>
+                    </div>
+                    <div class="creator-actions">
+                        <button type="button" class="btn btn-ghost" id="creatorBack">Back</button>
+                        <button type="submit" class="btn btn-primary">Start the day</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- In-game HUD -->
+        <div class="hud-layer" id="hudLayer" hidden>
+            <div class="hud hud-objective" id="objectiveCard">
+                <p class="hud-chapter" id="chapterLabel">Chapter 1</p>
+                <p class="hud-title" id="missionTitle">Morning</p>
+                <p class="hud-objective-text" id="objectiveText">Head outside</p>
+                <p class="hud-hint" id="objectiveHint"></p>
+            </div>
+
+            <div class="hud hud-timer" id="timerCard" hidden>
+                <span class="timer-label">TIME</span>
+                <b id="timerValue">3:00</b>
+            </div>
+
+            <div class="hud hud-location">
+                <span id="districtLabel">Maple Rise</span>
+                <b id="clockLabel">08:12</b>
+                <i id="weatherLabel">Clear</i>
+            </div>
+
+            <div class="hud hud-compass" id="compassCard">
+                <div class="compass-arrow" id="compassArrow"></div>
+                <span id="compassDistance">120 m</span>
+            </div>
+
+            <div class="hud hud-level">
+                <span>LV <b id="levelValue">1</b></span>
+                <div class="xp-bar"><i id="xpFill"></i></div>
+            </div>
+
+            <div class="hud hud-vehicle" id="vehicleCard" hidden>
+                <span id="vehicleName">BMX</span>
+                <div class="speedo"><i id="speedFill"></i></div>
+                <b id="speedValue">0</b><small>km/h</small>
+            </div>
+
+            <div class="hud hud-score" id="scoreCard" hidden>
+                <div class="score-team"><span id="homeName">Bayline</span><b id="homeScore">0</b></div>
+                <div class="score-clock"><b id="matchClock">4:00</b><small id="shotClock">24</small></div>
+                <div class="score-team away"><span>Riverside</span><b id="awayScore">0</b></div>
+            </div>
+
+            <div class="shot-meter" id="shotMeter" hidden>
+                <div class="shot-meter-track">
+                    <div class="shot-meter-green" id="shotGreen"></div>
+                    <i id="shotFill"></i>
+                </div>
+                <span>Release in the green</span>
+            </div>
+
+            <div class="prompt" id="actionPrompt" hidden><kbd id="promptKey">E</kbd><span id="promptText">Talk</span></div>
+
+            <div class="dialogue" id="dialogueBox" hidden>
+                <p class="dialogue-speaker" id="dialogueSpeaker">Mara</p>
+                <p class="dialogue-line" id="dialogueLine"></p>
+                <p class="dialogue-next">Press <kbd>E</kbd> to continue</p>
+            </div>
+
+            <div class="choice-box" id="choiceBox" hidden>
+                <p class="choice-title" id="choiceTitle">Pick a route</p>
+                <div class="choice-options" id="choiceOptions"></div>
+            </div>
+
+            <div class="toast-stack" id="toastStack"></div>
+            <div class="announcer" id="announcerLine" hidden></div>
+            <div class="cinematic-bars" id="cinematicBars" hidden></div>
+            <div class="title-card" id="titleCard" hidden><b id="titleCardMain"></b><span id="titleCardSub"></span></div>
+
+            <div class="controls-tip" id="controlsTip">
+                <span><kbd>WASD</kbd> Move</span>
+                <span><kbd>Shift</kbd> Sprint</span>
+                <span><kbd>Space</kbd> Jump</span>
+                <span><kbd>E</kbd> Interact</span>
+                <span><kbd>F</kbd> Ride</span>
+                <span><kbd>Mouse</kbd> Look</span>
+                <span><kbd>M</kbd> Map</span>
+                <span><kbd>Esc</kbd> Pause</span>
+            </div>
+
+            <button class="corner-btn" id="pauseButton" aria-label="Pause">II</button>
+            <button class="corner-btn corner-btn-map" id="mapButton" aria-label="Map">MAP</button>
+
+            <div class="touch-controls" id="touchControls" hidden>
+                <button class="touch-btn" data-touch="interact">E</button>
+                <button class="touch-btn" data-touch="shoot">SHOOT</button>
+                <button class="touch-btn" data-touch="sprint">RUN</button>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <section class="screen screen-map" id="mapScreen" hidden>
+            <div class="map-panel">
+                <header>
+                    <h2>Bayline District</h2>
+                    <button class="btn btn-ghost" id="mapClose">Close</button>
+                </header>
+                <canvas id="mapCanvas" width="760" height="620"></canvas>
+                <div class="map-legend">
+                    <span><i class="dot dot-you"></i>You</span>
+                    <span><i class="dot dot-objective"></i>Objective</span>
+                    <span><i class="dot dot-friend"></i>Friends</span>
+                    <span><i class="dot dot-place"></i>Places</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pause / profile -->
+        <section class="screen screen-pause" id="pauseScreen" hidden>
+            <div class="pause-panel">
+                <header class="pause-header">
+                    <div>
+                        <p class="eyebrow">Paused</p>
+                        <h2 id="pauseName">Rowan</h2>
+                        <p class="pause-sub" id="pauseSub">Level 1 · Maple Rise</p>
+                    </div>
+                    <button class="btn btn-primary" id="resumeButton">Resume</button>
+                </header>
+
+                <div class="pause-grid">
+                    <div class="pause-card">
+                        <h3>Profile</h3>
+                        <div class="stat-list" id="statList"></div>
+                    </div>
+                    <div class="pause-card">
+                        <h3>Recently</h3>
+                        <ul class="history-list" id="historyList"></ul>
+                        <h3 class="spaced">Friends</h3>
+                        <div class="friend-list" id="friendList"></div>
+                    </div>
+                    <div class="pause-card">
+                        <h3>Unlocked</h3>
+                        <div class="unlock-list" id="unlockList"></div>
+                        <h3 class="spaced">Settings</h3>
+                        <label class="toggle"><input type="checkbox" id="audioToggle" checked><span>Sound</span></label>
+                        <label class="toggle"><input type="checkbox" id="qualityToggle" checked><span>High detail</span></label>
+                        <div class="pause-buttons">
+                            <button class="btn btn-ghost" id="saveButton">Save</button>
+                            <button class="btn btn-ghost" id="quitButton">Main menu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section class="screen screen-results" id="resultsScreen" hidden>
+            <div class="results-panel">
+                <p class="eyebrow" id="resultsEyebrow">Full time</p>
+                <h2 id="resultsTitle">Fulton Cup Final</h2>
+                <p class="results-score" id="resultsScore">21 - 18</p>
+                <p class="results-line" id="resultsLine"></p>
+                <div class="results-stats" id="resultsStats"></div>
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="resultsContinue">Continue</button>
+                    <button class="btn btn-ghost" id="resultsReplay">Play again</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls overlay -->
+        <section class="screen screen-controls" id="controlsScreen" hidden>
+            <div class="controls-panel">
+                <h2>Controls</h2>
+                <div class="controls-grid">
+                    <div><kbd>W A S D</kbd><span>Move</span></div>
+                    <div><kbd>Mouse</kbd><span>Look around (click to lock)</span></div>
+                    <div><kbd>Q</kbd> <kbd>E</kbd><span>Turn camera without mouse</span></div>
+                    <div><kbd>Shift</kbd><span>Sprint</span></div>
+                    <div><kbd>Space</kbd><span>Jump / brake in a vehicle</span></div>
+                    <div><kbd>E</kbd><span>Talk, pick up, use</span></div>
+                    <div><kbd>F</kbd><span>Get on or off a bike, board or car</span></div>
+                    <div><kbd>Hold LMB</kbd><span>Load a shot, release to fire</span></div>
+                    <div><kbd>G</kbd><span>Pass to a teammate</span></div>
+                    <div><kbd>M</kbd><span>Map</span></div>
+                    <div><kbd>Esc</kbd><span>Pause and profile</span></div>
+                    <div><kbd>Touch</kbd><span>Left half moves, right half looks</span></div>
+                </div>
+                <button class="btn btn-primary" id="controlsClose">Got it</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        (function () {
+            const status = document.getElementById("loadingStatus");
+            const percent = document.getElementById("loadingPercent");
+            const started = Date.now();
+            const heartbeat = setInterval(function () {
+                if (status.dataset.live === "1") {
+                    clearInterval(heartbeat);
+                    return;
+                }
+                const seconds = Math.round((Date.now() - started) / 1000);
+                status.textContent = seconds < 8
+                    ? "Loading the 3D engine"
+                    : "Still working — this can take a little while";
+                percent.textContent = seconds > 1 ? seconds + "s" : "";
+            }, 400);
+
+            window.__cityLoader = {
+                set: function (ratio, text) {
+                    status.dataset.live = "1";
+                    const bar = document.getElementById("loadingBar");
+                    const fill = document.getElementById("loadingFill");
+                    if (bar) bar.classList.remove("is-waiting");
+                    if (fill) fill.style.width = Math.round(ratio * 100) + "%";
+                    if (text) status.textContent = text;
+                    percent.textContent = Math.round(ratio * 100) + "%";
+                },
+                fail: function (message) {
+                    status.dataset.live = "1";
+                    const bar = document.getElementById("loadingBar");
+                    if (bar) bar.classList.remove("is-waiting");
+                    status.textContent = message || "Could not start";
+                    percent.textContent = "";
+                },
+                done: function () {
+                    clearInterval(heartbeat);
+                }
+            };
+        })();
+    </script>
+    <script type="module">
+        window.__cityLoader.set(0.04, "Loading the 3D engine");
+        import("./game.js").catch(function (error) {
+            console.error(error);
+            window.__cityLoader.fail("Could not start: " + (error && error.message ? error.message : "script error"));
+        });
+    </script>
+</body>
+</html>

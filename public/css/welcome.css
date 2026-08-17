@@ -1289,8 +1289,34 @@ body::before {
     box-shadow: 0 6px 20px rgba(237, 137, 54, 0.35);
 }
 
-/* Game entry, sized like the Continue button but in mountain blue so the two
-   calls to action stay easy to tell apart. */
+/* Games shelf: sits under the AI Coach card and holds every playable game. */
+.games-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.games-heading {
+    margin: 0;
+    color: #fff;
+    font-size: 1.35rem;
+    font-weight: 900;
+    text-align: center;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.games-subtitle {
+    margin: 0 0 2px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* Game entries, sized like the Continue button but each in its own colour so
+   the calls to action stay easy to tell apart. */
 .game-btn {
     width: 100%;
     box-sizing: border-box;
@@ -1303,6 +1329,15 @@ body::before {
 .game-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(43, 108, 176, 0.5);
+}
+
+.game-btn-pressure {
+    background: linear-gradient(135deg, #174f45 0%, #26866f 50%, #c28b45 100%);
+    box-shadow: 0 8px 22px rgba(23, 79, 69, 0.44);
+}
+
+.game-btn-pressure:hover {
+    box-shadow: 0 12px 28px rgba(23, 79, 69, 0.52);
 }
 
 .continue-btn:hover {
