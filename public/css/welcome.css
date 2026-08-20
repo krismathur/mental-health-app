@@ -1331,13 +1331,22 @@ body::before {
     box-shadow: 0 12px 28px rgba(43, 108, 176, 0.5);
 }
 
-.game-btn-pressure {
-    background: linear-gradient(135deg, #174f45 0%, #26866f 50%, #c28b45 100%);
-    box-shadow: 0 8px 22px rgba(23, 79, 69, 0.44);
+.game-btn-diver {
+    background: linear-gradient(135deg, #0b3a5e 0%, #1481b8 50%, #35c4d6 100%);
+    box-shadow: 0 8px 22px rgba(11, 58, 94, 0.46);
 }
 
-.game-btn-pressure:hover {
-    box-shadow: 0 12px 28px rgba(23, 79, 69, 0.52);
+.game-btn-diver:hover {
+    box-shadow: 0 12px 28px rgba(11, 58, 94, 0.54);
+}
+
+.game-btn-lantern {
+    background: linear-gradient(135deg, #2a1a3e 0%, #6b3fa0 45%, #e0a141 100%);
+    box-shadow: 0 8px 22px rgba(42, 26, 62, 0.5);
+}
+
+.game-btn-lantern:hover {
+    box-shadow: 0 12px 28px rgba(42, 26, 62, 0.58);
 }
 
 .continue-btn:hover {
