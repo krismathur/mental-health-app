@@ -79,24 +79,26 @@ form.addEventListener("submit", async function (event) {
     button.disabled = true;
     button.textContent = "Building your plan...";
 
+    const profile = {
+        name,
+        age,
+        sport,
+        goal,
+        challenge,
+        days,
+        mentalSkill: mentalSkill.value,
+        goalCommitment: goalCommitment.value,
+        confidence: confidence.value,
+        stress: stress.value,
+        focus: focus.value,
+        bounce: bounce.value
+    };
+
     try {
         const response = await fetch("/api/profile", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name,
-                age,
-                sport,
-                goal,
-                challenge,
-                days,
-                mentalSkill: mentalSkill.value,
-                goalCommitment: goalCommitment.value,
-                confidence: confidence.value,
-                stress: stress.value,
-                focus: focus.value,
-                bounce: bounce.value
-            })
+            body: JSON.stringify(profile)
         });
 
         const result = await response.json();
@@ -109,6 +111,30 @@ form.addEventListener("submit", async function (event) {
         }
     } catch (error) {
         alert("Could not save your profile. Please try again.");
+        button.disabled = false;
+        button.textContent = "Build My Plan! 🎯";
+        return;
+    }
+
+    button.textContent = "Generating your plan...";
+
+    try {
+        const response = await fetch("/api/generate-plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(profile)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.message || "Could not build your plan. Please try again.");
+            button.disabled = false;
+            button.textContent = "Build My Plan! 🎯";
+            return;
+        }
+    } catch (error) {
+        alert("Could not build your plan. Please try again.");
         button.disabled = false;
         button.textContent = "Build My Plan! 🎯";
         return;

@@ -218,23 +218,23 @@ Return ONLY valid JSON in this exact shape (no markdown, no extra text):
       "title": "Short kid-friendly title",
       "duration": "20-30 minutes",
       "daySummary": [
-        "Full sentence 1 explaining what today is about.",
-        "Full sentence 2 explaining why it helps them in ${sport}.",
-        "Full sentence 3 explaining what they will practice today.",
-        "Full sentence 4 telling them they can do this."
+        "One short sentence explaining today's mental skill.",
+        "One short sentence explaining how it helps in ${sport}."
       ],
       "whatToDo": [
-        "Write 8 to 12 full sentences. Each sentence is one clear step with timing or reps when helpful.",
-        "Must include one step for Visualisation for Athletes, one for Reset Mind, one for Fix What Went Wrong, and one for Your Mental Choices.",
-        "Example: Open Visualisation for Athletes and complete today's guided session about staying calm under pressure."
+        "One short instruction for Visualisation for Athletes.",
+        "One short instruction for Reset Mind.",
+        "One short instruction for Fix What Went Wrong.",
+        "One short instruction for Your Mental Choices.",
+        "One short instruction reminding them to play the game assigned on their dashboard."
       ],
       "sportTryIt": [
-        "Write 3 to 5 full sentences showing how to use today's skill in ${sport} at practice or in a game."
+        "Write 2 short sentences showing how to use today's skill in ${sport} at practice or in a game."
       ],
       "thinkAboutIt": [
-        "Write 2 to 4 full sentences with simple reflection questions or journal prompts."
+        "Write 1 short reflection question the athlete can answer after training."
       ],
-      "youAreDoneWhen": "Write 2 or 3 full sentences that say they finished when they used all four MindZone tools and completed today's steps."
+      "youAreDoneWhen": "Write 1 short sentence saying they finished after using all four MindZone tools, playing the assigned game, and trying the sport challenge."
     }
   ]
 }
@@ -242,17 +242,20 @@ Return ONLY valid JSON in this exact shape (no markdown, no extra text):
 Writing rules (very important):
 - Include exactly ${days} day objects (day 1 through day ${days}).
 - Every string must be a complete sentence with a subject and verb. Never write fragments like "Breathe more" or "Stay focused."
-- daySummary must have exactly 3 or 4 full sentences for each day.
+- daySummary must have exactly 2 short full sentences for each day.
+- whatToDo must have exactly 5 short full sentences, one for each required activity.
 - Every day MUST include these 4 MindZone features in whatToDo (tie each one to today's theme):
   1) Visualisation for Athletes — open Activities and finish a guided visualisation session
   2) Reset Mind — do a breathing exercise to calm down
   3) Fix What Went Wrong — describe a sports mistake and watch the matching clip
   4) Your Mental Choices — practice good vs bad mental choices with their athlete avatar
+- The dashboard assigns one MindZone game each day. Remind the athlete that playing that assigned game is a required part of finishing the daily plan.
 - Use words a ${age}-year-old can easily understand.
-- Be very detailed and specific, but still sound friendly and encouraging.
+- Be specific and useful, but keep every sentence short, friendly, and encouraging.
 - Tie each day to their challenge: "${challenge}" and their goal: "${goal}".
 - If a self-rating is low (1-2), give more help in that area during the week.
 - Match how much work you assign to their willingness score (${goalCommitment}/10).
+- Keep the whole coaching guide short enough for a young athlete to scan in about one minute.
 - Do NOT use generic lines like "believe in yourself" or "stay positive."
 
 Bad example: "Do breathing exercises."

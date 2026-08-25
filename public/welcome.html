@@ -4,7 +4,7 @@
         <title>Welcome - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/welcome.css">
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/video-library.css">
@@ -36,12 +36,12 @@
                 <div class="dashboard-welcome-copy">
                     <p class="dashboard-kicker">TODAY'S MENTAL TRAINING</p>
                     <h1>Welcome back, <span id="dashboardName">athlete</span>.</h1>
-                    <p>Check in, build your plan, and finish with a quick review.</p>
+                    <p>One focused session. Five simple activities. Build a stronger mental game today.</p>
                 </div>
                 <div class="dashboard-flow" aria-label="Today's training flow">
                     <span><b>1</b> Check in</span>
-                    <span><b>2</b> Build your plan</span>
-                    <span><b>3</b> Review your day</span>
+                    <span><b>2</b> Train your skills</span>
+                    <span><b>3</b> Play &amp; reflect</span>
                 </div>
             </header>
 
@@ -49,8 +49,9 @@
                 <div class="top-left">
                     <section class="tool-plan tool-card">
                     <div id="planIntro" class="plan-intro">
-                        <h1>Your Daily Plan</h1>
-                        <p>Complete your daily plan to earn rewards</p>
+                        <p class="plan-eyebrow">YOUR SESSION</p>
+                        <h1>Today’s Training Plan</h1>
+                        <p>Five quick activities, chosen to strengthen your mental game.</p>
                     </div>
 
                     <div class="card" id="mainCard">
@@ -58,7 +59,7 @@
                         <div class="card-icon">🧠</div>
                         <h2 class="card-title">Ready when you are</h2>
                         <p class="subtitle" id="planText">
-                            Visualization, Understanding your mistakes, Resetting your mind, and Good mental choices are the four steps to great mental strength.
+                            Use your four MindZone tools and play today's assigned game to build mental strength.
                         </p>
                         <div class="plan-generate-hint" id="planGenerateHint" aria-hidden="true">
                             <span class="plan-arrow" aria-hidden="true">↓</span>
@@ -78,7 +79,13 @@
 
                 <div class="top-right-stack">
                 <section id="emotionCheckinSection" class="tool-card tool-checkin tool-block top-right">
-                    <h2 class="tool-title">💭 Mood Check-in</h2>
+                    <div class="checkin-heading">
+                        <div>
+                            <p class="section-eyebrow">START HERE</p>
+                            <h2 class="tool-title">💭 How are you feeling?</h2>
+                        </div>
+                        <p>Pick the mood that feels closest right now.</p>
+                    </div>
                     <div class="emotion-grid emotion-grid--compact">
                         <div class="emotion-cell" data-emotion="Happy" data-emoji="🙂">
                             <button type="button" class="emotion-speak-btn" aria-label="Listen to Happy mood">
@@ -253,6 +260,7 @@
                 <section id="aiCoachSection" class="tool-card tool-block tool-ai-coach top-right">
                     <div class="coach-card-header">
                         <div>
+                            <p class="section-eyebrow">TALK IT OUT</p>
                             <h2 class="tool-title">AI Coach</h2>
                             <p class="ai-coach-subtitle">
                                 Ask a question or say what's on your mind — your coach answers right here.
@@ -274,20 +282,34 @@
                 </section>
 
                 <section class="games-block">
-                    <h2 class="games-heading">Mental Video Games</h2>
-                    <p class="games-subtitle">
-                        Here are some video games you might want to play. Fun, and they build mental
-                        strength, confidence, resilience, and focus — just like the video games you
-                        play at home.
-                    </p>
-                    <a href="game/index.html" class="welcome-action-btn game-btn">Play: The Impossible Mountain 🏔️</a>
-                    <a href="deep-diver/index.html" class="welcome-action-btn game-btn game-btn-diver">Play: Deep Diver 🌊</a>
-                    <a href="lantern-walk/index.html" class="welcome-action-btn game-btn game-btn-lantern">Play: Lantern Walk 🏮</a>
+                    <div class="games-header">
+                        <div>
+                            <p class="section-eyebrow">GAME LIBRARY</p>
+                            <h2 class="games-heading">Train through play</h2>
+                        </div>
+                        <p class="games-subtitle">Play today’s assigned game or choose another for extra practice.</p>
+                    </div>
+                    <div class="games-grid">
+                        <a href="game/index.html" class="game-btn game-btn-mountain">
+                            <span class="game-icon" aria-hidden="true">🏔️</span>
+                            <span class="game-copy"><strong>The Impossible Mountain</strong><span>Bounce back after setbacks.</span></span>
+                            <span class="game-go">Play →</span>
+                        </a>
+                        <a href="deep-diver/index.html" class="game-btn game-btn-diver">
+                            <span class="game-icon" aria-hidden="true">🌊</span>
+                            <span class="game-copy"><strong>Deep Diver</strong><span>Stay calm under pressure.</span></span>
+                            <span class="game-go">Play →</span>
+                        </a>
+                        <a href="lantern-walk/index.html" class="game-btn game-btn-lantern">
+                            <span class="game-icon" aria-hidden="true">🏮</span>
+                            <span class="game-copy"><strong>Lantern Walk</strong><span>Make healthy mental choices.</span></span>
+                            <span class="game-go">Play →</span>
+                        </a>
+                    </div>
                 </section>
                 </div>
             </div>
 
-            <a href="meditation.html" class="continue-btn-floating welcome-action-btn continue-btn">Continue Building Mental Strength 🧘</a>
         </div>
 
         <div id="moodSavedPopup" class="mood-saved-popup mood-saved-popup-hidden" role="status" aria-live="polite">
@@ -499,7 +521,7 @@
                                 <span class="video-play">▶</span>
                                 <div>
                                     <span class="video-category-label">Pressure</span>
-                                    <h3>Mental Toughness, Strategies for Nervous Players, & Misconceptions</h3>
+                                    <h3>Mental Toughness, Strategies for Nervous Players, &amp; Misconceptions</h3>
                                     <p>Practical reset tools for nerves, pressure, and focus.</p>
                                 </div>
                             </a>

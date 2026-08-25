@@ -42,6 +42,7 @@ body::before {
 .steps,
 .about,
 .mind-quotes,
+.reward-preview,
 .video-section,
 footer {
     position: relative;
@@ -161,11 +162,10 @@ footer {
 
 .krish {
     position: absolute;
-    right: 100%;
-    bottom: -34px;
+    right: calc(100% + 240px);
+    bottom: -230px;
     height: 240px;
     width: auto;
-    margin-right: -6px;
     pointer-events: none;
     mix-blend-mode: screen;
     filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
@@ -642,5 +642,498 @@ footer {
 
     .about {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Kid-friendly quest experience */
+.journey-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1200;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    pointer-events: none;
+}
+
+.journey-progress span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #63b3ed, #81e6d9, #f6e05e);
+    box-shadow: 0 0 14px rgba(129, 230, 217, 0.75);
+    transition: width 0.12s linear;
+}
+
+.hero-actions > .hero-btn:not(.hero-btn-secondary),
+.preview-quest-btn {
+    color: #102a43;
+    background: linear-gradient(135deg, #f6e05e, #fbd38d);
+    border: 2px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 8px 24px rgba(246, 224, 94, 0.3);
+}
+
+.hero-actions > .hero-btn:not(.hero-btn-secondary):hover,
+.preview-quest-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 13px 30px rgba(246, 224, 94, 0.42);
+}
+
+.section-kicker {
+    margin: 0 0 8px;
+    color: #81e6d9;
+    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.74rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.krish-guide {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: fit-content;
+    max-width: 580px;
+    margin: 0 auto 28px;
+}
+
+.krish-guide-right {
+    flex-direction: row-reverse;
+}
+
+.krish-guide img {
+    flex: 0 0 auto;
+    width: 150px;
+    height: 190px;
+    object-fit: contain;
+    object-position: center;
+    mix-blend-mode: normal;
+    filter: drop-shadow(0 8px 13px rgba(0, 0, 0, 0.34));
+}
+
+.krish-guide p {
+    position: relative;
+    margin: 0;
+    padding: 13px 17px;
+    color: #17324d;
+    background: rgba(255, 255, 255, 0.96);
+    border: 2px solid #81e6d9;
+    border-radius: 18px 18px 18px 5px;
+    box-shadow: 0 9px 24px rgba(3, 18, 35, 0.22);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.krish-guide-right p {
+    border-radius: 18px 18px 5px 18px;
+}
+
+.krish-guide strong {
+    color: #246bce;
+}
+
+.steps,
+.mind-quotes,
+.reward-preview,
+.video-section {
+    scroll-margin-top: 86px;
+}
+
+.steps {
+    max-width: 1180px;
+}
+
+.quest-path {
+    position: relative;
+    gap: 34px;
+}
+
+.quest-path::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 13%;
+    right: 13%;
+    top: 52%;
+    height: 7px;
+    background: repeating-linear-gradient(90deg, #81e6d9 0 18px, transparent 18px 30px);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+.quest-card {
+    padding-bottom: 20px;
+    background: linear-gradient(165deg, rgba(21, 55, 86, 0.94), rgba(12, 26, 45, 0.96));
+    border: 2px solid rgba(129, 230, 217, 0.5);
+}
+
+.quest-card:nth-child(2) {
+    border-color: rgba(246, 224, 94, 0.58);
+}
+
+.quest-card:nth-child(3) {
+    border-color: rgba(183, 148, 244, 0.58);
+}
+
+.quest-card::after {
+    content: "✦";
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    color: #f6e05e;
+    font-size: 1.35rem;
+    text-shadow: 0 0 12px rgba(246, 224, 94, 0.8);
+}
+
+.quest-card img {
+    filter: saturate(1.08);
+}
+
+.quest-level {
+    display: block;
+    margin: 10px 16px 0;
+    color: #81e6d9;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+}
+
+.quest-card h3 {
+    margin-top: 5px;
+    font-size: 1.12rem;
+}
+
+.quest-reward {
+    display: inline-block;
+    margin: 15px 14px 0;
+    padding: 7px 10px;
+    color: #17324d;
+    background: #e6fffa;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 900;
+}
+
+.mind-quotes {
+    max-width: 1180px;
+}
+
+.mind-quote-card {
+    border-width: 2px;
+}
+
+.power-tag {
+    position: absolute;
+    z-index: 2;
+    left: 14px;
+    bottom: 13px;
+    padding: 7px 10px;
+    color: #102a43;
+    background: #f6e05e;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 999px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.24);
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+}
+
+.mind-quote-ohtani .power-tag {
+    background: #90cdf4;
+}
+
+.mind-quote-alcaraz .power-tag {
+    background: #9ae6b4;
+}
+
+.reward-preview {
+    max-width: 1180px;
+    margin: 0 auto 96px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.reward-preview .section-title,
+.reward-preview .section-subtitle {
+    color: #fff;
+    opacity: 1;
+    text-shadow: 0 3px 14px rgba(0, 0, 0, 0.72);
+}
+
+.reward-preview .section-subtitle {
+    font-weight: 700;
+}
+
+.reward-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 34px;
+}
+
+.preview-card {
+    position: relative;
+    overflow: hidden;
+    padding: 24px 18px 20px;
+    color: #17324d;
+    background: rgba(255, 255, 255, 0.96);
+    border: 2px solid #bee3f8;
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(3, 18, 35, 0.24);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.preview-card:hover {
+    transform: translateY(-7px) rotate(-1deg);
+    box-shadow: 0 20px 38px rgba(3, 18, 35, 0.32);
+}
+
+.preview-card:nth-child(even):hover {
+    transform: translateY(-7px) rotate(1deg);
+}
+
+.preview-icon {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 12px;
+    background: #ebf8ff;
+    border-radius: 18px;
+    font-size: 1.8rem;
+}
+
+.preview-card h3 {
+    margin-bottom: 7px;
+    color: #246bce;
+    font-size: 1.05rem;
+}
+
+.preview-card p {
+    min-height: 48px;
+    color: #486581;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.preview-meter {
+    height: 10px;
+    margin-top: 16px;
+    overflow: hidden;
+    background: #d9e2ec;
+    border-radius: 999px;
+}
+
+.preview-meter span {
+    display: block;
+    width: var(--preview-progress);
+    height: 100%;
+    background: linear-gradient(90deg, #3182ce, #63b3ed);
+    border-radius: inherit;
+}
+
+.preview-star-row {
+    margin-top: 13px;
+    color: #d69e2e;
+    font-size: 1.35rem;
+    letter-spacing: 0.08em;
+}
+
+.preview-badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.preview-badge-row span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    background: #edf2f7;
+    border-radius: 50%;
+}
+
+.preview-locked {
+    display: inline-block;
+    margin-top: 13px;
+    padding: 6px 9px;
+    color: #6b46c1;
+    background: #faf5ff;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 900;
+}
+
+.preview-quest-btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 900;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.reward-preview .preview-quest-btn {
+    color: #fff;
+    background: linear-gradient(135deg, #246bce, #6b46c1);
+    border-color: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 10px 26px rgba(36, 107, 206, 0.38);
+}
+
+.reward-preview .preview-quest-btn:hover {
+    box-shadow: 0 14px 32px rgba(107, 70, 193, 0.48);
+}
+
+.video-card {
+    overflow: hidden;
+    position: relative;
+    padding: 34px;
+    border: 2px solid rgba(246, 224, 94, 0.5);
+    background: linear-gradient(155deg, rgba(16, 45, 74, 0.94), rgba(22, 76, 91, 0.92));
+}
+
+.coach-challenge-heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.challenge-badge,
+.challenge-time {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+}
+
+.challenge-badge {
+    color: #102a43;
+    background: #f6e05e;
+}
+
+.challenge-time {
+    color: #e6fffa;
+    border: 1px solid rgba(129, 230, 217, 0.5);
+}
+
+.challenge-question {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 760px;
+    margin: 0 auto 22px;
+    padding: 13px 16px;
+    color: #17324d;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 14px;
+    text-align: left;
+}
+
+.challenge-question > span {
+    font-size: 1.55rem;
+}
+
+.challenge-question p {
+    margin: 0;
+    color: #334e68;
+    font-size: 0.84rem;
+}
+
+.challenge-finish {
+    margin: 16px auto 0 !important;
+    color: #e6fffa !important;
+    font-weight: 900;
+}
+
+.quest-motion-ready .reveal-card {
+    opacity: 0;
+    transform: translateY(24px);
+}
+
+.quest-motion-ready .reveal-card.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 1000px) {
+    .reward-preview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 800px) {
+    .quest-path::before {
+        left: 50%;
+        right: auto;
+        top: 4%;
+        bottom: 4%;
+        width: 7px;
+        height: auto;
+        background: repeating-linear-gradient(180deg, #81e6d9 0 18px, transparent 18px 30px);
+    }
+
+    .krish-guide,
+    .krish-guide-right {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 600px) {
+    .krish-guide img {
+        width: 104px;
+        height: 132px;
+    }
+
+    .krish-guide p {
+        font-size: 0.8rem;
+    }
+
+    .reward-preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-card p {
+        min-height: 0;
+    }
+
+    .coach-challenge-heading {
+        flex-wrap: wrap;
+    }
+
+    .video-card {
+        padding: 24px 16px;
+    }
+
+    .challenge-question {
+        align-items: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .krish,
+    .scroll-cue-arrow {
+        animation: none;
+    }
+
+    .quest-motion-ready .reveal-card {
+        opacity: 1;
+        transform: none;
+    }
+
+    * {
+        scroll-behavior: auto !important;
     }
 }

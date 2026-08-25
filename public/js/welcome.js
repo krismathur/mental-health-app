@@ -1,10 +1,8 @@
-// Reflow the dashboard layout: Mood Check-in becomes a full-width strip on
-// top, and the Continue button ends up on its own row below everything else.
+// Reflow the dashboard layout so Mood Check-in becomes a full-width strip on top.
 (function reflowWelcomeLayout() {
     const page = document.querySelector(".page");
     const topRow = document.querySelector(".top-row");
     const mood = document.getElementById("emotionCheckinSection");
-    const continueBtn = document.querySelector(".continue-btn-floating");
     const dashboardName = document.getElementById("dashboardName");
 
     if (dashboardName) {
@@ -16,9 +14,6 @@
 
     if (page && topRow && mood) {
         page.insertBefore(mood, topRow);
-    }
-    if (page && continueBtn) {
-        page.appendChild(continueBtn);
     }
 })();
 
@@ -1421,8 +1416,57 @@ function appendPlanParagraphs(card, title, items) {
     card.appendChild(section);
 }
 
+const DAILY_GAMES = [
+    {
+        name: "The Impossible Mountain",
+        href: "game/index.html",
+        detail: "Practice recovering from mistakes, setbacks, and tough moments.",
+        keywords: ["mistake", "bounce", "setback", "resilien", "fail", "recover", "confidence"]
+    },
+    {
+        name: "Deep Diver",
+        href: "deep-diver/index.html",
+        detail: "Practice staying calm, focused, and in control under pressure.",
+        keywords: ["calm", "stress", "pressure", "breath", "anx", "nerv", "focus", "concentrat"]
+    },
+    {
+        name: "Lantern Walk",
+        href: "lantern-walk/index.html",
+        detail: "Practice making healthy mental choices and looking after yourself.",
+        keywords: ["self-care", "look after", "rest", "routine", "choice", "habit", "balance", "kind"]
+    }
+];
+
+function getDailyGame(dayEntry) {
+    const dayNumber = parseInt(dayEntry && dayEntry.day, 10) || 1;
+    const fallbackGame = DAILY_GAMES[(dayNumber - 1) % DAILY_GAMES.length];
+    const planTheme = [
+        dayEntry && dayEntry.title,
+        dayEntry && dayEntry.daySummary,
+        dayEntry && dayEntry.sportTryIt,
+        dayEntry && dayEntry.thinkAboutIt
+    ].flat().filter(Boolean).join(" ").toLowerCase();
+
+    let bestGame = fallbackGame;
+    let bestScore = 0;
+
+    DAILY_GAMES.forEach(function (game) {
+        const score = game.keywords.reduce(function (total, keyword) {
+            return total + (planTheme.includes(keyword) ? 1 : 0);
+        }, 0);
+
+        if (score > bestScore) {
+            bestGame = game;
+            bestScore = score;
+        }
+    });
+
+    return bestGame;
+}
+
 function appendMindZoneFeatures(card, dayEntry) {
     const titleTheme = String(dayEntry && dayEntry.title ? dayEntry.title : "today's focus").trim();
+    const dailyGame = getDailyGame(dayEntry);
     const features = [
         {
             name: "Visualization",
@@ -1447,6 +1491,13 @@ function appendMindZoneFeatures(card, dayEntry) {
             detail: "Practice the good mental choice with your athlete avatar.",
             href: "meditation.html?open=choices",
             tone: "choices"
+        },
+        {
+            name: "Today's Game: " + dailyGame.name,
+            detail: dailyGame.detail,
+            href: dailyGame.href,
+            tone: "game",
+            cta: "Play today's game →"
         }
     ];
 
@@ -1454,12 +1505,12 @@ function appendMindZoneFeatures(card, dayEntry) {
     section.className = "plan-section plan-features-section";
 
     const heading = document.createElement("h3");
-    heading.textContent = "Today's 4 Features";
+    heading.textContent = "Today's 5 Activities";
     section.appendChild(heading);
 
     const intro = document.createElement("p");
     intro.className = "plan-sentence plan-features-intro";
-    intro.textContent = "Click each feature below to open it and train your mind.";
+    intro.textContent = "Complete all four MindZone tools and today's assigned game.";
     section.appendChild(intro);
 
     const list = document.createElement("div");
@@ -1474,7 +1525,7 @@ function appendMindZoneFeatures(card, dayEntry) {
             "<span class=\"plan-feature-copy\">" +
                 "<strong>" + escapeHtml(feature.name) + "</strong>" +
                 "<span>" + escapeHtml(feature.detail) + "</span>" +
-                "<em class=\"plan-feature-cta\">Click to open →</em>" +
+                "<em class=\"plan-feature-cta\">" + escapeHtml(feature.cta || "Click to open →") + "</em>" +
             "</span>" +
             "<span class=\"plan-feature-arrow\" aria-hidden=\"true\">→</span>";
         list.appendChild(item);
@@ -1482,6 +1533,32 @@ function appendMindZoneFeatures(card, dayEntry) {
 
     section.appendChild(list);
     card.appendChild(section);
+}
+
+function appendPlanCoachingDetails(card, dayEntry) {
+    const details = document.createElement("details");
+    details.className = "plan-coaching-details";
+
+    const summary = document.createElement("summary");
+    summary.innerHTML =
+        "<span><strong>Want more guidance?</strong>" +
+        "<small>Open your step-by-step coaching details.</small></span>" +
+        "<span class=\"coaching-details-icon\" aria-hidden=\"true\">+</span>";
+    details.appendChild(summary);
+
+    const body = document.createElement("div");
+    body.className = "plan-coaching-details-body";
+    appendPlanParagraphs(body, "Today's Focus", dayEntry.daySummary);
+    appendPlanParagraphs(body, "Step-by-Step Help", dayEntry.whatToDo);
+    appendPlanParagraphs(body, "Try It in Your Sport", dayEntry.sportTryIt);
+    appendPlanParagraphs(body, "Think About It", dayEntry.thinkAboutIt);
+
+    const doneWhen = normalizePlanFieldList(dayEntry.youAreDoneWhen);
+    doneWhen.push("Finish today's assigned MindZone game before checking off your plan.");
+    appendPlanParagraphs(body, "You Are Done When", doneWhen);
+
+    details.appendChild(body);
+    card.appendChild(details);
 }
 
 function createWaitingCard(completedDay, nextDay) {
@@ -1513,12 +1590,16 @@ function createDailyPlanCard(dayEntry, progress) {
     const header = document.createElement("div");
     header.className = "daily-plan-header";
     header.innerHTML = `
-        <p class="daily-plan-kicker">Today · Day ${dayEntry.day}</p>
-        <h2>${escapeHtml(dayEntry.title || "Mental Training")}</h2> 
+        <div>
+            <p class="daily-plan-kicker">TODAY · DAY ${dayEntry.day}</p>
+            <h2>${escapeHtml(dayEntry.title || "Mental Training")}</h2>
+        </div>
+        <span class="daily-plan-duration">${escapeHtml(dayEntry.duration || "20–30 min")}</span>
     `;
     card.appendChild(header);
 
     appendMindZoneFeatures(card, dayEntry);
+    appendPlanCoachingDetails(card, dayEntry);
 
     const completeWrap = document.createElement("label");
     completeWrap.className = "daily-complete-row";

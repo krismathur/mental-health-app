@@ -4,7 +4,7 @@
         <title>MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/index.css">
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/nav.css">
@@ -21,6 +21,8 @@
             </div>
         </nav>
 
+        <div class="journey-progress" aria-hidden="true"><span id="journeyProgressFill"></span></div>
+
         <section class="hero">
             <div class="hero-inner">
                 <div class="hero-text">
@@ -31,9 +33,9 @@
                         Your team is down by two, five seconds remain, and one thought takes over: <em>"Don't miss."</em> MindZone helps you stay focused, confident, and calm when the pressure is on.
                     </p>
                     <div class="hero-actions">
-                        <a class="hero-btn" href="auth.html">Start Training</a>
+                        <a class="hero-btn" href="auth.html" data-auth-cta>Start Your First Quest</a>
                         <span class="krish-wrap">
-                            <img class="krish" src="images/krish.png" alt="Krish pointing at See How It Works" aria-hidden="true">
+                            <img class="krish" src="images/krish.png" alt="Krish pointing at Start Your First Quest" aria-hidden="true">
                             <a class="hero-btn hero-btn-secondary" href="#how-it-works">See How It Works</a>
                         </span>
                     </div>
@@ -47,39 +49,56 @@
 
         <main>
         <section id="how-it-works" class="steps">
-            <h2 class="section-title">Train for the Moments That Matter</h2>
-            <p class="section-subtitle">Build a plan around your sport, your goals, and the pressure you face.</p>
+            <div class="krish-guide reveal-card">
+                <img src="images/krish-quest-guide.png" alt="" aria-hidden="true">
+                <p><strong>Hey, athlete!</strong> Your MindZone journey has three simple levels. I’ll be here to help.</p>
+            </div>
+            <p class="section-kicker">YOUR FIRST QUEST</p>
+            <h2 class="section-title">Three Levels to a Stronger Mind</h2>
+            <p class="section-subtitle">Build your athlete profile, get your plan, and practice skills that help when pressure hits.</p>
 
-            <div class="steps-grid">
-                <div class="step-card">
+            <div class="steps-grid quest-path">
+                <div class="step-card quest-card reveal-card">
                     <img src="images/step-signup.jpg" alt="Student signing up on a laptop">
                     <span class="step-num">1</span>
+                    <span class="quest-level">LEVEL 1</span>
                     <h3>Build your athlete profile</h3>
                     <p>Choose your sport, your goals, and your biggest mindset challenge.</p>
+                    <span class="quest-reward">Unlock: Your personal training path 🔓</span>
                 </div>
-                <div class="step-card">
+                <div class="step-card quest-card reveal-card">
                     <img src="images/step-questions.jpg" alt="Teen thinking about their sport and goals">
                     <span class="step-num">2</span>
+                    <span class="quest-level">LEVEL 2</span>
                     <h3>Get a personalized plan</h3>
                     <p>Turn your answers into practical daily mental training.</p>
+                    <span class="quest-reward">Unlock: Today’s five activities ⚡</span>
                 </div>
-                <div class="step-card">
+                <div class="step-card quest-card reveal-card">
                     <img src="images/step-plan.jpg" alt="Daily plan on a phone screen">
                     <span class="step-num">3</span>
+                    <span class="quest-level">LEVEL 3</span>
                     <h3>Practice under pressure</h3>
                     <p>Build focus, confidence, and a faster reset after mistakes.</p>
+                    <span class="quest-reward">Earn: XP, stars, and badges 🏆</span>
                 </div>
             </div>
         </section>
 
         <section class="mind-quotes" aria-label="How pro athletes train their minds">
-            <h2 class="section-title">Train Like the Greats</h2>
-            <p class="section-subtitle">Hear how champions build mental strength.</p>
+            <div class="krish-guide krish-guide-right reveal-card">
+                <img src="images/krish-power-cards.png" alt="" aria-hidden="true">
+                <p><strong>Collect pro powers!</strong> Every champion trains a different mental skill.</p>
+            </div>
+            <p class="section-kicker">PRO POWER CARDS</p>
+            <h2 class="section-title">Choose a Champion Mindset</h2>
+            <p class="section-subtitle">Discover the mental powers great athletes use in big moments.</p>
 
             <div class="mind-quotes-grid">
-                <article class="mind-quote-card mind-quote-jordan">
+                <article class="mind-quote-card mind-quote-jordan reveal-card">
                     <div class="mind-quote-photo">
                         <img src="images/hero-jordan-dunk.jpg" alt="Michael Jordan">
+                        <span class="power-tag">POWER: CONFIDENCE</span>
                     </div>
                     <div class="mind-quote-body">
                         <p class="mind-quote-kicker">This is How I Train My Mind</p>
@@ -90,9 +109,10 @@
                     </div>
                 </article>
 
-                <article class="mind-quote-card mind-quote-ohtani">
+                <article class="mind-quote-card mind-quote-ohtani reveal-card">
                     <div class="mind-quote-photo">
                         <img src="images/mlb/ohtani.jpg" alt="Shohei Ohtani">
+                        <span class="power-tag">POWER: PRESSURE</span>
                     </div>
                     <div class="mind-quote-body">
                         <p class="mind-quote-kicker">This is How I Train My Mind</p>
@@ -103,9 +123,10 @@
                     </div>
                 </article>
 
-                <article class="mind-quote-card mind-quote-alcaraz">
+                <article class="mind-quote-card mind-quote-alcaraz reveal-card">
                     <div class="mind-quote-photo">
                         <img src="images/alcaraz.jpg" alt="Carlos Alcaraz">
+                        <span class="power-tag">POWER: CONTROL</span>
                     </div>
                     <div class="mind-quote-body">
                         <p class="mind-quote-kicker">This is How I Train My Mind</p>
@@ -118,16 +139,64 @@
             </div>
         </section>
 
+        <section class="reward-preview">
+            <div class="krish-guide reveal-card">
+                <img src="images/krish-rewards.png" alt="" aria-hidden="true">
+                <p><strong>Your effort earns rewards.</strong> Train your mind, fill your meters, and unlock new wins.</p>
+            </div>
+            <p class="section-kicker">YOUR MENTAL LOCKER</p>
+            <h2 class="section-title">What Will You Unlock?</h2>
+            <p class="section-subtitle">Real progress starts after you create an account. Here’s what your training can earn.</p>
+
+            <div class="reward-preview-grid">
+                <article class="preview-card preview-xp reveal-card">
+                    <span class="preview-icon">⚡</span>
+                    <h3>Mental XP</h3>
+                    <p>Level up by finishing activities and games.</p>
+                    <div class="preview-meter"><span style="--preview-progress: 72%"></span></div>
+                </article>
+                <article class="preview-card preview-stars reveal-card">
+                    <span class="preview-icon">⭐</span>
+                    <h3>Consistency Stars</h3>
+                    <p>Collect stars when you keep showing up.</p>
+                    <div class="preview-star-row" aria-hidden="true">★ ★ ★ ☆ ☆</div>
+                </article>
+                <article class="preview-card preview-badges reveal-card">
+                    <span class="preview-icon">🏅</span>
+                    <h3>Skill Badges</h3>
+                    <p>Earn badges for focus, calm, confidence, and comebacks.</p>
+                    <div class="preview-badge-row" aria-hidden="true"><span>🎯</span><span>🌊</span><span>💪</span></div>
+                </article>
+                <article class="preview-card preview-avatar reveal-card">
+                    <span class="preview-icon">🧢</span>
+                    <h3>Avatar Gear</h3>
+                    <p>Build toward new looks for your athlete avatar.</p>
+                    <span class="preview-locked">🔒 Unlock after training</span>
+                </article>
+            </div>
+
+            <a class="preview-quest-btn" href="auth.html" data-auth-cta>Start Your First Quest →</a>
+        </section>
+
         <section class="video-section">
-            <div class="video-card">
-                <h2>Watch: Novak Djokovic on Mental Strength</h2>
+            <div class="video-card reveal-card">
+                <div class="coach-challenge-heading">
+                    <span class="challenge-badge">🎬 COACH’S CHALLENGE</span>
+                    <span class="challenge-time">1 MIN</span>
+                </div>
+                <h2>Novak Djokovic’s Mental Strength Challenge</h2>
                 <p>
                     From his 60 Minutes interview — Djokovic says mental strength is not a gift.
                     It takes work, just like your serve or your shot.
                 </p>
+                <div class="challenge-question">
+                    <span aria-hidden="true">🧠</span>
+                    <p><strong>Your mission:</strong> While you watch, find one way Novak trains his mind that you could try before your next game.</p>
+                </div>
                 <div class="video-frame">
                     <iframe src="https://www.youtube.com/embed/RmqkooV1Kh8" title="Novak Djokovic on mental strength — 60 Minutes" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                 </div>
+                <p class="challenge-finish">✅ Challenge complete when you can explain your one takeaway.</p>
             </div>
         </section>
         </main>
