@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Welcome - MindZone</title>
+        <title>Quest Hub - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
@@ -10,8 +10,9 @@
         <link rel="stylesheet" href="css/video-library.css">
         <link rel="stylesheet" href="css/nav.css">
         <link rel="stylesheet" href="css/dev-time-panel.css">
+        <link rel="stylesheet" href="css/quest-system.css">
     </head>
-    <body class="has-site-nav welcome-page">
+    <body class="has-site-nav welcome-page quest-app quest-dashboard">
 
         <a class="page-brand" href="index.html">MindZone</a>
 
@@ -273,6 +274,12 @@
 
                     <p id="coachNotice" class="coach-notice" hidden></p>
 
+                    <div class="coach-starters" aria-label="Quick coach questions">
+                        <button type="button" class="coach-starter" data-coach-prompt="I feel nervous before my next game.">😬 I’m nervous</button>
+                        <button type="button" class="coach-starter" data-coach-prompt="Help me bounce back after a mistake.">🔄 I made a mistake</button>
+                        <button type="button" class="coach-starter" data-coach-prompt="Give me one quick focus mission for today.">🎯 Help me focus</button>
+                    </div>
+
                     <form id="coachForm" class="coach-form">
                         <label class="visually-hidden" for="coachInput">Message your coach</label>
                         <textarea id="coachInput" class="coach-input" rows="1" maxlength="2000"
@@ -281,35 +288,41 @@
                     </form>
                 </section>
 
-                <section class="games-block">
-                    <div class="games-header">
-                        <div>
-                            <p class="section-eyebrow">GAME LIBRARY</p>
-                            <h2 class="games-heading">Train through play</h2>
-                        </div>
-                        <p class="games-subtitle">Play today’s assigned game or choose another for extra practice.</p>
-                    </div>
-                    <div class="games-grid">
-                        <a href="game/index.html" class="game-btn game-btn-mountain">
-                            <span class="game-icon" aria-hidden="true">🏔️</span>
-                            <span class="game-copy"><strong>The Impossible Mountain</strong><span>Bounce back after setbacks.</span></span>
-                            <span class="game-go">Play →</span>
-                        </a>
-                        <a href="deep-diver/index.html" class="game-btn game-btn-diver">
-                            <span class="game-icon" aria-hidden="true">🌊</span>
-                            <span class="game-copy"><strong>Deep Diver</strong><span>Stay calm under pressure.</span></span>
-                            <span class="game-go">Play →</span>
-                        </a>
-                        <a href="lantern-walk/index.html" class="game-btn game-btn-lantern">
-                            <span class="game-icon" aria-hidden="true">🏮</span>
-                            <span class="game-copy"><strong>Lantern Walk</strong><span>Make healthy mental choices.</span></span>
-                            <span class="game-go">Play →</span>
-                        </a>
-                    </div>
-                </section>
                 </div>
             </div>
 
+        </div>
+
+        <div id="arcadeOverlay" class="overlay overlay-hidden">
+            <div class="overlay-backdrop" id="arcadeBackdrop"></div>
+            <section class="arcade-panel" role="dialog" aria-modal="true" aria-labelledby="arcadeTitle">
+                <div class="arcade-header">
+                    <div>
+                        <p class="section-eyebrow">GAME LIBRARY</p>
+                        <h2 id="arcadeTitle">Train through play</h2>
+                        <p>Play today’s assigned game or choose another for extra practice.</p>
+                    </div>
+                    <button type="button" id="closeArcadeBtn" class="arcade-close-btn" aria-label="Close game library">&times;</button>
+                </div>
+
+                <div class="games-grid arcade-games-grid">
+                    <a href="game/index.html" class="game-btn game-btn-mountain">
+                        <span class="game-icon" aria-hidden="true">🏔️</span>
+                        <span class="game-copy"><strong>The Impossible Mountain</strong><span>Bounce back after setbacks.</span></span>
+                        <span class="game-go">Play →</span>
+                    </a>
+                    <a href="deep-diver/index.html" class="game-btn game-btn-diver">
+                        <span class="game-icon" aria-hidden="true">🌊</span>
+                        <span class="game-copy"><strong>Deep Diver</strong><span>Stay calm under pressure.</span></span>
+                        <span class="game-go">Play →</span>
+                    </a>
+                    <a href="lantern-walk/index.html" class="game-btn game-btn-lantern">
+                        <span class="game-icon" aria-hidden="true">🏮</span>
+                        <span class="game-copy"><strong>Lantern Walk</strong><span>Make healthy mental choices.</span></span>
+                        <span class="game-go">Play →</span>
+                    </a>
+                </div>
+            </section>
         </div>
 
         <div id="moodSavedPopup" class="mood-saved-popup mood-saved-popup-hidden" role="status" aria-live="polite">
@@ -645,6 +658,7 @@
         <script src="js/video-library.js"></script>
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
+        <script src="js/quest-system.js"></script>
         <script src="js/welcome.js"></script>
         <script src="js/coach-chat.js"></script>
         <script src="js/dev-time-panel.js"></script>

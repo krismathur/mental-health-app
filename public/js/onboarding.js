@@ -106,13 +106,13 @@ form.addEventListener("submit", async function (event) {
         if (!response.ok) {
             alert(result.message || "Could not save your profile. Please try again.");
             button.disabled = false;
-            button.textContent = "Build My Plan! 🎯";
+            button.textContent = "Unlock My First Quest 🔓";
             return;
         }
     } catch (error) {
         alert("Could not save your profile. Please try again.");
         button.disabled = false;
-        button.textContent = "Build My Plan! 🎯";
+        button.textContent = "Unlock My First Quest 🔓";
         return;
     }
 
@@ -130,13 +130,13 @@ form.addEventListener("submit", async function (event) {
         if (!response.ok) {
             alert(result.message || "Could not build your plan. Please try again.");
             button.disabled = false;
-            button.textContent = "Build My Plan! 🎯";
+            button.textContent = "Unlock My First Quest 🔓";
             return;
         }
     } catch (error) {
         alert("Could not build your plan. Please try again.");
         button.disabled = false;
-        button.textContent = "Build My Plan! 🎯";
+        button.textContent = "Unlock My First Quest 🔓";
         return;
     }
 

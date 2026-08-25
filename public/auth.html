@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Log In / Sign Up - MindZone</title>
+        <title>Enter MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -9,8 +9,9 @@
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/video-library.css">
         <link rel="stylesheet" href="css/nav.css">
+        <link rel="stylesheet" href="css/quest-system.css">
     </head>
-    <body class="has-site-nav">
+    <body class="has-site-nav quest-app quest-no-hud quest-entry">
 
         <a class="page-brand" href="index.html">MindZone</a>
 
@@ -23,16 +24,17 @@
         <div class="auth-layout">
             <div class="auth-hero">
                 <div class="auth-hero-text">
-                    <span class="badge">MENTAL TRAINING FOR ATHLETES</span>
-                    <h1>Build the mindset behind your best performance.</h1>
+                    <span class="badge">YOUR MINDZONE QUEST STARTS HERE</span>
+                    <h1>Enter the training ground for your mind.</h1>
                     <p>
-                        Train focus, confidence, calm, and resilience with a plan built around your sport.
+                        Complete short missions, build real mental skills, and unlock progress made for your sport.
                     </p>
                     <ul class="perks">
-                        <li>🧠 Personalized mental training</li>
-                        <li>🎯 Short exercises for pressure moments</li>
-                        <li>🏆 Progress, streaks, and rewards</li>
+                        <li>🗺️ Your own daily quest</li>
+                        <li>🎮 Games that train real skills</li>
+                        <li>🏆 XP, stars, badges, and locker unlocks</li>
                     </ul>
+                    <img class="entry-krish" src="images/krish-quest-guide.png" alt="" aria-hidden="true">
                 </div>
             </div>
 
@@ -41,8 +43,8 @@
                     <div class="card-header">
                         <img src="images/step-signup.jpg" alt="" class="card-thumb">
                         <div>
-                            <h2 id="authCardTitle">Welcome back</h2>
-                            <p id="authCardSubtitle" class="card-sub">Log in to continue your mental training.</p>
+                            <h2 id="authCardTitle">Welcome back, athlete</h2>
+                            <p id="authCardSubtitle" class="card-sub">Log in and continue your active quest.</p>
                         </div>
                     </div>
 
@@ -59,7 +61,7 @@
                         <label>Password <span class="req">*</span></label>
                         <input id="signupPassword" type="password" placeholder="At least 6 characters" required>
 
-                        <button type="submit" class="submit-btn">Create My Account</button>
+                        <button type="submit" class="submit-btn">Create My Player Profile</button>
                     </form>
 
                     <!-- Login Form -->
@@ -70,7 +72,7 @@
                         <label>Password <span class="req">*</span></label>
                         <input id="loginPassword" type="password" placeholder="Your password" required>
 
-                        <button type="submit" class="submit-btn">Log In</button>
+                        <button type="submit" class="submit-btn">Enter My Quest</button>
                     </form>
 
                     <p id="message"></p>
@@ -96,15 +98,15 @@
                     login.classList.add("hidden");
                     tabSignup.classList.add("active");
                     tabLogin.classList.remove("active");
-                    cardTitle.textContent = "Create your account";
-                    cardSubtitle.textContent = "Start building your personalized mental-training plan.";
+                    cardTitle.textContent = "Create your player profile";
+                    cardSubtitle.textContent = "Unlock a personalized quest built around your sport.";
                 } else {
                     login.classList.remove("hidden");
                     signup.classList.add("hidden");
                     tabLogin.classList.add("active");
                     tabSignup.classList.remove("active");
-                    cardTitle.textContent = "Welcome back";
-                    cardSubtitle.textContent = "Log in to continue your mental training.";
+                    cardTitle.textContent = "Welcome back, athlete";
+                    cardSubtitle.textContent = "Log in and continue your active quest.";
                 }
             }
 

@@ -5,12 +5,20 @@
     function getCurrentPageKey() {
         const path = window.location.pathname;
 
-        if (/\/(welcome|onboarding)\.html$/.test(path)) {
+        if (/\/welcome\.html$/.test(path)) {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("open") === "arcade") {
+                return "arcade";
+            }
             return "dashboard";
         }
 
-        if (/\/(meditation|avatar|mental-training)\.html$/.test(path)) {
+        if (/\/(meditation|mental-training)\.html$/.test(path)) {
             return "training";
+        }
+
+        if (/\/avatar\.html$/.test(path)) {
+            return "locker";
         }
 
         return "";
@@ -123,12 +131,24 @@
         document.body.classList.toggle("user-logged-in", loggedIn);
         document.body.classList.toggle("user-logged-out", !loggedIn);
 
+        if (!loggedIn) {
+            const playerHud = document.querySelector(".mz-player-hud");
+            if (playerHud) {
+                playerHud.remove();
+            }
+        } else if (window.MindZoneQuest) {
+            window.MindZoneQuest.ensureHud();
+            window.MindZoneQuest.refreshHud();
+        }
+
         if (loggedIn) {
             navLinks.innerHTML = `
-                <a class="nav-btn" data-nav-key="dashboard" href="welcome.html">Dashboard</a>
-                <a class="nav-btn" data-nav-key="training" href="meditation.html">Training</a>
-                <button type="button" class="nav-btn video-library-btn" data-nav-key="videos">Videos</button>
-                <button type="button" class="nav-btn rewards-btn" data-nav-key="rewards">Rewards</button>
+                <a class="nav-btn" data-nav-key="dashboard" href="welcome.html">🏠 Quest Hub</a>
+                <a class="nav-btn" data-nav-key="training" href="meditation.html">⚡ Skill Zones</a>
+                <a class="nav-btn arcade-btn" data-nav-key="arcade" href="welcome.html?open=arcade">🎮 Arcade</a>
+                <button type="button" class="nav-btn video-library-btn" data-nav-key="videos">🎬 Film Room</button>
+                <a class="nav-btn" data-nav-key="locker" href="avatar.html">🎽 Locker</a>
+                <button type="button" class="nav-btn rewards-btn" data-nav-key="rewards">🏆 Rewards</button>
             `;
             ensureSettingsAccess();
         } else {
@@ -147,4 +167,5 @@
     }
 
     applyNavRules();
+    window.addEventListener("hashchange", updateActiveNav);
 })();

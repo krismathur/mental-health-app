@@ -4,8 +4,16 @@ const avatarProfileArea = document.getElementById("avatarProfileArea");
 function loadSelectedAvatar() {
     const saved = JSON.parse(localStorage.getItem(AVATAR_STORAGE_KEY) || "null");
     if (!saved || !saved.name) {
-        window.location.href = "meditation.html";
-        return;
+        avatarProfileArea.innerHTML = `
+            <div class="avatar-empty-state">
+                <span class="avatar-empty-icon" aria-hidden="true">🪪</span>
+                <p class="avatar-profile-league">CAPTAIN SLOT OPEN</p>
+                <h3>Choose the athlete who inspires you</h3>
+                <p>Your captain will appear here and join you in the Mental Choice Challenge.</p>
+                <a href="meditation.html?open=choices" class="avatar-choose-captain-btn">Choose My Captain →</a>
+            </div>
+        `;
+        return false;
     }
 
     avatarProfileArea.innerHTML = `
@@ -16,19 +24,22 @@ function loadSelectedAvatar() {
             <p class="avatar-profile-tagline">You're going to make the best decisions for this athlete</p>
         </div>
     `;
+
+    return true;
 }
 
-loadSelectedAvatar();
+const hasSelectedAvatar = loadSelectedAvatar();
 
 const closeAvatarPageBtn = document.getElementById("closeAvatarPageBtn");
 if (closeAvatarPageBtn) {
     closeAvatarPageBtn.addEventListener("click", function () {
-        window.location.href = "meditation.html";
+        window.location.href = "welcome.html";
     });
 }
 
 const startMentalTrainingBtn = document.getElementById("startMentalTrainingBtn");
 if (startMentalTrainingBtn) {
+    startMentalTrainingBtn.hidden = !hasSelectedAvatar;
     startMentalTrainingBtn.addEventListener("click", function () {
         window.location.href = "mental-training.html";
     });

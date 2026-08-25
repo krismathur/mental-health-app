@@ -6,6 +6,25 @@ const videoItems = videoLibraryOverlay ? videoLibraryOverlay.querySelectorAll(".
 let videoPlayerView = null;
 let videoPlayerFrame = null;
 
+function addFilmRoomMission() {
+    if (!videoLibraryOverlay || videoLibraryOverlay.querySelector(".film-room-mission")) {
+        return;
+    }
+
+    const intro = videoLibraryOverlay.querySelector(".video-intro");
+    if (!intro) {
+        return;
+    }
+
+    const mission = document.createElement("div");
+    mission.className = "film-room-mission";
+    mission.innerHTML = `
+        <span aria-hidden="true">🔎</span>
+        <p><strong>Scout mission:</strong> Choose one clip and spot one mental move you can try in your sport.</p>
+    `;
+    intro.insertAdjacentElement("afterend", mission);
+}
+
 function getYouTubeVideoId(url) {
     try {
         const parsedUrl = new URL(url, window.location.href);
@@ -57,6 +76,8 @@ function buildVideoPlayer() {
     videoPlayerView.querySelector(".video-player-back").addEventListener("click", closeVideoPlayer);
     videoPlayerView.querySelector(".video-player-close").addEventListener("click", closeVideoLibrary);
 }
+
+addFilmRoomMission();
 
 function openVideoPlayer(event) {
     event.preventDefault();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Mental Training - MindZone</title>
+        <title>Choice Arena - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -9,8 +9,9 @@
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/video-library.css">
         <link rel="stylesheet" href="css/nav.css">
+        <link rel="stylesheet" href="css/quest-system.css">
     </head>
-    <body class="avatar-page has-site-nav">
+    <body class="avatar-page has-site-nav quest-app quest-challenge">
 
         <a class="page-brand" href="index.html">MindZone</a>
 
@@ -22,11 +23,25 @@
             </div>
         </nav>
 
+        <header class="quest-page-hero">
+            <div class="quest-page-hero-copy">
+                <p class="quest-page-kicker">CHOICE ARENA</p>
+                <h1>Make the Next-Play Decision</h1>
+                <p>Pressure shows up fast. Choose the response that helps your athlete stay ready for what comes next.</p>
+            </div>
+            <img class="quest-page-mascot" src="images/krish-power-cards.png" alt="" aria-hidden="true">
+        </header>
+
         <main class="avatar-page-shell">
             <div class="avatar-page-panel">
                 <div class="med-header avatar-header">
-                    <h2>Your Mental Choices</h2>
+                    <h2>Mental Choice Challenge</h2>
                     <button type="button" id="closeMentalTrainingBtn" class="close-btn avatar-close-btn" aria-label="Close">&times;</button>
+                </div>
+
+                <div class="challenge-mission-strip">
+                    <span>🎯 Mission: finish the round and learn from every choice.</span>
+                    <span class="challenge-reward">⚡ +20 XP · ⭐ +1</span>
                 </div>
 
                 <div class="mental-training-intro" id="mentalTrainingIntro">
@@ -85,6 +100,7 @@
         <script src="js/video-library.js"></script>
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
+        <script src="js/quest-system.js"></script>
         <script src="js/mental-training.js"></script>
     </body>
 </html>

@@ -7,6 +7,21 @@ const GEMSTONE_STORAGE_KEY = "mindzone_login_gemstones";
 const GEMSTONE_DISPLAY_COUNT = 10;
 let activeRewardType = "";
 
+function labelRewardsAsLocker() {
+    if (!rewardsOverlay) {
+        return;
+    }
+
+    const kicker = rewardsOverlay.querySelector(".rewards-kicker");
+    const title = rewardsOverlay.querySelector(".rewards-header h2");
+    if (kicker) {
+        kicker.textContent = "YOUR MENTAL LOCKER";
+    }
+    if (title) {
+        title.textContent = "See What Your Training Has Unlocked";
+    }
+}
+
 function getAppToday() {
     if (window.AppTime && typeof window.AppTime.getToday === "function") {
         return window.AppTime.getToday();
@@ -107,6 +122,9 @@ function saveRewards(rewards) {
     localStorage.setItem("mindzone_xp", rewards.xp);
     localStorage.setItem("mindzone_stars", rewards.stars);
     localStorage.setItem("mindzone_activity_completions", rewards.activityCompletions);
+    document.dispatchEvent(new CustomEvent("mindzone:rewards-updated", {
+        detail: rewards
+    }));
 }
 
 function resetRewards() {
@@ -361,3 +379,4 @@ if (!localStorage.getItem(PROGRESS_RESET_FLAG)) {
 }
 
 initLoginGemstones();
+labelRewardsAsLocker();

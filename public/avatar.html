@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Your Mental Choices - MindZone</title>
+        <title>Mental Locker - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -9,8 +9,9 @@
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/video-library.css">
         <link rel="stylesheet" href="css/nav.css">
+        <link rel="stylesheet" href="css/quest-system.css">
     </head>
-    <body class="avatar-page has-site-nav">
+    <body class="avatar-page has-site-nav quest-app quest-locker">
 
         <a class="page-brand" href="index.html">MindZone</a>
 
@@ -22,17 +23,32 @@
             </div>
         </nav>
 
+        <header class="quest-page-hero">
+            <div class="quest-page-hero-copy">
+                <p class="quest-page-kicker">YOUR MENTAL LOCKER</p>
+                <h1>Build Your Athlete Identity</h1>
+                <p>Choose the champion who inspires you now. Keep training to open more ways to personalize your locker.</p>
+            </div>
+            <img class="quest-page-mascot" src="images/krish-rewards.png" alt="" aria-hidden="true">
+        </header>
+
         <main class="avatar-page-shell">
             <div class="avatar-page-panel">
                 <div class="med-header avatar-header">
-                    <h2>Your Mental Choices</h2>
+                    <h2>Choose Your Captain</h2>
                     <button type="button" id="closeAvatarPageBtn" class="close-btn avatar-close-btn" aria-label="Close">&times;</button>
+                </div>
+
+                <div class="locker-unlocks" aria-label="Locker unlocks">
+                    <div class="locker-slot"><span>🪪</span><span><strong>Captain Card</strong><small>Ready to choose</small></span></div>
+                    <div class="locker-slot is-locked"><span>✨</span><span><strong>Victory Aura</strong><small>Unlock with 3 badges</small></span></div>
+                    <div class="locker-slot is-locked"><span>👟</span><span><strong>Champion Gear</strong><small>Unlock at Level 3</small></span></div>
                 </div>
 
                 <div class="avatar-profile-area" id="avatarProfileArea"></div>
 
                 <div class="avatar-page-footer">
-                    <a href="meditation.html" class="avatar-back-link">← Back to Activities</a>
+                    <a href="welcome.html" class="avatar-back-link">← Back to Quest Hub</a>
                     <button type="button" id="startMentalTrainingBtn" class="avatar-start-training-btn">Start Mental Training</button>
                 </div>
             </div>
@@ -80,6 +96,7 @@
         <script src="js/video-library.js"></script>
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
+        <script src="js/quest-system.js"></script>
         <script src="js/avatar.js"></script>
     </body>
 </html>

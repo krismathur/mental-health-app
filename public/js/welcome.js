@@ -28,6 +28,9 @@ const settingsBtn = document.getElementById("settingsBtn");
 const settingsOverlay = document.getElementById("settingsOverlay");
 const overlayBackdrop = document.getElementById("overlayBackdrop");
 const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+const arcadeOverlay = document.getElementById("arcadeOverlay");
+const arcadeBackdrop = document.getElementById("arcadeBackdrop");
+const closeArcadeBtn = document.getElementById("closeArcadeBtn");
 const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 const regenerateBtn = document.getElementById("regenerateBtn");
 const emotionCheckinSection = document.getElementById("emotionCheckinSection");
@@ -120,6 +123,52 @@ if (welcomePageParams.get("open") === "settings" && settingsBtn) {
         settingsBtn.click();
     }, 0);
 }
+
+function openArcade(event) {
+    if (!arcadeOverlay) {
+        return;
+    }
+
+    if (event) {
+        event.preventDefault();
+    }
+
+    arcadeOverlay.classList.remove("overlay-hidden");
+    if (closeArcadeBtn) {
+        closeArcadeBtn.focus();
+    }
+}
+
+function closeArcade() {
+    if (arcadeOverlay) {
+        arcadeOverlay.classList.add("overlay-hidden");
+    }
+}
+
+document.addEventListener("click", function (event) {
+    const arcadeButton = event.target.closest(".arcade-btn");
+    if (arcadeButton && arcadeOverlay) {
+        openArcade(event);
+    }
+});
+
+if (closeArcadeBtn) {
+    closeArcadeBtn.addEventListener("click", closeArcade);
+}
+
+if (arcadeBackdrop) {
+    arcadeBackdrop.addEventListener("click", closeArcade);
+}
+
+if (welcomePageParams.get("open") === "arcade") {
+    setTimeout(openArcade, 0);
+}
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && arcadeOverlay && !arcadeOverlay.classList.contains("overlay-hidden")) {
+        closeArcade();
+    }
+});
 
 function closeSettings() {
     settingsOverlay.classList.add("overlay-hidden");

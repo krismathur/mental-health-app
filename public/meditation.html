@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Activities - MindZone</title>
+        <title>Skill Zones - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -9,8 +9,9 @@
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/video-library.css">
         <link rel="stylesheet" href="css/nav.css">
+        <link rel="stylesheet" href="css/quest-system.css">
     </head>
-    <body class="has-site-nav">
+    <body class="has-site-nav quest-app quest-zones">
 
         <a class="page-brand" href="index.html">MindZone</a>
 
@@ -22,30 +23,57 @@
             </div>
         </nav>
 
+        <header class="quest-page-hero">
+            <div class="quest-page-hero-copy">
+                <p class="quest-page-kicker">CHOOSE TODAY’S MISSION</p>
+                <h1>Enter a Skill Zone</h1>
+                <p>Pick one short mental rep. Every zone trains a power you can use in your next practice or game.</p>
+                <div class="quest-chip-row" aria-label="Available mental skills">
+                    <span class="quest-chip">🎯 Focus</span>
+                    <span class="quest-chip">🌊 Calm</span>
+                    <span class="quest-chip">💪 Confidence</span>
+                    <span class="quest-chip">🔄 Comebacks</span>
+                </div>
+            </div>
+            <img class="quest-page-mascot" src="images/krish-quest-guide.png" alt="" aria-hidden="true">
+        </header>
+
         <div class="activity-grid">
 
             <!-- Top-left: Visualisation for Athletes -->
             <div class="activity-box meditation-box">
-                <h2 class="activity-title">Visualisation for Athletes</h2>
-                <button type="button" id="openMeditationBtn" class="open-now-btn">Open Now</button>
+                <span class="zone-kicker">FOCUS LAB</span>
+                <h2 class="activity-title">See Your Best Play</h2>
+                <p class="zone-description">Use guided visualisation to rehearse confidence before the moment arrives.</p>
+                <div class="zone-meta"><span>⏱ 5 min</span><span>⚡ +20 XP</span><span>🎯 Focus</span></div>
+                <button type="button" id="openMeditationBtn" class="open-now-btn">Start Mission →</button>
             </div>
 
             <!-- Top-right: Athlete Avatar -->
             <div class="activity-box avatar-box">
-                <h2 class="activity-title">Your Mental Choices</h2>
-                <button type="button" id="openAvatarBtn" class="open-now-btn">Open Now</button>
+                <span class="zone-kicker">CHOICE ARENA</span>
+                <h2 class="activity-title">Make the Winning Choice</h2>
+                <p class="zone-description">Train your athlete through pressure moments and learn what strong mindsets do next.</p>
+                <div class="zone-meta"><span>⏱ 4 min</span><span>⚡ +20 XP</span><span>💪 Confidence</span></div>
+                <button type="button" id="openAvatarBtn" class="open-now-btn">Choose a Captain →</button>
             </div>
 
             <!-- Bottom-left: Fix What Went Wrong -->
             <div class="activity-box fix-box">
+                <span class="zone-kicker">COMEBACK CORNER</span>
                 <h2 class="activity-title">Fix What Went Wrong</h2>
-                <button type="button" id="openFixBtn" class="open-now-btn">Open Now</button>
+                <p class="zone-description">Turn one real mistake into a clear adjustment for the next play.</p>
+                <div class="zone-meta"><span>⏱ 3 min</span><span>⚡ +20 XP</span><span>🔄 Reset</span></div>
+                <button type="button" id="openFixBtn" class="open-now-btn">Build My Comeback →</button>
             </div>
 
             <!-- Bottom-right: Reset Mind -->
             <div class="activity-box reset-box">
-                <h2 class="activity-title">Reset Mind</h2>
-                <button type="button" id="openResetBtn" class="open-now-btn">Open Now</button>
+                <span class="zone-kicker">CALM ZONE</span>
+                <h2 class="activity-title">Reset Your Mind</h2>
+                <p class="zone-description">Slow everything down, breathe, and return ready for the next moment.</p>
+                <div class="zone-meta"><span>⏱ 2 min</span><span>⚡ +20 XP</span><span>🌊 Calm</span></div>
+                <button type="button" id="openResetBtn" class="open-now-btn">Begin Reset →</button>
             </div>
 
         </div>
@@ -560,5 +588,6 @@
         <script src="js/video-library.js"></script>
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
+        <script src="js/quest-system.js"></script>
     </body>
 </html>
