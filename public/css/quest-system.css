@@ -94,9 +94,12 @@ body.quest-app .site-nav .nav-btn.active {
     padding: 8px 13px;
     color: #fff;
     background: linear-gradient(145deg, rgba(7, 26, 45, 0.94), rgba(18, 57, 87, 0.9));
-    border: 1px solid rgba(129, 230, 217, 0.45);
+    border: 1px solid rgba(248, 215, 106, 0.55);
     border-radius: 18px;
-    box-shadow: 0 12px 30px rgba(3, 14, 28, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 14px 34px rgba(3, 14, 28, 0.38),
+        0 0 28px rgba(248, 215, 106, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     transform: translateX(-50%);
@@ -335,18 +338,26 @@ body.quest-zones .open-now-btn {
     border-radius: 14px;
 }
 
-/* Mental Locker + choice challenge */
+/* Mental Locker + choice challenge share shell size only */
 body.quest-locker .avatar-page-shell,
 body.quest-challenge .avatar-page-shell {
     padding-top: 18px;
 }
 
-body.quest-locker .avatar-page-panel,
 body.quest-challenge .avatar-page-panel {
     width: min(1120px, calc(100% - 40px));
-    border: 2px solid rgba(169, 140, 255, 0.5);
+    border: 2px solid rgba(237, 100, 166, 0.62);
     border-radius: 28px;
-    box-shadow: 0 24px 60px rgba(2, 12, 25, 0.38);
+    box-shadow: 0 24px 60px rgba(74, 4, 78, 0.42);
+}
+
+body.quest-locker .avatar-page-panel {
+    width: min(1120px, calc(100% - 40px));
+    border: 2px solid rgba(248, 215, 106, 0.55);
+    border-radius: 28px;
+    box-shadow:
+        0 28px 64px rgba(2, 12, 25, 0.5),
+        0 0 48px rgba(248, 215, 106, 0.18);
 }
 
 .locker-unlocks {
@@ -653,4 +664,270 @@ body.quest-onboarding button[type="submit"] {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* Make Quest Hub pop without moving anything. */
+body.quest-dashboard::before {
+    background:
+        radial-gradient(ellipse at 18% 8%, rgba(248, 215, 106, 0.24), transparent 36%),
+        radial-gradient(ellipse at 82% 12%, rgba(103, 232, 210, 0.18), transparent 34%),
+        linear-gradient(115deg, rgba(5, 20, 38, 0.58), rgba(12, 42, 66, 0.38) 48%, rgba(8, 22, 38, 0.52)),
+        linear-gradient(180deg, rgba(8, 20, 34, 0.04), rgba(8, 20, 34, 0.46));
+}
+
+body.quest-dashboard .dashboard-welcome {
+    border: 2px solid rgba(248, 215, 106, 0.5);
+    box-shadow:
+        0 26px 60px rgba(2, 12, 25, 0.45),
+        0 0 48px rgba(103, 232, 210, 0.2);
+}
+
+body.quest-dashboard .dashboard-kicker,
+body.quest-dashboard .section-eyebrow,
+body.quest-dashboard .plan-eyebrow {
+    color: var(--quest-gold);
+    text-shadow: 0 0 18px rgba(248, 215, 106, 0.5);
+}
+
+body.quest-dashboard .dashboard-flow b {
+    color: var(--quest-navy);
+    background: var(--quest-gold);
+    box-shadow: 0 0 14px rgba(248, 215, 106, 0.55);
+}
+
+body.quest-dashboard .tool-plan {
+    border: 2px solid rgba(248, 215, 106, 0.55);
+    box-shadow:
+        0 28px 64px rgba(2, 12, 25, 0.46),
+        0 0 40px rgba(248, 215, 106, 0.2);
+}
+
+body.quest-dashboard .tool-ai-coach {
+    border: 2px solid rgba(103, 232, 210, 0.6);
+    box-shadow:
+        0 28px 64px rgba(2, 12, 25, 0.5),
+        0 0 52px rgba(103, 232, 210, 0.32);
+}
+
+body.quest-dashboard .page > #emotionCheckinSection {
+    border: 2px solid rgba(248, 215, 106, 0.48);
+    box-shadow:
+        0 24px 56px rgba(2, 12, 25, 0.4),
+        0 0 36px rgba(248, 215, 106, 0.16);
+}
+
+body.quest-dashboard #generatePlanButton {
+    background: linear-gradient(135deg, #1d6fd4 0%, #3ec6ff 48%, #67e8d2 100%);
+    box-shadow: 0 12px 28px rgba(62, 198, 255, 0.45), 0 0 22px rgba(248, 215, 106, 0.22);
+}
+
+body.quest-dashboard .coach-send-btn {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 52%, #67e8d2 100%);
+    box-shadow: 0 12px 26px rgba(20, 184, 166, 0.48);
+}
+
+body.quest-dashboard .coach-starter {
+    border-color: rgba(248, 215, 106, 0.4);
+}
+
+body.quest-dashboard #emotionCheckinSection .emotion-cell:hover {
+    transform: translateY(-3px);
+    border-color: var(--quest-teal);
+    box-shadow: 0 12px 22px rgba(103, 232, 210, 0.3);
+}
+
+body.quest-dashboard #emotionCheckinSection .emotion-cell.is-selected {
+    transform: translateY(-3px) scale(1.04);
+    border-color: var(--quest-gold);
+    box-shadow: 0 0 0 2px var(--quest-gold), 0 12px 24px rgba(248, 215, 106, 0.4);
+}
+
+/* Locker: navy/gold stall, not the magenta choice arena. */
+body.quest-locker.avatar-page {
+    background-color: #071525;
+    background-image:
+        radial-gradient(ellipse at 16% 8%, rgba(248, 215, 106, 0.22), transparent 34%),
+        radial-gradient(ellipse at 84% 12%, rgba(103, 232, 210, 0.14), transparent 32%),
+        linear-gradient(160deg, #04101c 0%, #0b2740 48%, #071525 100%);
+}
+
+body.quest-locker.avatar-page::before {
+    display: block;
+    z-index: 0;
+    opacity: 1;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(248, 215, 106, 0.16), transparent 42%),
+        linear-gradient(180deg, rgba(4, 16, 28, 0.12), rgba(4, 16, 28, 0.28));
+}
+
+body.quest-locker .quest-page-hero {
+    border-color: rgba(248, 215, 106, 0.5);
+    background:
+        radial-gradient(circle at 88% 12%, rgba(248, 215, 106, 0.2), transparent 30%),
+        linear-gradient(135deg, rgba(10, 36, 62, 0.96), rgba(8, 24, 42, 0.96));
+    box-shadow:
+        0 24px 56px rgba(2, 12, 25, 0.45),
+        0 0 40px rgba(248, 215, 106, 0.16);
+}
+
+body.quest-locker .avatar-page-shell {
+    position: relative;
+    z-index: 1;
+}
+
+body.quest-locker .avatar-page-panel {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 18%),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 0 2px,
+            transparent 2px 28px
+        ),
+        linear-gradient(165deg, #102a43 0%, #0b1f33 52%, #081525 100%);
+    overflow: auto;
+}
+
+body.quest-locker .avatar-header h2 {
+    color: #fff8e7;
+}
+
+body.quest-locker .avatar-close-btn {
+    color: #f8d76a;
+}
+
+body.quest-locker .locker-unlocks {
+    gap: 14px;
+}
+
+body.quest-locker .locker-slot {
+    position: relative;
+    min-height: 78px;
+    padding: 14px 34px 14px 14px;
+    color: #fff8e7;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(8, 24, 42, 0.55)),
+        linear-gradient(145deg, #1a3d63, #0e2740);
+    border: 2px solid rgba(248, 215, 106, 0.42);
+    border-radius: 14px 14px 10px 10px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 10px 22px rgba(2, 12, 25, 0.35);
+}
+
+body.quest-locker .locker-slot::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffe9a8, #d69e2e 62%, #975a16);
+    box-shadow: 0 0 10px rgba(248, 215, 106, 0.55);
+    transform: translateY(-50%);
+}
+
+body.quest-locker .locker-slot.is-locked {
+    opacity: 1;
+    filter: saturate(0.7);
+    border-color: rgba(255, 255, 255, 0.16);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(8, 24, 42, 0.7)),
+        linear-gradient(145deg, #16324f, #0b1d30);
+}
+
+body.quest-locker .locker-slot.is-locked::after {
+    background: #4a5568;
+    box-shadow: none;
+}
+
+body.quest-locker .avatar-profile-card {
+    width: min(380px, 100%);
+    padding: 28px 24px 26px;
+    color: #fff8e7;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(248, 215, 106, 0.2), transparent 34%),
+        linear-gradient(165deg, #143656 0%, #0c2740 100%);
+    border: 3px solid #f8d76a;
+    border-radius: 20px;
+    box-shadow:
+        0 18px 40px rgba(2, 12, 25, 0.42),
+        0 0 32px rgba(248, 215, 106, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+body.quest-locker .avatar-profile-card img {
+    border-color: #f8d76a;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35), 0 0 18px rgba(248, 215, 106, 0.28);
+}
+
+body.quest-locker .avatar-profile-league {
+    color: #f8d76a;
+}
+
+body.quest-locker .avatar-profile-tagline {
+    color: rgba(255, 248, 231, 0.86);
+}
+
+body.quest-locker .avatar-empty-state {
+    background: rgba(8, 24, 42, 0.62);
+    border: 2px dashed rgba(248, 215, 106, 0.7);
+    box-shadow: 0 16px 36px rgba(2, 12, 25, 0.32);
+}
+
+body.quest-locker .avatar-choose-captain-btn,
+body.quest-locker .avatar-start-training-btn {
+    color: #102a43;
+    background: linear-gradient(135deg, #f8d76a, #fbd38d);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 24px rgba(248, 215, 106, 0.38);
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+}
+
+body.quest-locker .avatar-start-training-btn {
+    margin-left: 0;
+}
+
+body.quest-locker .avatar-start-training-btn:hover,
+body.quest-locker .avatar-choose-captain-btn:hover {
+    color: #102a43;
+    background: linear-gradient(135deg, #ffe08a, #f6c453);
+    transform: translateY(-2px);
+}
+
+body.quest-locker .avatar-back-link {
+    color: #f8d76a;
+}
+
+.avatar-footer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+body.quest-locker .avatar-footer-actions .avatar-choose-captain-btn {
+    margin-top: 0;
+}
+
+/* Keep Choices as a heat-of-the-moment arena, distinct from locker. */
+body.quest-challenge.avatar-page {
+    background:
+        radial-gradient(circle at 18% 16%, rgba(251, 182, 206, 0.4), transparent 30%),
+        radial-gradient(circle at 84% 78%, rgba(229, 62, 62, 0.38), transparent 28%),
+        linear-gradient(145deg, #4a044e 0%, #702459 40%, #9b2c2c 100%);
+}
+
+body.quest-challenge .quest-page-hero {
+    border-color: rgba(251, 182, 206, 0.5);
+    background:
+        radial-gradient(circle at 86% 16%, rgba(237, 100, 166, 0.28), transparent 32%),
+        linear-gradient(135deg, rgba(74, 4, 78, 0.96), rgba(123, 31, 62, 0.94));
+}
+
+body.quest-challenge .quest-page-kicker {
+    color: #fbb6ce;
+    text-shadow: 0 0 16px rgba(237, 100, 166, 0.45);
 }

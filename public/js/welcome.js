@@ -1,4 +1,4 @@
-// Reflow the dashboard layout so Mood Check-in becomes a full-width strip on top.
+// Keep Mood Check-in full-width under the plan and AI Coach cards.
 (function reflowWelcomeLayout() {
     const page = document.querySelector(".page");
     const topRow = document.querySelector(".top-row");
@@ -13,7 +13,7 @@
     }
 
     if (page && topRow && mood) {
-        page.insertBefore(mood, topRow);
+        topRow.insertAdjacentElement("afterend", mood);
     }
 })();
 
@@ -101,10 +101,70 @@ loadProfileFromServer()
 setTimeout(finishWelcomeInit, 6000);
 
 // Open settings and load saved profile data into the form
+function setSettingsTab(tabId) {
+    const tabs = document.querySelectorAll(".settings-tab");
+    const panels = document.querySelectorAll(".settings-tab-panel");
+    const actions = document.querySelector(".settings-form-actions");
+    const tabOrder = ["profile", "checkin", "account"];
+    const nextTab = tabOrder.includes(tabId) ? tabId : "profile";
+
+    tabs.forEach(function (tab) {
+        const selected = tab.dataset.tab === nextTab;
+        tab.classList.toggle("is-active", selected);
+        tab.setAttribute("aria-selected", selected ? "true" : "false");
+        tab.tabIndex = selected ? 0 : -1;
+    });
+
+    panels.forEach(function (panel) {
+        panel.hidden = panel.dataset.tab !== nextTab;
+    });
+
+    if (actions) {
+        actions.hidden = nextTab === "account";
+    }
+}
+
+document.querySelectorAll(".settings-tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+        setSettingsTab(tab.dataset.tab);
+    });
+});
+
+const settingsTabList = document.querySelector(".settings-tabs");
+if (settingsTabList) {
+    settingsTabList.addEventListener("keydown", function (event) {
+        const tabs = Array.from(document.querySelectorAll(".settings-tab"));
+        const currentIndex = tabs.findIndex(function (tab) {
+            return tab.classList.contains("is-active");
+        });
+        if (currentIndex < 0) {
+            return;
+        }
+
+        let nextIndex = currentIndex;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+            nextIndex = (currentIndex + 1) % tabs.length;
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+            nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        } else if (event.key === "Home") {
+            nextIndex = 0;
+        } else if (event.key === "End") {
+            nextIndex = tabs.length - 1;
+        } else {
+            return;
+        }
+
+        event.preventDefault();
+        setSettingsTab(tabs[nextIndex].dataset.tab);
+        tabs[nextIndex].focus();
+    });
+}
+
 if (settingsBtn && settingsOverlay) {
     settingsBtn.addEventListener("click", function () {
         loadSettingsIntoForm();
         updateRegenerateButton();
+        setSettingsTab("profile");
         settingsOverlay.classList.remove("overlay-hidden");
     });
 }
@@ -992,6 +1052,8 @@ async function saveSettingsFromForm() {
     const bounce = document.querySelector('#settingsForm input[name="bounce"]:checked');
 
     if (!name || !age || !sport || !goal || !challenge || !mentalSkill || !goalCommitment || !weeks || !confidence || !stress || !focus || !bounce) {
+        const profileIncomplete = !name || !age || !sport || !goal || !challenge || !mentalSkill || !goalCommitment || !weeks;
+        setSettingsTab(profileIncomplete ? "profile" : "checkin");
         alert("Please fill out every field before saving.");
         return false;
     }

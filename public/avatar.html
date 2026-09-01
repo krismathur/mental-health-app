@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="css/video-library.css">
         <link rel="stylesheet" href="css/nav.css">
         <link rel="stylesheet" href="css/quest-system.css">
+        <link rel="stylesheet" href="css/athlete-studio.css?v=62">
     </head>
     <body class="avatar-page has-site-nav quest-app quest-locker">
 
@@ -35,7 +36,7 @@
         <main class="avatar-page-shell">
             <div class="avatar-page-panel">
                 <div class="med-header avatar-header">
-                    <h2>Choose Your Captain</h2>
+                    <h2>Your Locker</h2>
                     <button type="button" id="closeAvatarPageBtn" class="close-btn avatar-close-btn" aria-label="Close">&times;</button>
                 </div>
 
@@ -49,10 +50,59 @@
 
                 <div class="avatar-page-footer">
                     <a href="welcome.html" class="avatar-back-link">← Back to Quest Hub</a>
-                    <button type="button" id="startMentalTrainingBtn" class="avatar-start-training-btn">Start Mental Training</button>
+                    <div class="avatar-footer-actions">
+                        <button type="button" class="avatar-choose-captain-btn" data-open-studio>Customise Athletes</button>
+                        <button type="button" id="startMentalTrainingBtn" class="avatar-start-training-btn">Start Mental Training</button>
+                    </div>
                 </div>
             </div>
         </main>
+
+        <div id="athleteStudio" class="athlete-studio overlay overlay-hidden" hidden>
+            <div class="athlete-studio-shell" role="dialog" aria-modal="true" aria-labelledby="studioTitle">
+                <header class="studio-top">
+                    <div>
+                        <p class="studio-kicker">MENTAL LOCKER</p>
+                        <h2 id="studioTitle">Dress your athlete</h2>
+                    </div>
+                    <div class="studio-top-actions">
+                        <button type="button" id="studioSaveBtn" class="studio-save-btn">Save Look</button>
+                        <button type="button" id="studioCloseBtn" class="studio-close-btn" aria-label="Close customiser">&times;</button>
+                    </div>
+                </header>
+
+                <nav class="studio-tabs" role="tablist" aria-label="Athlete customiser">
+                    <button type="button" class="studio-tab is-active" role="tab" data-tab="player" aria-selected="true">Player</button>
+                    <button type="button" class="studio-tab" role="tab" data-tab="skin" aria-selected="false">Skin</button>
+                    <button type="button" class="studio-tab" role="tab" data-tab="tops" aria-selected="false">Tops</button>
+                    <button type="button" class="studio-tab" role="tab" data-tab="bottoms" aria-selected="false">Bottoms</button>
+                    <button type="button" class="studio-tab" role="tab" data-tab="hats" aria-selected="false">Hats</button>
+                    <button type="button" class="studio-tab" role="tab" data-tab="shoes" aria-selected="false">Shoes</button>
+                </nav>
+
+                <div class="studio-board">
+                    <section class="studio-picker" aria-label="Item choices">
+                        <div class="studio-picker-head">
+                            <p id="studioPickerLabel">Player</p>
+                            <p id="studioPickerHint">Tap a player.</p>
+                            <button type="button" id="studioUnequipBtn" class="studio-unequip-btn" hidden>Take it off</button>
+                        </div>
+                        <div id="studioGrid" class="studio-grid"></div>
+                    </section>
+
+                    <section class="studio-stage" id="studioStage" aria-label="Athlete preview">
+                        <img class="studio-scene-photo" src="images/studio/studio-locker-bg.png?v=46" alt="" aria-hidden="true">
+                        <div class="studio-viewport">
+                            <div class="studio-rig" id="studioRig">
+                                <div class="studio-volume" id="studioVolume">
+                                    <canvas id="studioDress" class="studio-dress"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
 
         <div id="rewardsOverlay" class="rewards-overlay rewards-hidden">
             <div class="rewards-backdrop" id="rewardsBackdrop"></div>
@@ -98,5 +148,6 @@
         <script src="js/rewards.js"></script>
         <script src="js/quest-system.js"></script>
         <script src="js/avatar.js"></script>
+        <script type="module" src="js/athlete-studio.js?v=62"></script>
     </body>
 </html>

@@ -1927,15 +1927,16 @@ body::before {
 .settings-panel {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
     background: white;
     border-radius: 20px;
-    max-width: 920px;
+    max-width: 720px;
     width: 100%;
     max-height: 94vh;
-    overflow-y: auto;
+    overflow: hidden;
     overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-    padding: 28px 32px 30px;
+    padding: 24px 28px 22px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     text-align: left;
 }
@@ -1944,7 +1945,8 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
 }
 
 .settings-header h2 {
@@ -2747,8 +2749,69 @@ body.welcome-page .arcade-panel .game-go {
     margin-top: 14px;
 }
 
+.settings-tabs {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-bottom: 16px;
+    padding: 4px;
+    border-radius: 14px;
+    background: #edf2f7;
+}
+
+.settings-tab {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: #4a5568;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.settings-tab.is-active {
+    background: white;
+    color: #2b6cb0;
+    box-shadow: 0 1px 4px rgba(26, 54, 93, 0.12);
+}
+
+.settings-tab:focus-visible {
+    outline: 2px solid #63b3ed;
+    outline-offset: 2px;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+}
+
+.settings-tab-panels {
+    flex: 1;
+    min-height: 260px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.settings-tab-panel[hidden] {
+    display: none;
+}
+
+.settings-tab-lead {
+    margin: 0 0 4px;
+    color: #718096;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
 .settings-onboarding-section {
-    padding: 22px;
+    padding: 18px 18px 20px;
     border: 1px solid #dbe7f3;
     border-radius: 18px;
     background: linear-gradient(180deg, #f8fbff 0%, #edf5fc 100%);
@@ -2854,6 +2917,10 @@ body.welcome-page .arcade-panel .game-go {
     cursor: not-allowed;
 }
 
+.settings-action-btn[hidden] {
+    display: none;
+}
+
 .settings-action-btn.secondary:disabled,
 .settings-action-btn.secondary:disabled:hover {
     background-color: #a0aec0;
@@ -2861,10 +2928,23 @@ body.welcome-page .arcade-panel .game-go {
     color: white;
 }
 
+.settings-field:first-child label,
+.settings-fields-grid .settings-field:nth-child(2) label {
+    margin-top: 0;
+}
+
 .settings-account {
-    margin-top: 22px;
-    padding-top: 18px;
-    border-top: 2px dashed #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings-account .settings-tab-lead {
+    margin-bottom: 8px;
+}
+
+.settings-account .settings-action-btn {
+    margin-top: 0;
 }
 
 .settings-logout-btn {
@@ -2884,9 +2964,6 @@ body.welcome-page .arcade-panel .game-go {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 2px dashed #e2e8f0;
 }
 
 .settings-panel .star-section h3 {
@@ -2962,6 +3039,12 @@ body.welcome-page .arcade-panel .game-go {
 .settings-form-actions {
     display: flex;
     gap: 14px;
+    flex-shrink: 0;
+    margin-top: 16px;
+}
+
+.settings-form-actions[hidden] {
+    display: none;
 }
 
 .settings-form-actions .settings-action-btn {
@@ -3912,4 +3995,183 @@ body.welcome-page .game-go {
         min-height: 300px;
         max-height: 410px;
     }
+}
+
+/* Quest Hub: mood check-in sits under plan + coach; chat matches plan height. */
+@media (min-width: 901px) {
+    body.welcome-page .top-row {
+        align-items: stretch;
+    }
+
+    body.welcome-page .top-left,
+    body.welcome-page .top-right-stack {
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        height: auto;
+    }
+
+    body.welcome-page .tool-plan,
+    body.welcome-page .tool-ai-coach,
+    body.welcome-page .top-right-stack > .tool-ai-coach {
+        flex: 1 1 auto;
+        height: 100%;
+        min-height: 0;
+        max-height: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    body.welcome-page .coach-messages {
+        flex: 1 1 auto;
+        min-height: 180px;
+        max-height: none;
+    }
+}
+
+body.welcome-page .page > #emotionCheckinSection {
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
+body.welcome-page .page > #emotionCheckinSection[hidden] {
+    display: none;
+}
+
+/* Visual pop only — same layout, stronger light, color, and lift. */
+body.welcome-page::before {
+    background:
+        radial-gradient(ellipse at 18% 8%, rgba(248, 215, 106, 0.22), transparent 36%),
+        radial-gradient(ellipse at 82% 12%, rgba(103, 232, 210, 0.16), transparent 34%),
+        linear-gradient(115deg, rgba(5, 20, 38, 0.62), rgba(12, 42, 66, 0.42) 48%, rgba(8, 22, 38, 0.58)),
+        linear-gradient(180deg, rgba(8, 20, 34, 0.06), rgba(8, 20, 34, 0.5));
+}
+
+body.welcome-page .dashboard-welcome {
+    border-color: rgba(248, 215, 106, 0.42);
+    box-shadow:
+        0 24px 58px rgba(3, 12, 24, 0.42),
+        0 0 0 1px rgba(255, 255, 255, 0.16) inset,
+        0 0 44px rgba(103, 232, 210, 0.18);
+}
+
+body.welcome-page .dashboard-welcome::after {
+    background: rgba(248, 215, 106, 0.22);
+}
+
+body.welcome-page .dashboard-kicker,
+body.welcome-page .section-eyebrow,
+body.welcome-page .plan-eyebrow {
+    color: #f8d76a;
+    text-shadow: 0 0 18px rgba(248, 215, 106, 0.45);
+}
+
+body.welcome-page .dashboard-welcome h1 {
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+}
+
+body.welcome-page .dashboard-flow span {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(248, 215, 106, 0.35);
+}
+
+body.welcome-page .dashboard-flow b {
+    color: #102a43;
+    background: #f8d76a;
+    box-shadow: 0 0 12px rgba(248, 215, 106, 0.55);
+}
+
+body.welcome-page .tool-plan {
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 26px 60px rgba(3, 12, 24, 0.42),
+        0 0 0 1px rgba(248, 215, 106, 0.28),
+        0 0 36px rgba(248, 215, 106, 0.16);
+}
+
+body.welcome-page .tool-plan .card,
+body.welcome-page .tool-plan .plan-view .weekly-goal-card,
+body.welcome-page .tool-plan .plan-view .daily-plan-card,
+body.welcome-page .tool-plan .plan-view .plan-waiting-card,
+body.welcome-page .tool-plan .plan-view .plan-finished-card {
+    border-color: rgba(79, 156, 249, 0.28);
+    box-shadow: 0 12px 30px rgba(22, 60, 96, 0.16);
+}
+
+body.welcome-page .tool-plan .card-accent {
+    background: linear-gradient(90deg, #f8d76a, #67e8d2, #4f9cf9);
+    box-shadow: 0 0 16px rgba(248, 215, 106, 0.45);
+}
+
+body.welcome-page .tool-plan #generatePlanButton {
+    background: linear-gradient(135deg, #1d6fd4 0%, #3ec6ff 48%, #67e8d2 100%);
+    box-shadow:
+        0 12px 28px rgba(62, 198, 255, 0.42),
+        0 0 22px rgba(248, 215, 106, 0.22);
+}
+
+body.welcome-page .tool-plan #generatePlanButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 16px 34px rgba(62, 198, 255, 0.5),
+        0 0 26px rgba(248, 215, 106, 0.3);
+}
+
+body.welcome-page .tool-ai-coach {
+    border-color: rgba(103, 232, 210, 0.55);
+    box-shadow:
+        0 26px 60px rgba(3, 12, 24, 0.48),
+        0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+        0 0 48px rgba(103, 232, 210, 0.28);
+}
+
+body.welcome-page .coach-messages {
+    border-color: rgba(103, 232, 210, 0.28);
+    box-shadow: inset 0 0 24px rgba(103, 232, 210, 0.08);
+}
+
+body.welcome-page .coach-send-btn {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 52%, #67e8d2 100%);
+    box-shadow: 0 12px 26px rgba(20, 184, 166, 0.45);
+}
+
+body.welcome-page .coach-starter {
+    border-color: rgba(248, 215, 106, 0.28);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.welcome-page .page > #emotionCheckinSection {
+    border: 1px solid rgba(248, 215, 106, 0.38);
+    box-shadow:
+        0 22px 52px rgba(3, 12, 24, 0.36),
+        0 0 32px rgba(248, 215, 106, 0.12);
+}
+
+body.welcome-page .checkin-heading .section-eyebrow {
+    color: #d69e2e;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-cell {
+    border-color: rgba(79, 156, 249, 0.22);
+    box-shadow: 0 6px 16px rgba(22, 60, 96, 0.12);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-cell:hover {
+    transform: translateY(-3px);
+    border-color: #67e8d2;
+    box-shadow: 0 12px 22px rgba(103, 232, 210, 0.28);
+}
+
+body.welcome-page #emotionCheckinSection .emotion-cell.is-selected {
+    transform: translateY(-3px) scale(1.04);
+    border-color: #f8d76a;
+    box-shadow:
+        0 0 0 2px #f8d76a,
+        0 12px 24px rgba(248, 215, 106, 0.38);
+}
+
+body.welcome-page #emotionCheckinSection .emotion-save-btn:not(:disabled) {
+    background: linear-gradient(135deg, #1d6fd4 0%, #3ec6ff 52%, #67e8d2 100%);
+    box-shadow: 0 10px 24px rgba(62, 198, 255, 0.38);
 }

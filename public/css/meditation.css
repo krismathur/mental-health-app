@@ -116,7 +116,7 @@ body::after {
 .avatar-box {
     background:
         linear-gradient(180deg, rgba(112, 36, 89, 0.28) 0%, rgba(90, 20, 50, 0.82) 100%),
-        url("../images/mls/messi.jpg") center 18% / cover no-repeat;
+        url("../images/mls/ronaldo.jpg") center 18% / cover no-repeat;
     border: 2px solid rgba(251, 182, 206, 0.45);
     box-shadow: 0 0 24px rgba(229, 62, 62, 0.22);
 }

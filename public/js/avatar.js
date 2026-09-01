@@ -10,7 +10,7 @@ function loadSelectedAvatar() {
                 <p class="avatar-profile-league">CAPTAIN SLOT OPEN</p>
                 <h3>Choose the athlete who inspires you</h3>
                 <p>Your captain will appear here and join you in the Mental Choice Challenge.</p>
-                <a href="meditation.html?open=choices" class="avatar-choose-captain-btn">Choose My Captain →</a>
+                <a href="#" class="avatar-choose-captain-btn" data-open-studio>Customise Athletes</a>
             </div>
         `;
         return false;
@@ -22,6 +22,7 @@ function loadSelectedAvatar() {
             <p class="avatar-profile-league">${saved.league}</p>
             <h3 class="avatar-profile-name">${saved.name}</h3>
             <p class="avatar-profile-tagline">You're going to make the best decisions for this athlete</p>
+            <button type="button" class="avatar-choose-captain-btn" data-open-studio>Customise Athletes</button>
         </div>
     `;
 
@@ -29,6 +30,14 @@ function loadSelectedAvatar() {
 }
 
 const hasSelectedAvatar = loadSelectedAvatar();
+const refreshSelectedAvatar = loadSelectedAvatar;
+window.loadSelectedAvatar = function () {
+    const hasAvatar = refreshSelectedAvatar();
+    if (startMentalTrainingBtn) {
+        startMentalTrainingBtn.hidden = !hasAvatar;
+    }
+    return hasAvatar;
+};
 
 const closeAvatarPageBtn = document.getElementById("closeAvatarPageBtn");
 if (closeAvatarPageBtn) {
