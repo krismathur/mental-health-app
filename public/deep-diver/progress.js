@@ -16,11 +16,11 @@ export const STAT_META = [
 ];
 
 export const BADGES = [
-    { id: "surfaced", label: "Surfaced", icon: "🌅", hint: "Reach the surface" },
-    { id: "never-give-up", label: "Never Give Up", icon: "💪", hint: "Finish after three or more setbacks" },
-    { id: "problem-solver", label: "Problem Solver", icon: "🧭", hint: "Find the real way after a dead end" },
-    { id: "breath-collector", label: "Breath Collector", icon: "🫧", hint: "Gather every air bubble" },
-    { id: "calm-diver", label: "Calm Diver", icon: "🧘", hint: "Reach the surface without being swept back" }
+    { id: "first-haul", label: "First Haul", icon: "🪙", hint: "Bank your first treasure" },
+    { id: "deep-hunter", label: "Deep Hunter", icon: "💠", hint: "Dive 150 meters down" },
+    { id: "full-hold", label: "Full Hold", icon: "🏴‍☠️", hint: "Bank every treasure in one dive" },
+    { id: "steady-breather", label: "Steady Breather", icon: "🫧", hint: "Bank everything without ever running out of air" },
+    { id: "comeback-diver", label: "Comeback Diver", icon: "🛟", hint: "Get rescued, then still bank every treasure" }
 ];
 
 function emptyProgress() {

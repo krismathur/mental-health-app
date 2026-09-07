@@ -1,135 +1,120 @@
 /**
- * Level data for Deep Diver.
+ * World data for Deep Diver.
  *
- * Adding a new level means appending one object to LEVELS - no engine changes.
- * The world uses pixel-ish units where y grows downward, so the sunlit surface
- * has a small y and the dark seabed where you start has a large one. You rise.
+ * One open ocean, top to bottom. y grows downward: the ship floats at the
+ * waterline near y = WATERLINE and the darkest treasure sits near the seabed.
  *
- * Level shape:
+ * World shape:
  *   id, name, subtitle   - shown on the loading toast and complete screen
  *   width, height        - world bounds
- *   spawn {x, y}         - where the diver starts on the seabed (y is the feet)
- *   platforms[]          - { id, x, y, w, h, type, solid }
- *                          y is the TOP surface. type: "rock" (coral shelf) |
- *                          "ice" (slick kelp-smoothed rock) | "crumble"
- *                          (fragile coral). solid:true is a full block; anything
- *                          else is a swim-through ledge you can rise past.
- *   crystals[]           - { x, y } air bubbles to gather
- *   checkpoints[]        - { x, y } base of an air pocket you resurface to
- *   zones[]              - { kind: "wind" (current) | "deadend", x, y, w, h }
- *   goal                 - { x, y, w, h } the surface
- *   route[]              - platform ids of the calm path, used by the guiding
- *                          light ability
- *   reflection           - the sentence shown on the level complete screen
+ *   waterline            - y of the surface; above it is sky and ship deck
+ *   spawn {x, y}         - where the diver starts (just under the ship)
+ *   ship                 - { x, y, w, h } the hull, plus bank zone underneath
+ *   bankZone             - { x, y, w, h } touch it while carrying to bank
+ *   surfaceZone          - { y } above this line oxygen refills fast
+ *   rocks[]              - { id, x, y, w, h } solid stone the diver swims around
+ *   treasures[]          - { id, x, y, value, name, icon } deeper = worth more
+ *   oxygen[]             - { id, x, y } air bubbles, +30 O2, respawn after a bit
+ *   jellies[]            - { id, x, y, range, speed, axis } drifting jellyfish
+ *   currents[]           - { x, y, w, h, direction, strength, period, activeFor }
+ *   metersPerUnit        - world units to meters for the depth readout
+ *   reflection           - the sentence shown on the dive complete screen
  */
 
-const LEVEL_ONE = {
-    id: "the-deep",
-    name: "The Deep",
-    subtitle: "Stay calm and rise to the surface.",
-    width: 1240,
-    height: 3120,
-    spawn: { x: 120, y: 2960 },
+const OCEAN = {
+    id: "treasure-trench",
+    name: "Treasure Trench",
+    subtitle: "Dive deep, watch your air, bring treasure home.",
+    width: 1600,
+    height: 3600,
+    waterline: 220,
     metersPerUnit: 1 / 20,
 
-    platforms: [
-        // ---- Band 1: gentle warm up along the seabed ----
-        { id: "ground", x: 40, y: 2960, w: 460, h: 160, type: "rock", solid: true },
-        { id: "p1", x: 557, y: 2870, w: 156, h: 34, type: "rock" },
-        { id: "p2", x: 787, y: 2760, w: 156, h: 34, type: "rock" },
-        { id: "p3", x: 557, y: 2650, w: 146, h: 34, type: "rock" },
-        { id: "p4", x: 317, y: 2545, w: 156, h: 34, type: "rock" },
-        { id: "p5", x: 67, y: 2440, w: 176, h: 34, type: "rock" },
+    spawn: { x: 880, y: 330 },
 
-        // ---- Band 2: fragile coral that breaks, slick kelp that slides ----
-        { id: "p6", x: 327, y: 2335, w: 146, h: 34, type: "rock" },
-        { id: "c1", x: 552, y: 2235, w: 136, h: 28, type: "crumble" },
-        { id: "p7", x: 787, y: 2140, w: 156, h: 34, type: "rock" },
-        { id: "i1", x: 517, y: 2035, w: 246, h: 32, type: "ice" },
-        { id: "p8", x: 267, y: 1930, w: 156, h: 34, type: "rock" },
-        { id: "c2", x: 77, y: 1830, w: 126, h: 28, type: "crumble" },
-        { id: "p9", x: 297, y: 1725, w: 156, h: 34, type: "rock" },
-        { id: "i2", x: 542, y: 1620, w: 256, h: 32, type: "ice" },
-        { id: "p10", x: 867, y: 1515, w: 166, h: 34, type: "rock" },
-        { id: "p11", x: 637, y: 1410, w: 156, h: 34, type: "rock" },
-        { id: "p12", x: 397, y: 1305, w: 166, h: 34, type: "rock" },
+    ship: { x: 680, y: 130, w: 400, h: 95 },
+    bankZone: { x: 700, y: 210, w: 360, h: 130 },
+    surfaceZone: { y: 420 },
 
-        // ---- Band 3a: the tempting left way that stops at a rock roof ----
-        { id: "d1", x: 157, y: 1200, w: 156, h: 34, type: "rock" },
-        { id: "d2", x: 37, y: 1095, w: 136, h: 34, type: "rock" },
-        { id: "d3", x: 172, y: 990, w: 146, h: 34, type: "rock" },
-        // A solid rock ceiling: you can hover under it, but there is no way past.
-        { id: "rockRoof", x: 20, y: 800, w: 330, h: 60, type: "ice", solid: true },
+    rocks: [
+        // ---- Upper shelf: gentle funnels so the first dives feel easy ----
+        { id: "shelfL", x: 0, y: 700, w: 480, h: 90 },
+        { id: "shelfR", x: 1120, y: 620, w: 480, h: 90 },
+        { id: "mid1", x: 640, y: 980, w: 360, h: 80 },
 
-        // ---- Band 3b: the real way, up through the current ----
-        { id: "r1", x: 657, y: 1200, w: 156, h: 34, type: "rock" },
-        { id: "r2", x: 877, y: 1095, w: 166, h: 34, type: "rock" },
-        { id: "r3", x: 657, y: 990, w: 146, h: 34, type: "rock" },
-        { id: "r4", x: 417, y: 885, w: 156, h: 34, type: "rock" },
-        { id: "r5", x: 647, y: 780, w: 146, h: 34, type: "rock" },
-        { id: "r6", x: 867, y: 675, w: 156, h: 34, type: "rock" },
-        { id: "r7", x: 647, y: 570, w: 146, h: 34, type: "rock" },
-        { id: "r8", x: 407, y: 465, w: 156, h: 34, type: "rock" },
-        { id: "r9", x: 637, y: 360, w: 156, h: 34, type: "rock" },
-        { id: "shallows", x: 830, y: 255, w: 380, h: 200, type: "rock", solid: true }
+        // ---- Middle maze: overhangs that make you pick a lane ----
+        { id: "wallL1", x: 0, y: 1320, w: 380, h: 100 },
+        { id: "spineC", x: 600, y: 1280, w: 140, h: 460 },
+        { id: "wallR1", x: 1180, y: 1480, w: 420, h: 100 },
+        { id: "ledge1", x: 300, y: 1720, w: 420, h: 80 },
+        { id: "ledge2", x: 900, y: 1980, w: 460, h: 90 },
+
+        // ---- Deep caves: narrow gaps guarding the big treasure ----
+        { id: "caveL", x: 0, y: 2180, w: 560, h: 110 },
+        { id: "caveR", x: 860, y: 2420, w: 740, h: 110 },
+        { id: "fang1", x: 340, y: 2680, w: 480, h: 100 },
+        { id: "fang2", x: 1040, y: 2940, w: 560, h: 100 },
+        { id: "bedL", x: 0, y: 3180, w: 520, h: 110 },
+        { id: "bedR", x: 1140, y: 3140, w: 460, h: 110 }
     ],
 
-    crystals: [
-        { x: 635, y: 2820 },
-        { x: 865, y: 2710 },
-        { x: 630, y: 2600 },
-        { x: 395, y: 2495 },
-        { x: 155, y: 2390 },
-        { x: 620, y: 2185 },
-        { x: 640, y: 1985 },
-        { x: 140, y: 1780 },
-        { x: 670, y: 1570 },
-        { x: 950, y: 1465 },
-        { x: 245, y: 940 },
-        { x: 735, y: 1150 },
-        { x: 495, y: 835 },
-        { x: 720, y: 730 },
-        { x: 485, y: 415 }
+    treasures: [
+        { id: "t1", x: 260, y: 900, value: 20, name: "Bronze Coin", icon: "🪙" },
+        { id: "t2", x: 1300, y: 1120, value: 25, name: "Silver Goblet", icon: "🏆" },
+        { id: "t3", x: 480, y: 1560, value: 35, name: "Pearl", icon: "🫧" },
+        { id: "t4", x: 1080, y: 1840, value: 45, name: "Silver Chest", icon: "🧰" },
+        { id: "t5", x: 220, y: 2440, value: 60, name: "Golden Crown", icon: "👑" },
+        { id: "t6", x: 1340, y: 2760, value: 80, name: "Gem Chest", icon: "💎" },
+        { id: "t7", x: 800, y: 3400, value: 120, name: "Crown Jewels", icon: "💠" }
     ],
 
-    checkpoints: [
-        { x: 130, y: 2440 },
-        { x: 355, y: 1725 },
-        { x: 460, y: 1305 },
-        { x: 470, y: 885 }
+    oxygen: [
+        { id: "o1", x: 620, y: 760 },
+        { id: "o2", x: 1180, y: 900 },
+        { id: "o3", x: 260, y: 1180 },
+        { id: "o4", x: 880, y: 1200 },
+        { id: "o5", x: 1420, y: 1340 },
+        { id: "o6", x: 180, y: 1580 },
+        { id: "o7", x: 820, y: 1620 },
+        { id: "o8", x: 500, y: 1920 },
+        { id: "o9", x: 1300, y: 2140 },
+        { id: "o10", x: 700, y: 2280 },
+        { id: "o11", x: 160, y: 2600 },
+        { id: "o12", x: 980, y: 2620 },
+        { id: "o13", x: 560, y: 2880 },
+        { id: "o14", x: 1240, y: 3060 },
+        { id: "o15", x: 380, y: 3320 },
+        { id: "o16", x: 1000, y: 3380 }
     ],
 
-    zones: [
+    jellies: [
+        { id: "j1", x: 900, y: 820, range: 140, speed: 0.7, axis: "x" },
+        { id: "j2", x: 400, y: 1440, range: 120, speed: 0.9, axis: "y" },
+        { id: "j3", x: 1150, y: 1640, range: 170, speed: 0.6, axis: "x" },
+        { id: "j4", x: 640, y: 2100, range: 150, speed: 0.8, axis: "x" },
+        { id: "j5", x: 300, y: 2820, range: 130, speed: 1.0, axis: "y" },
+        { id: "j6", x: 1100, y: 3220, range: 160, speed: 0.7, axis: "x" }
+    ],
+
+    currents: [
         {
-            kind: "deadend",
-            x: 30, y: 930, w: 300, h: 70,
-            message: "No way up here. Swim back down and try the other side."
+            x: 0, y: 1120, w: 1600, h: 180,
+            direction: 1, strength: 320, period: 6.0, activeFor: 2.6
         },
         {
-            // A rip current sweeps this stretch, so time your kicks through it.
-            kind: "wind",
-            x: 360, y: 240, w: 760, h: 660,
-            direction: -1,
-            strength: 470,
-            period: 5.4,
-            activeFor: 2.4
+            x: 0, y: 2300, w: 1600, h: 200,
+            direction: -1, strength: 420, period: 5.2, activeFor: 2.4
         }
     ],
 
-    goal: { x: 950, y: 145, w: 110, h: 110 },
-
-    route: ["p12", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "shallows"],
-
-    reflection: "The deep pushed back, and every time you stayed calm and kept rising. That steady breathing is a skill you can take anywhere."
+    reflection: "Every trip down, you decided how deep to go and when to head back for air. Knowing your limits — and pushing them a little at a time — is what calm confidence feels like."
 };
 
-export const LEVELS = [LEVEL_ONE];
-
-export function getLevel(index) {
-    return LEVELS[Math.min(Math.max(index, 0), LEVELS.length - 1)];
+export function getWorld() {
+    return OCEAN;
 }
 
-/** Deep copy so a restart never inherits broken coral or gathered bubbles. */
-export function cloneLevel(level) {
-    return JSON.parse(JSON.stringify(level));
+/** Deep copy so a restart never inherits taken treasure or popped bubbles. */
+export function cloneWorld() {
+    return JSON.parse(JSON.stringify(OCEAN));
 }

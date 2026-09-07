@@ -1214,7 +1214,7 @@ body::before {
     display: block;
     width: 100%;
     max-width: 480px;
-    margin: 0;
+    margin: 0 auto;
     pointer-events: auto;
 }
 
@@ -1329,15 +1329,6 @@ body::before {
 
 .game-btn-diver:hover {
     box-shadow: 0 12px 28px rgba(11, 58, 94, 0.54);
-}
-
-.game-btn-lantern {
-    background: linear-gradient(135deg, #2a1a3e 0%, #6b3fa0 45%, #e0a141 100%);
-    box-shadow: 0 8px 22px rgba(42, 26, 62, 0.5);
-}
-
-.game-btn-lantern:hover {
-    box-shadow: 0 12px 28px rgba(42, 26, 62, 0.58);
 }
 
 .emotion-checkin-btn {
@@ -2556,10 +2547,10 @@ body::before {
 .arcade-panel {
     position: relative;
     z-index: 1;
-    width: min(980px, 100%);
-    max-height: min(760px, 92vh);
+    width: min(1240px, 96vw);
+    max-height: min(880px, 94vh);
     overflow-y: auto;
-    padding: 30px;
+    padding: 42px;
     color: #fff;
     background:
         radial-gradient(circle at 12% 8%, rgba(99, 179, 237, 0.25), transparent 30%),
@@ -2619,17 +2610,17 @@ body::before {
 
 .arcade-games-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
 }
 
 body.welcome-page .arcade-panel .game-btn {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 12px;
-    min-height: 245px;
-    padding: 24px 20px;
+    gap: 16px;
+    min-height: 330px;
+    padding: 32px 26px;
     color: #fff;
     background: linear-gradient(145deg, #194e82, #2d7ed0);
     border: 2px solid rgba(144, 205, 255, 0.5);
@@ -2643,22 +2634,17 @@ body.welcome-page .arcade-panel .game-btn-diver {
     border-color: rgba(103, 232, 210, 0.54);
 }
 
-body.welcome-page .arcade-panel .game-btn-lantern {
-    background: linear-gradient(145deg, #432568, #9a5a28);
-    border-color: rgba(248, 215, 106, 0.5);
-}
-
 body.welcome-page .arcade-panel .game-icon {
     display: grid;
     place-items: center;
-    width: 94px;
-    height: 94px;
-    flex: 0 0 94px;
+    width: 120px;
+    height: 120px;
+    flex: 0 0 120px;
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.14);
     border: 2px solid rgba(255, 255, 255, 0.28);
-    border-radius: 26px;
-    font-size: 3.5rem;
+    border-radius: 30px;
+    font-size: 4.4rem;
     line-height: 1;
     overflow: hidden;
 }
@@ -2670,22 +2656,22 @@ body.welcome-page .arcade-panel .game-copy {
 
 body.welcome-page .arcade-panel .game-copy strong {
     color: #fff;
-    font-size: 1.08rem;
+    font-size: 1.35rem;
 }
 
 body.welcome-page .arcade-panel .game-copy span {
     color: rgba(255, 255, 255, 0.82);
-    font-size: 0.82rem;
+    font-size: 0.98rem;
 }
 
 body.welcome-page .arcade-panel .game-go {
     display: inline-flex;
     align-self: center;
-    padding: 8px 13px;
+    padding: 10px 18px;
     color: #102a43;
     background: #f6e05e;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
 }
 
 /* With the games moved out, the coach becomes the full right-side workspace. */

@@ -1477,14 +1477,8 @@ const DAILY_GAMES = [
     {
         name: "Deep Diver",
         href: "deep-diver/index.html",
-        detail: "Practice staying calm, focused, and in control under pressure.",
+        detail: "Dive for treasure while managing your air — practice pacing yourself and staying calm under pressure.",
         keywords: ["calm", "stress", "pressure", "breath", "anx", "nerv", "focus", "concentrat"]
-    },
-    {
-        name: "Lantern Walk",
-        href: "lantern-walk/index.html",
-        detail: "Practice making healthy mental choices and looking after yourself.",
-        keywords: ["self-care", "look after", "rest", "routine", "choice", "habit", "balance", "kind"]
     }
 ];
 

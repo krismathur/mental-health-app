@@ -1,9 +1,10 @@
 /**
- * The mental-strength layer: what the game says after a setback, and what the
- * player gets for choosing a strong response.
+ * The mental-strength layer: what the game says after a hard moment, and what
+ * the player gets for choosing a strong response.
  *
- * Deep Diver's whole theme is staying calm under pressure, so the setbacks are
- * about breath, patience and steadiness rather than force.
+ * Deep Diver's theme is pacing yourself under pressure: the oxygen gauge is a
+ * stand-in for stress, and going back up for air is never a failure — it's the
+ * skill being taught.
  *
  * Rules the content follows:
  * - Nothing is ever scolded. A "give up" answer gets a warm reframe, not a
@@ -11,201 +12,160 @@
  * - Strong answers pay off inside the gameplay (a real ability), so the lesson
  *   lands as something you *do*, not something you were quizzed on.
  *
- * The ability keys (hint / floaty / grip / boost) and cause keys (fall / crumble
- * / slip / wind / wrongway) are the engine's; only the words around them change.
+ * The ability keys (light / calm / fins / kick) and cause keys (panic / lowair
+ * / sting / current) are the engine's; only the words around them change.
  */
 
 const ABILITY_LABELS = {
-    hint: "Guiding Light — the calm path is glowing",
-    floaty: "Calm Lungs — you sink slower",
-    grip: "Steady Fins — slick kelp can't slide you",
-    boost: "Strong Kick — your kicks carry higher"
+    light: "Guiding Light — the way to your goal is glowing",
+    calm: "Calm Lungs — your air lasts twice as long",
+    fins: "Steady Fins — currents and stings can't touch you",
+    kick: "Strong Kick — you swim faster"
 };
 
 const ABILITY_SECONDS = {
-    hint: 20,
-    floaty: 22,
-    grip: 22,
-    boost: 20
+    light: 20,
+    calm: 25,
+    fins: 20,
+    kick: 20
 };
 
 const SETBACKS = {
-    fall: {
-        face: "😮‍💨",
-        kicker: "Swept back down",
+    panic: {
+        face: "🛟",
+        kicker: "Rescued",
         variants: [
-            { title: "The water pulled you back!", text: "You were rising nicely. What do you want to do now?" },
-            { title: "Down you drift — again!", text: "Sinking a little is part of diving. What's your move?" },
-            { title: "Not this time!", text: "The deep won that round. What now?" }
+            { title: "Your buddy pulled you up!", text: "You ran out of air down there. The treasure slipped away — but you're safe on the ship. What do you want to do?" },
+            { title: "Back on deck — safe.", text: "The air ran out again. That's okay: every diver misjudges a dive sometimes. What's your plan?" },
+            { title: "That was a close one!", text: "You pushed deep and the tank hit empty. What now?" }
         ],
         choices: [
             {
-                text: "I quit. This is too hard.",
-                response: "Quitting is always allowed, and you can stop any time. But look how far you already rose — every kick of that was you. Want one more go?"
+                text: "I'm done. Diving is too hard.",
+                response: "You can stop any time, and resting is a real choice. But notice: you made it deeper than last trip. The ocean isn't going anywhere."
             },
             {
-                text: "This is impossible!",
-                response: "It feels impossible right now. That word usually means \"not yet\". Let's find out what happens on the next kick."
+                text: "I almost had it! So unfair.",
+                response: "So close! That sting of 'almost' means you care. The treasure is still exactly where you found it, waiting."
             },
             {
-                text: "I'll find a calmer route.",
+                text: "Next dive, I'll turn back earlier.",
                 stat: "awareness",
-                points: 8,
-                ability: "hint",
-                response: "That's smart diving. When one way pushes back, the calm path isn't gone — it's just somewhere else. Follow the glow."
+                points: 9,
+                ability: "calm",
+                response: "That's real diver wisdom. Going up for air isn't quitting — it's how you get to dive again. Your lungs are calm and slow now."
             },
             {
-                text: "I'll take a slow breath and go again.",
+                text: "I'll breathe, reset, and go again.",
                 stat: "composure",
                 points: 8,
-                ability: "floaty",
-                response: "Perfect. Breathe in for 4, out for 6, then kick. Staying calm is the whole skill down here."
+                ability: "kick",
+                response: "Perfect. In for 4, out for 6, then back in the water. A calm body swims faster than a panicked one."
             }
         ]
     },
 
-    crumble: {
-        face: "😳",
-        kicker: "The coral broke",
+    lowair: {
+        face: "😮‍💨",
+        kicker: "Air running low",
         variants: [
-            { title: "The coral gave way!", text: "That ledge was never going to hold. What do you do?" },
-            { title: "It crumbled again!", text: "Some coral just can't be trusted. What's your plan?" }
+            { title: "Your air is getting low.", text: "That tight feeling in your chest? That's your body asking you to decide: push on, or head up? There's no wrong answer — but pick on purpose." },
+            { title: "The gauge is dropping.", text: "Low air again. You know this feeling now. What's your call?" }
         ],
         choices: [
             {
-                text: "That's so unfair!",
-                response: "It really did feel unfair. Now you know that pale coral breaks — that's information the sea just gave you for free."
+                text: "Panic! Swim anywhere!",
+                response: "That's the feeling talking — and everyone feels it. Panic burns air twice as fast, though. Try one slow breath first, then pick a direction."
             },
             {
-                text: "I knew I'd mess it up.",
-                response: "The coral broke, not you. Watch for the cracks next time and you'll spot them before they go."
+                text: "I'll ignore it and keep going.",
+                response: "Brave — but the gauge doesn't care how brave you are. Peek at it every few seconds so the choice stays yours."
             },
             {
-                text: "I'll push off it quickly next time.",
-                stat: "endurance",
-                points: 8,
-                ability: "boost",
-                response: "Good call — don't rest on cracked coral. Keep moving and it can't drop you."
+                text: "Slow breaths. I'll grab a bubble on my way.",
+                stat: "composure",
+                points: 9,
+                ability: "calm",
+                response: "Exactly right. Slow breathing makes the air last — in the game and in real life. Your lungs are calm now: watch the gauge slow down."
             },
             {
-                text: "I'll look for sturdier rock.",
+                text: "I know my limit. Heading up.",
                 stat: "awareness",
-                points: 8,
-                ability: "hint",
-                response: "Nice. Testing the ground before you trust it is what calm divers do."
+                points: 9,
+                ability: "light",
+                response: "That's the strongest move in diving. Knowing when to turn back IS the skill. The way up is glowing for you."
             }
         ]
     },
 
-    slip: {
-        face: "🌀",
-        kicker: "Slippery kelp",
+    sting: {
+        face: "🪼",
+        kicker: "Jellyfish sting",
         variants: [
-            { title: "Whoa — that kelp is slick!", text: "Your fins slid right off. What now?" },
-            { title: "The kelp got you again!", text: "Slick rock takes practice. What do you want to try?" }
+            { title: "Ouch — a jellyfish got you!", text: "It stung, and the treasure slipped out of your hands. What do you do?" },
+            { title: "Stung again!", text: "Those jellies drift in patterns. What's your plan?" }
         ],
         choices: [
             {
-                text: "I hate this part.",
-                response: "Slick kelp is genuinely annoying. The hard parts are also the parts that make you better at this."
+                text: "This game hates me.",
+                response: "It really felt that way. The jelly was just doing its jelly thing though — and now you know its path."
             },
             {
-                text: "I'm just bad at this.",
-                response: "You're new at it. That's different from bad at it. Two more tries and your fins will know what to do."
+                text: "I always mess up right at the end.",
+                response: "One sting isn't 'always'. It's one moment — and the treasure floated right back to where you found it. It's still yours to get."
             },
             {
-                text: "I'll take smaller, slower kicks.",
+                text: "I'll watch how it moves, then slip past.",
                 stat: "awareness",
                 points: 8,
-                ability: "grip",
-                response: "Exactly right. Tap the keys instead of holding them and you'll stay in control."
+                ability: "fins",
+                response: "Smart. Jellies swing back and forth like a clock — wait for the swing, then go. Your fins are steady: nothing can sting you for a bit."
             },
             {
-                text: "I'll keep trying until it clicks.",
-                stat: "endurance",
+                text: "Shake it off. Back for my treasure.",
+                stat: "courage",
                 points: 8,
-                ability: "grip",
-                response: "That's how slick rock gets learned — one more try, then one more. Your fins have extra grip now."
+                ability: "kick",
+                response: "That's the spirit. A setback stings for a second; giving up stings longer. Kick hard!"
             }
         ]
     },
 
-    wind: {
+    current: {
         face: "🌊",
-        kicker: "Current",
+        kicker: "Caught in a current",
         variants: [
-            { title: "The current pushed you off!", text: "It's surging through here. What's your plan?" },
+            { title: "The current swept you sideways!", text: "It's surging through here in waves. What's your plan?" },
             { title: "Another surge!", text: "The current comes and goes. What do you want to do?" }
         ],
         choices: [
             {
-                text: "The game is cheating.",
-                response: "It sure feels that way. The current does rest though — watch for the still moments."
+                text: "The ocean is cheating.",
+                response: "It sure feels that way. But watch: the current pushes for a few seconds, then rests. It has a rhythm you can learn."
             },
             {
-                text: "I give up on this part.",
-                response: "You can hover here and breathe as long as you like. This stretch is hard for everyone the first time."
+                text: "I'll just avoid this whole area.",
+                response: "You can — there's usually another way around. Just know the current rests between surges, if you ever want to try."
             },
             {
-                text: "I'll wait for the current to ease, then kick.",
+                text: "I'll wait for the surge to pass, then swim.",
                 stat: "awareness",
                 points: 9,
-                response: "Great read. Count the surges: they push for a few seconds, then go still. Kick in the stillness."
+                response: "Great read. Hold steady, count the surge out, then move in the calm. Timing beats muscle down here."
             },
             {
-                text: "I've got this. Let's go again.",
+                text: "I can power through this.",
                 stat: "courage",
                 points: 8,
-                ability: "boost",
-                response: "Love that. Say it before your next kick — calm and sure. Your body listens to what you tell it."
-            }
-        ]
-    },
-
-    wrongway: {
-        face: "🧭",
-        kicker: "Dead end",
-        variants: [
-            { title: "This way stops here.", text: "There's no way up from this side. What do you do?" }
-        ],
-        choices: [
-            {
-                text: "I wasted all that swimming.",
-                response: "Not wasted — you just crossed one wrong way off the list. That's exactly how divers find the right one."
-            },
-            {
-                text: "I'll never find the way up.",
-                response: "There is a way up, and you're one route closer to it. Head back down and look to the right."
-            },
-            {
-                text: "I'll go back and try the other side.",
-                stat: "awareness",
-                points: 10,
-                ability: "hint",
-                response: "That's the move. Backing up isn't losing — it's the fastest way forward from here."
-            },
-            {
-                text: "Good to know. Now I've learned something.",
-                stat: "courage",
-                points: 10,
-                ability: "hint",
-                response: "That is a seriously strong way to think. Mistakes are just facts you didn't have yet."
+                ability: "fins",
+                response: "Love the fight in that. With steady fins, the current can't budge you — feel the difference calm strength makes."
             }
         ]
     }
 };
 
-/** Encouragement for the little dips that don't deserve a whole card. */
-const STUMBLES = [
-    "Nice recovery — keep rising!",
-    "That's alright. Back up you go.",
-    "Shake it off, diver.",
-    "Everyone dips there. Try again.",
-    "Still rising. That's what counts."
-];
-
 export function getSetback(cause, timesSeen) {
-    const setback = SETBACKS[cause] || SETBACKS.fall;
+    const setback = SETBACKS[cause] || SETBACKS.panic;
     const variant = setback.variants[timesSeen % setback.variants.length];
 
     return {
@@ -215,10 +175,6 @@ export function getSetback(cause, timesSeen) {
         text: variant.text,
         choices: setback.choices
     };
-}
-
-export function getStumbleLine(index) {
-    return STUMBLES[index % STUMBLES.length];
 }
 
 export function getAbilityLabel(key) {
@@ -242,19 +198,20 @@ export function earnedBadges(runStats, owned) {
         }
     }
 
-    add("surfaced");
-
-    if (runStats.setbacks >= 3) {
-        add("never-give-up");
+    if (runStats.banked >= 1) {
+        add("first-haul");
     }
-    if (runStats.deadEndFound) {
-        add("problem-solver");
+    if (runStats.banked >= runStats.treasureTotal) {
+        add("full-hold");
     }
-    if (runStats.crystals >= runStats.crystalTotal) {
-        add("breath-collector");
+    if (runStats.deepestMeters >= 150) {
+        add("deep-hunter");
     }
-    if (runStats.setbacks === 0) {
-        add("calm-diver");
+    if (runStats.banked >= runStats.treasureTotal && runStats.rescues === 0) {
+        add("steady-breather");
+    }
+    if (runStats.banked >= runStats.treasureTotal && runStats.rescues >= 1) {
+        add("comeback-diver");
     }
 
     return earned;

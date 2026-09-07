@@ -9,12 +9,10 @@
 import { loadAssets } from "./assets.js";
 import { playSound, unlockAudio, isMuted, toggleMute } from "./audio.js";
 import { CHARACTERS, getCharacter } from "./characters.js";
-import { getLevel } from "./levels.js";
-import { Game, FIXED_STEP } from "./engine.js";
+import { Game, FIXED_STEP, TUNING } from "./engine.js";
 import { draw } from "./render.js";
 import {
     getSetback,
-    getStumbleLine,
     getAbilityLabel,
     getAbilitySeconds,
     earnedBadges
@@ -45,12 +43,11 @@ const state = {
     accumulator: 0,
     setbacksSeen: {},
     runStatPoints: 0,
-    stumbleIndex: 0,
     toastTimer: 0,
     pendingSetback: null
 };
 
-const input = { left: false, right: false, jump: false, jumpPressed: false };
+const input = { left: false, right: false, up: false, down: false };
 
 // ---------------------------------------------------------------- screens
 
@@ -169,9 +166,10 @@ const KEY_MAP = {
     KeyA: "left",
     ArrowRight: "right",
     KeyD: "right",
-    ArrowUp: "jump",
-    KeyW: "jump",
-    Space: "jump"
+    ArrowUp: "up",
+    KeyW: "up",
+    ArrowDown: "down",
+    KeyS: "down"
 };
 
 window.addEventListener("keydown", function (event) {
@@ -189,15 +187,7 @@ window.addEventListener("keydown", function (event) {
 
     event.preventDefault();
     unlockAudio();
-
-    if (action === "jump") {
-        if (!input.jump) {
-            input.jumpPressed = true;
-        }
-        input.jump = true;
-    } else {
-        input[action] = true;
-    }
+    input[action] = true;
 });
 
 window.addEventListener("keyup", function (event) {
@@ -207,12 +197,7 @@ window.addEventListener("keyup", function (event) {
     }
 
     event.preventDefault();
-
-    if (action === "jump") {
-        input.jump = false;
-    } else {
-        input[action] = false;
-    }
+    input[action] = false;
 });
 
 function setupTouchControls() {
@@ -229,22 +214,12 @@ function setupTouchControls() {
             unlockAudio();
             button.setPointerCapture(event.pointerId);
             button.classList.add("is-held");
-
-            if (action === "jump") {
-                input.jumpPressed = true;
-                input.jump = true;
-            } else {
-                input[action] = true;
-            }
+            input[action] = true;
         });
 
         const release = function () {
             button.classList.remove("is-held");
-            if (action === "jump") {
-                input.jump = false;
-            } else {
-                input[action] = false;
-            }
+            input[action] = false;
         };
 
         button.addEventListener("pointerup", release);
@@ -256,20 +231,17 @@ function setupTouchControls() {
 function clearInput() {
     input.left = false;
     input.right = false;
-    input.jump = false;
-    input.jumpPressed = false;
+    input.up = false;
+    input.down = false;
 }
 
 // -------------------------------------------------------------- game start
 
-function startLevel() {
-    const level = getLevel(0);
-
+function startDive() {
     state.character = getCharacter(state.progress.character);
-    state.game = new Game(level);
+    state.game = new Game();
     state.setbacksSeen = {};
     state.runStatPoints = 0;
-    state.stumbleIndex = 0;
     state.accumulator = 0;
     state.paused = false;
     state.running = true;
@@ -280,7 +252,7 @@ function startLevel() {
     showOverlay("setbackOverlay", false);
     showOverlay("completeOverlay", false);
 
-    toast(level.subtitle, 3200);
+    toast(state.game.level.subtitle, 3200);
     updateHud();
 }
 
@@ -391,7 +363,6 @@ function continueButton() {
 }
 
 function closeSetback() {
-    const event = state.pendingSetback;
     state.pendingSetback = null;
 
     showOverlay("setbackOverlay", false);
@@ -399,21 +370,14 @@ function closeSetback() {
     state.accumulator = 0;
     clearInput();
 
-    if (!state.game) {
-        return;
-    }
-
-    if (event && event.respawn) {
-        state.game.respawnPlayer();
-        toast("Back to your last air pocket. Let's rise again!", 2200);
-    } else {
+    if (state.game) {
         state.game.resume();
     }
 }
 
-// ---------------------------------------------------------- level complete
+// ----------------------------------------------------------- dive complete
 
-function completeLevel() {
+function completeDive() {
     state.running = false;
     state.paused = false;
     clearInput();
@@ -425,28 +389,28 @@ function completeLevel() {
 
     const fresh = earnedBadges(stats, progress.badges);
     progress.badges = progress.badges.concat(fresh);
-    progress.crystals += stats.crystals;
+    progress.crystals += stats.treasureValue;
     progress.dives += 1;
-    progress.bestMeters = Math.max(progress.bestMeters, stats.bestHeightMeters);
+    progress.bestMeters = Math.max(progress.bestMeters, stats.deepestMeters);
     saveProgress(progress);
 
-    const xp = 25 + stats.crystals * 3 + state.runStatPoints;
+    const xp = 25 + Math.round(stats.treasureValue / 4) + state.runStatPoints;
 
     // Feed the same XP meters the rest of MindZone uses.
     if (typeof window.addRewardProgress === "function") {
         window.addRewardProgress({ xp: xp, stars: 1, activityCompletions: 1 });
     }
 
-    el("completeTitle").textContent = stats.setbacks > 0
-        ? "You surfaced — after " + stats.setbacks + (stats.setbacks === 1 ? " setback!" : " setbacks!")
-        : "You surfaced!";
+    el("completeTitle").textContent = stats.rescues > 0
+        ? "All treasure aboard — after " + stats.rescues + (stats.rescues === 1 ? " rescue!" : " rescues!")
+        : "All treasure aboard!";
 
     el("completeReflection").textContent = level.reflection;
 
     el("completeStats").innerHTML = `
-        <div class="score-tile"><b>${stats.crystals}/${stats.crystalTotal}</b><span>Bubbles</span></div>
-        <div class="score-tile"><b>${stats.bestHeightMeters}m</b><span>Risen</span></div>
-        <div class="score-tile"><b>${stats.setbacks}</b><span>Comebacks</span></div>
+        <div class="score-tile"><b>${stats.treasureValue}</b><span>Gold</span></div>
+        <div class="score-tile"><b>${stats.deepestMeters}m</b><span>Deepest Dive</span></div>
+        <div class="score-tile"><b>${stats.oxygenGrabbed}</b><span>Air Bubbles</span></div>
         <div class="score-tile"><b>+${xp}</b><span>MindZone XP</span></div>
     `;
 
@@ -461,12 +425,28 @@ function updateHud() {
         return;
     }
 
-    const stats = state.game.stats;
-    el("hudCrystals").textContent = String(stats.crystals);
-    el("hudCrystalTotal").textContent = "/" + stats.crystalTotal;
-    el("hudHeight").textContent = String(stats.heightMeters);
+    const game = state.game;
+    const stats = game.stats;
 
-    const abilities = state.game.abilities;
+    el("hudBanked").textContent = String(stats.banked);
+    el("hudTreasureTotal").textContent = "/" + stats.treasureTotal;
+    el("hudDepth").textContent = String(game.depthMeters());
+
+    const fraction = game.oxygen / TUNING.maxOxygen;
+    const fill = el("oxygenFill");
+    fill.style.width = Math.round(fraction * 100) + "%";
+    fill.className = fraction <= 0.3 ? "is-low" : "";
+    el("hudOxygenChip").classList.toggle("is-warning", fraction <= 0.3);
+
+    const carrying = el("hudCarrying");
+    if (game.carrying) {
+        carrying.hidden = false;
+        carrying.textContent = game.carrying.icon + " " + game.carrying.name;
+    } else {
+        carrying.hidden = true;
+    }
+
+    const abilities = game.abilities;
     const active = Object.keys(abilities).find(function (key) {
         return abilities[key] > 0;
     });
@@ -488,37 +468,29 @@ function handleEvents() {
 
     for (const event of game.events) {
         switch (event.type) {
-            case "jump":
-                playSound("jump");
+            case "treasure":
+                playSound("crystal");
+                toast(event.name + " (+" + event.value + " gold)! Now get it back to the ship.", 2400);
                 break;
-            case "land":
-                playSound("land");
+            case "bank":
+                playSound("checkpoint");
+                toast(event.name + " banked! +" + event.value + " gold in the hold.", 2200);
                 break;
-            case "step":
-                playSound("step");
-                break;
-            case "crystal":
+            case "oxygen":
                 playSound("crystal");
                 break;
-            case "checkpoint":
-                playSound("checkpoint");
-                toast("Air pocket! You'll come back here.", 2000);
+            case "surge":
+                toast("Current surging — hold steady or ride it out!", 1800);
                 break;
-            case "crumbleStart":
-                playSound("crumble");
-                break;
-            case "gust":
-                toast("Current surging — wait for it to ease!", 1800);
-                break;
-            case "stumble":
-                state.stumbleIndex += 1;
-                toast(getStumbleLine(state.stumbleIndex), 1600);
+            case "rescueStart":
+                playSound("setback");
+                toast("Out of air! Your buddy's got you — up to the ship.", 2600);
                 break;
             case "setback":
                 openSetback(event);
                 break;
-            case "goal":
-                completeLevel();
+            case "complete":
+                completeDive();
                 break;
             default:
                 break;
@@ -574,7 +546,7 @@ function wireUi() {
 
     el("confirmCharacterBtn").addEventListener("click", function () {
         playSound("click");
-        startLevel();
+        startDive();
     });
 
     el("pauseBtn").addEventListener("click", togglePause);
@@ -582,7 +554,7 @@ function wireUi() {
 
     el("restartBtn").addEventListener("click", function () {
         playSound("click");
-        startLevel();
+        startDive();
     });
 
     el("quitBtn").addEventListener("click", function () {
@@ -592,7 +564,7 @@ function wireUi() {
 
     el("replayBtn").addEventListener("click", function () {
         playSound("click");
-        startLevel();
+        startDive();
     });
 
     const muteBtn = el("muteBtn");
