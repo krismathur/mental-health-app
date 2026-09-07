@@ -1,26 +1,56 @@
+/*
+ * Onboarding — "Build Your Player Card".
+ *
+ * The page is a create-a-player screen, not a form on a white card. Every
+ * choice below comes from that: jersey numerals for the steps, card stock
+ * rather than paper, and rating rows that read as stat meters because that is
+ * what a young athlete already understands a 1-10 row to mean.
+ *
+ * The bold element is the meter fill. Everything else stays quiet.
+ */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --ink: #0e1729;
+    --stock: #17223c;
+    --rise: #212e4e;
+    --edge: #2c3a5e;
+    --chalk: #edf2fa;
+    --mute: #8795b4;
+    --clay: #ff6b35;
+    --clay-deep: #e0521f;
+    --go: #4fd1a5;
+
+    --display: 'Barlow Condensed', 'Nunito', sans-serif;
+    --body: 'Nunito', 'Segoe UI', Arial, sans-serif;
+}
+
 body {
-    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    color: #fff;
+    font-family: var(--body);
+    color: var(--chalk);
     min-height: 100vh;
-    background-color: #0f2b4a;
-    background-image: url('../images/wimbledon-baseline-match.png');
+    background-color: var(--ink);
+    background-image: url('../images/onboarding-court.jpg');
     background-size: cover;
-    background-position: center 45%;
+    background-position: center 40%;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
 
+/* The court photograph is atmosphere, not content. Held well back so the
+   card reads first and the type keeps its contrast. */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(8, 20, 35, 0.45);
+    background:
+        radial-gradient(120% 80% at 50% 0%, rgba(14, 23, 41, 0.55), rgba(14, 23, 41, 0.94)),
+        var(--ink);
     z-index: 0;
     pointer-events: none;
 }
@@ -28,348 +58,514 @@ body::before {
 .page {
     position: relative;
     z-index: 1;
-    padding: 36px 20px 60px;
-    text-align: center;
-    max-width: 560px;
+    max-width: 640px;
     margin: 0 auto;
+    padding: 40px 20px 72px;
 }
+
+/* ---------- Header ---------- */
 
 .page-header {
-    margin-bottom: 28px;
+    position: relative;
+    margin-bottom: 30px;
 }
 
-.badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #f6ad55, #fc8181);
-    color: white;
-    font-size: 0.78rem;
-    font-weight: 800;
-    padding: 5px 14px;
-    border-radius: 20px;
-    margin-bottom: 12px;
+.header-text {
+    max-width: 30ch;
 }
+
 
 h1 {
-    font-size: 2.2rem;
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 8px;
-    line-height: 1.2;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+    font-family: var(--display);
+    font-size: clamp(2.1rem, 7vw, 3rem);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.005em;
+    margin-bottom: 10px;
 }
 
 .tagline {
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 1.05rem;
+    color: var(--mute);
+    font-size: 1rem;
     font-weight: 600;
-    line-height: 1.5;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    line-height: 1.55;
+    max-width: 44ch;
 }
 
-/* Progress steps */
+/* Krish stands at the edge of the header rather than sitting in the flow.
+   Scoped to the page because quest-system.css loads later and otherwise
+   re-centres him as a 150px block. */
+body.quest-onboarding .entry-krish {
+    position: absolute;
+    right: -10px;
+    bottom: -18px;
+    width: 108px;
+    height: auto;
+    margin: 0;
+    pointer-events: none;
+}
+
+/* ---------- Step track ---------- */
+
 .progress-bar {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0;
-    margin-bottom: 28px;
-    padding: 16px 12px;
-    background: rgba(255, 255, 255, 0.96);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 22px;
 }
 
 .progress-step {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 7px;
     font-size: 0.72rem;
     font-weight: 800;
-    color: #a0aec0;
-    min-width: 70px;
+    color: var(--mute);
+    flex: 0 0 auto;
+}
+
+/* The numeral is the step marker: jersey-style, and it grows when active
+   rather than changing colour alone. */
+.step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--edge);
+    background: var(--stock);
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--mute);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.progress-step.done .step-icon {
+    border-color: var(--go);
+    color: var(--go);
+}
+
+.progress-step.active .step-icon {
+    border-color: var(--clay);
+    background: var(--clay);
+    color: #17100b;
+    transform: scale(1.14);
 }
 
 .progress-step.done,
 .progress-step.active {
-    color: #2b6cb0;
-}
-
-.step-icon {
-    font-size: 1.3rem;
-    line-height: 1;
+    color: var(--chalk);
 }
 
 .progress-line {
     flex: 1;
-    height: 3px;
-    background: #e2e8f0;
-    min-width: 30px;
-    margin: 0 4px;
-    margin-bottom: 18px;
-    border-radius: 2px;
+    height: 2px;
+    background: var(--edge);
+    margin: 0 6px 22px;
 }
 
 .progress-line.done {
-    background: linear-gradient(90deg, #2b6cb0, #63b3ed);
+    background: var(--go);
 }
 
+/* ---------- The card ---------- */
+
 .card {
-    background-color: rgba(255, 255, 255, 0.97);
-    border-radius: 20px;
-    padding: 28px 30px;
-    text-align: left;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
-    border: 2px solid rgba(255, 255, 255, 0.35);
+    background: var(--stock);
+    border: 1px solid var(--edge);
+    border-radius: 18px;
+    padding: 26px 28px 28px;
+    box-shadow: 0 26px 60px rgba(4, 9, 20, 0.55);
 }
 
 .card-top {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 20px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
     padding-bottom: 16px;
-    border-bottom: 2px dashed #e2e8f0;
-}
-
-.card-thumb {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    object-fit: cover;
-    flex-shrink: 0;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--edge);
 }
 
 .card h2 {
-    color: #2b6cb0;
-    font-size: 1.25rem;
-    font-weight: 900;
-    margin-bottom: 2px;
+    font-family: var(--display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.05;
 }
 
 .subtitle {
-    color: #718096;
-    font-size: 0.88rem;
+    color: var(--mute);
+    font-size: 0.9rem;
     font-weight: 600;
+    margin-top: 3px;
 }
 
-.form-section {
-    margin-bottom: 20px;
+/* Reads as the number on the back of a shirt. */
+.card-count {
+    font-family: var(--display);
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--edge);
+    flex-shrink: 0;
 }
+
+.card-count b {
+    color: var(--clay);
+    font-weight: 700;
+}
+
+/* ---------- Fields ---------- */
 
 .section-label {
-    font-size: 0.95rem;
-    font-weight: 900;
-    color: #4a5568;
-    margin-bottom: 12px;
-    padding-bottom: 6px;
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--chalk);
+    margin-bottom: 16px;
 }
 
 label {
     display: block;
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #4a5568;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    margin-bottom: 5px;
-    margin-top: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--chalk);
+    margin: 18px 0 7px;
+}
+
+label:first-of-type {
+    margin-top: 0;
 }
 
 .req {
-    color: #fc8181;
+    color: var(--clay);
 }
 
-input {
+input[type="text"],
+input[type="number"] {
     display: block;
     width: 100%;
-    padding: 11px 14px;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    font-family: 'Nunito', sans-serif;
+    padding: 12px 14px;
+    border: 1px solid var(--edge);
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--chalk);
+    font-family: var(--body);
+    font-size: 0.98rem;
     font-weight: 600;
-    box-sizing: border-box;
-    background: #f8fafc;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.18s, box-shadow 0.18s;
 }
 
-input:focus {
+input::placeholder {
+    color: #5f6d8c;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
     outline: none;
-    border-color: #63b3ed;
-    box-shadow: 0 0 0 4px rgba(99, 179, 237, 0.2);
-    background: white;
+    border-color: var(--clay);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.22);
 }
 
-button {
-    display: block;
-    width: 100%;
-    margin-top: 24px;
-    padding: 15px;
-    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
-    color: white;
-    border: none;
-    border-radius: 14px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    font-family: 'Nunito', sans-serif;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(43, 108, 176, 0.3);
-    transition: transform 0.15s, box-shadow 0.15s;
+/* ---------- Stat meters ----------
+   The one place this page spends its boldness. A rating row fills like an
+   attribute bar: every segment up to the chosen one lights, the rest stay
+   dark. Done with :has() and a sibling combinator, so there is no JS behind
+   it -- fill everything, then unfill whatever follows the checked segment. */
+
+.star-row,
+.scale-row {
+    margin-top: 18px;
+    padding: 15px 16px 16px;
+    background: var(--rise);
+    border: 1px solid var(--edge);
+    border-radius: 12px;
 }
 
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(43, 108, 176, 0.35);
-}
-
-/* Star rating with emojis */
-.star-section {
-    margin-top: 8px;
-    padding-top: 20px;
-    border-top: 2px dashed #e2e8f0;
-}
-
-.star-section h3 {
-    color: #2b6cb0;
-    font-size: 1.05rem;
-    font-weight: 900;
+.star-question,
+.scale-question {
+    font-size: 0.93rem;
+    font-weight: 700;
+    line-height: 1.45;
     margin-bottom: 4px;
 }
 
+.star-scale,
+.scale-hint,
 .star-hint {
-    color: #718096;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin-bottom: 8px;
+    color: var(--mute);
+    margin-bottom: 11px;
 }
 
-.star-row {
-    margin-top: 18px;
-    background: #f8fafc;
-    padding: 14px;
-    border-radius: 14px;
-}
-
-.star-question {
-    font-size: 0.92rem;
-    font-weight: 700;
-    color: #4a5568;
-    margin-bottom: 10px;
-    line-height: 1.4;
-}
-
-.star-scale {
-    font-size: 0.78rem;
-    color: #718096;
-    font-weight: 600;
-    margin-bottom: 10px;
+.star-hint {
+    margin-bottom: 0;
 }
 
 .stars {
     display: flex;
-    gap: 6px;
+    gap: 4px;
 }
 
 .stars input {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .stars label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-    margin: 0;
-    padding: 8px 4px;
+    justify-content: center;
+    gap: 3px;
     flex: 1;
-    text-align: center;
-    text-transform: none;
-    letter-spacing: 0;
-    background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
+    margin: 0;
+    padding: 9px 2px;
+    border-radius: 6px;
+    background: var(--ink);
+    border: 1px solid transparent;
+    color: var(--mute);
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    transition: background 0.16s, color 0.16s, transform 0.16s;
 }
 
-.stars label:hover {
-    transform: scale(1.05);
-    border-color: #63b3ed;
+.stars:has(input:checked) label {
+    background: var(--clay);
+    color: #17100b;
 }
 
-.star-num {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: #a0aec0;
-}
-
-.star-emoji {
-    font-size: 1.2rem;
-    line-height: 1;
+.stars label:has(input:checked) ~ label {
+    background: var(--ink);
+    color: var(--mute);
 }
 
 .stars label:has(input:checked) {
-    background: linear-gradient(135deg, #2b6cb0, #4299e1);
-    border-color: #2b6cb0;
-    transform: scale(1.08);
-    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
-.stars label:has(input:checked) .star-num {
-    color: rgba(255, 255, 255, 0.8);
+.stars label:hover {
+    border-color: var(--clay);
 }
 
-/* 1–10 rating scales */
-.scale-row {
-    margin-top: 16px;
-    background: #f8fafc;
-    padding: 14px;
-    border-radius: 14px;
+.stars label:focus-within {
+    outline: 2px solid var(--chalk);
+    outline-offset: 2px;
 }
 
-.scale-question {
-    font-size: 0.92rem;
-    font-weight: 700;
-    color: #4a5568;
-    margin-bottom: 6px;
-    line-height: 1.4;
+.star-num {
+    font-size: 0.95rem;
 }
 
-.scale-hint {
-    font-size: 0.78rem;
-    color: #718096;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.stars.scale-10 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
+.star-emoji {
+    font-size: 1.1rem;
+    line-height: 1;
 }
 
 .stars.scale-10 label {
-    padding: 8px 4px;
-    font-size: 0.85rem;
-    font-weight: 800;
+    padding: 10px 0;
 }
 
-@media (max-width: 500px) {
-    body {
-        background-position: center 35%;
-        background-attachment: scroll;
+/* ---------- Consent ---------- */
+
+.consent-section {
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 12px;
+    background: var(--rise);
+    border: 1px solid var(--edge);
+}
+
+.consent-section .section-label {
+    margin-bottom: 10px;
+}
+
+.consent-intro {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--mute);
+    margin-bottom: 14px;
+}
+
+.consent-check {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    margin: 0 0 12px;
+    padding: 13px 14px;
+    border-radius: 10px;
+    background: var(--ink);
+    border: 1px solid var(--edge);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--chalk);
+}
+
+.consent-check:focus-within {
+    border-color: var(--clay);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.22);
+}
+
+.consent-check input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 19px;
+    height: 19px;
+    margin: 1px 0 0;
+    accent-color: var(--clay);
+    cursor: pointer;
+}
+
+.consent-note {
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--mute);
+}
+
+.consent-note a {
+    color: var(--chalk);
+    font-weight: 700;
+    text-underline-offset: 2px;
+}
+
+.consent-note a:hover,
+.consent-note a:focus-visible {
+    color: var(--clay);
+}
+
+/* ---------- Steps and navigation ---------- */
+
+.step {
+    display: none;
+}
+
+.step.is-active {
+    display: block;
+}
+
+.step-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 26px;
+}
+
+button {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border: none;
+    border-radius: 11px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: background 0.16s, transform 0.14s;
+}
+
+.nav-next {
+    flex: 1;
+    background: var(--clay);
+    color: #17100b;
+}
+
+.nav-next:hover {
+    background: var(--clay-deep);
+    transform: translateY(-1px);
+}
+
+.nav-back {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid var(--edge);
+    color: var(--mute);
+}
+
+.nav-back:hover {
+    color: var(--chalk);
+    border-color: var(--chalk);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--chalk);
+    outline-offset: 2px;
+}
+
+.form-error {
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255, 107, 53, 0.12);
+    border: 1px solid var(--clay);
+    color: #ffbfa3;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 620px) {
+    .page {
+        padding: 28px 14px 56px;
     }
 
-    h1 {
-        font-size: 1.8rem;
+    body.quest-onboarding .entry-krish {
+        width: 78px;
+        right: -6px;
+        bottom: -8px;
     }
 
-    .progress-step span:not(.step-icon) {
-        font-size: 0.65rem;
+    .header-text {
+        max-width: 20ch;
     }
 
     .card {
-        padding: 22px 18px;
+        padding: 20px 17px 22px;
+    }
+
+    .progress-step span:not(.step-icon) {
+        font-size: 0.62rem;
+    }
+
+    .step-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1.05rem;
+    }
+
+    /* Ten segments across a phone would be too narrow to hit accurately. */
+    .stars.scale-10 {
+        flex-wrap: wrap;
+    }
+
+    .stars.scale-10 label {
+        flex: 0 0 calc(20% - 4px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+
+    .progress-step.active .step-icon,
+    .stars label:has(input:checked),
+    .nav-next:hover {
+        transform: none;
     }
 }

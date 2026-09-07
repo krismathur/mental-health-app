@@ -1,37 +1,9 @@
 const AVATAR_STORAGE_KEY = "selectedAthleteAvatar";
 const LOOK_KEY = "mindzone_athlete_look";
 
-function bodyPath(id) {
-    return "images/studio/bodies/body-" + id + ".png?v=23";
-}
-
-const PLAYERS = [
-    { id: "curry", name: "Curry", league: "NBA", image: "images/nba/curry.jpg", body: bodyPath("curry"), alt: "Stephen Curry" },
-    { id: "durant", name: "Durant", league: "NBA", image: "images/nba/durant.jpg", body: bodyPath("durant"), alt: "Kevin Durant" },
-    { id: "giannis", name: "Antetokounmpo", league: "NBA", image: "images/nba/antetokounmpo.jpg", body: bodyPath("giannis"), alt: "Giannis Antetokounmpo" },
-    { id: "jokic", name: "Jokic", league: "NBA", image: "images/nba/jokic.jpg", body: bodyPath("jokic"), alt: "Nikola Jokic" },
-    { id: "doncic", name: "Doncic", league: "NBA", image: "images/nba/doncic.jpg", body: bodyPath("doncic"), alt: "Luka Doncic" },
-    { id: "embiid", name: "Embiid", league: "NBA", image: "images/nba/embiid.jpg", body: bodyPath("embiid"), alt: "Joel Embiid" },
-    { id: "tatum", name: "Tatum", league: "NBA", image: "images/nba/tatum.jpg", body: bodyPath("tatum"), alt: "Jayson Tatum" },
-    { id: "edwards", name: "Edwards", league: "NBA", image: "images/nba/edwards.jpg", body: bodyPath("edwards"), alt: "Anthony Edwards" },
-    { id: "booker", name: "Booker", league: "NBA", image: "images/nba/booker.jpg", body: bodyPath("booker"), alt: "Devin Booker" },
-    { id: "ohtani", name: "Ohtani", league: "MLB", image: "images/mlb/ohtani.jpg", body: bodyPath("ohtani"), alt: "Shohei Ohtani" },
-    { id: "judge", name: "Judge", league: "MLB", image: "images/mlb/judge.jpg", body: bodyPath("judge"), alt: "Aaron Judge" },
-    { id: "trout", name: "Trout", league: "MLB", image: "images/mlb/trout.jpg", body: bodyPath("trout"), alt: "Mike Trout" },
-    { id: "acuna", name: "Acuña", league: "MLB", image: "images/mlb/acuna.jpg", body: bodyPath("acuna"), alt: "Ronald Acuña Jr." },
-    { id: "betts", name: "Betts", league: "MLB", image: "images/mlb/betts.jpg", body: bodyPath("betts"), alt: "Mookie Betts" },
-    { id: "soto", name: "Soto", league: "MLB", image: "images/mlb/soto.jpg", body: bodyPath("soto"), alt: "Juan Soto" },
-    { id: "ronaldo", name: "Ronaldo", league: "MLS", image: "images/mls/ronaldo.jpg", body: bodyPath("ronaldo"), alt: "Cristiano Ronaldo" },
-    { id: "mbappe", name: "Mbappe", league: "MLS", image: "images/mls/mbappe.jpg", body: bodyPath("mbappe"), alt: "Kylian Mbappé" },
-    { id: "haaland", name: "Haaland", league: "MLS", image: "images/mls/haaland.jpg", body: bodyPath("haaland"), alt: "Erling Haaland" },
-    { id: "neymar", name: "Neymar", league: "MLS", image: "images/mls/neymar.jpg", body: bodyPath("neymar"), alt: "Neymar" },
-    { id: "beckham", name: "Beckham", league: "MLS", image: "images/mls/beckham.jpg", body: bodyPath("beckham"), alt: "David Beckham" },
-    { id: "mahomes", name: "Mahomes", league: "NFL", image: "images/nfl/mahomes.jpg", body: bodyPath("mahomes"), alt: "Patrick Mahomes" },
-    { id: "brady", name: "Brady", league: "NFL", image: "images/nfl/brady.jpg", body: bodyPath("brady"), alt: "Tom Brady" },
-    { id: "jackson", name: "Jackson", league: "NFL", image: "images/nfl/jackson.jpg", body: bodyPath("jackson"), alt: "Lamar Jackson" },
-    { id: "kelce", name: "Kelce", league: "NFL", image: "images/nfl/kelce.jpg", body: bodyPath("kelce"), alt: "Travis Kelce" },
-    { id: "alcaraz", name: "Alcaraz", league: "ATP", image: "images/alcaraz.jpg", body: bodyPath("alcaraz"), alt: "Carlos Alcaraz" }
-];
+// Characters come from roster.js so the studio, the picker on meditation.html,
+// and the profile card all read one list. roster.js must load first.
+const PLAYERS = window.MindZoneRoster.CHARACTERS;
 
 const SKINS = [
     { id: "fair", name: "Fair", color: "#f3d2c2", photo: "images/studio/skins/skin-fair.png" },
@@ -95,13 +67,13 @@ const HATS = [
 
 const SHOES = [
     { id: "none", name: "None" },
-    { id: "sneakers", name: "Sneakers", color: "#f4f4f4", photo: "images/studio/gear/gear-shoe-sneakers.png?v=4" },
-    { id: "highs", name: "High tops", color: "#222222", photo: "images/studio/gear/gear-shoe-highs.png?v=4" },
-    { id: "cleats", name: "Cleats", color: "#111111", photo: "images/studio/gear/gear-shoe-cleats.png?v=4" },
-    { id: "gold", name: "Gold kicks", color: "#d4a017", photo: "images/studio/gear/gear-shoe-gold.png?v=4" },
-    { id: "red", name: "Red kicks", color: "#c4122f", photo: "images/studio/gear/gear-shoe-red.png?v=4" },
-    { id: "runners", name: "Runners", color: "#e8e8e8", photo: "images/studio/gear/gear-shoe-runners.png?v=4" },
-    { id: "baseball", name: "Baseball cleats", color: "#eeeeee", photo: "images/studio/gear/gear-shoe-baseball.png?v=4" }
+    { id: "sneakers", name: "Sneakers", color: "#f4f4f4", photo: "images/studio/gear/gear-shoe-sneakers.png?v=5" },
+    { id: "highs", name: "High tops", color: "#222222", photo: "images/studio/gear/gear-shoe-highs.png?v=5" },
+    { id: "cleats", name: "Cleats", color: "#111111", photo: "images/studio/gear/gear-shoe-cleats.png?v=5" },
+    { id: "gold", name: "Gold kicks", color: "#d4a017", photo: "images/studio/gear/gear-shoe-gold.png?v=5" },
+    { id: "red", name: "Red kicks", color: "#c4122f", photo: "images/studio/gear/gear-shoe-red.png?v=5" },
+    { id: "runners", name: "Runners", color: "#e8e8e8", photo: "images/studio/gear/gear-shoe-runners.png?v=5" },
+    { id: "baseball", name: "Baseball cleats", color: "#eeeeee", photo: "images/studio/gear/gear-shoe-baseball.png?v=5" }
 ];
 
 const TAB_COPY = {
@@ -150,7 +122,7 @@ function loadLook() {
 
     return {
         player: player.id,
-        skin: savedLook.skin || "tan",
+        skin: savedLook.skin || player.skin,
         top: savedLook.top || "none",
         bottom: savedLook.bottom || "none",
         hat: savedLook.hat || "none",
@@ -162,6 +134,7 @@ function persist() {
     const player = PLAYERS.find(function (item) { return item.id === look.player; }) || PLAYERS[0];
     localStorage.setItem(LOOK_KEY, JSON.stringify(look));
     localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify({
+        id: player.id,
         league: player.league,
         name: player.name,
         image: player.image,
@@ -1630,18 +1603,41 @@ function thumbSrc(item) {
         .replace(/\?v=\d+$/, "") + version;
 }
 
+// The Content-Security-Policy forbids inline style attributes, so dynamic
+// widths, offsets and colours travel as data-* attributes and are applied
+// here through the CSSOM after insertion. Setting element.style from script
+// is not restricted by the policy.
+function applyDynamicStyles(root) {
+    if (!root) {
+        return;
+    }
+
+    root.querySelectorAll("[data-style-width]").forEach(function (element) {
+        element.style.width = element.getAttribute("data-style-width");
+    });
+
+    root.querySelectorAll("[data-style-left]").forEach(function (element) {
+        element.style.left = element.getAttribute("data-style-left");
+    });
+
+    root.querySelectorAll("[data-style-background]").forEach(function (element) {
+        element.style.background = element.getAttribute("data-style-background");
+    });
+}
+
+
 function gearThumb(item, tab) {
     if (tab === "player") {
         return "<img src=\"" + item.image + "\" alt=\"" + item.alt + "\">";
     }
     const src = thumbSrc(item);
     const dot = item.color
-        ? "<i class=\"studio-color-dot\" style=\"background:" + item.color + "\"></i>"
+        ? "<i class=\"studio-color-dot\" data-style-background=\"" + item.color + "\"></i>"
         : "";
     if (src) {
         return dot + "<img src=\"" + src + "\" alt=\"" + item.name + "\">";
     }
-    return "<span class=\"studio-swatch\" style=\"background:" + (item.color || "rgba(255,255,255,0.12)") + "\"></span>";
+    return "<span class=\"studio-swatch\" data-style-background=\"" + (item.color || "rgba(255,255,255,0.12)") + "\"></span>";
 }
 
 function renderGrid() {
@@ -1661,6 +1657,8 @@ function renderGrid() {
         return "<button type=\"button\" class=\"studio-item" + (on ? " is-on" : "") + "\" data-id=\"" + item.id + "\">" +
             gearThumb(item, activeTab) + badge + "<span>" + label + "</span></button>";
     }).join("");
+
+    applyDynamicStyles(grid);
 }
 
 function setTab(tab) {

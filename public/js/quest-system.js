@@ -11,8 +11,17 @@
             const cursor = new Date();
             let streak = 0;
 
+            // Must match how logins are stored: a LOCAL calendar date.
+            // toISOString() is UTC and names tomorrow during the local
+            // evening, which silently zeroed the streak every night.
+            function localKey(date) {
+                return date.getFullYear()
+                    + "-" + String(date.getMonth() + 1).padStart(2, "0")
+                    + "-" + String(date.getDate()).padStart(2, "0");
+            }
+
             cursor.setHours(0, 0, 0, 0);
-            while (dateSet.has(cursor.toISOString().slice(0, 10))) {
+            while (dateSet.has(localKey(cursor))) {
                 streak += 1;
                 cursor.setDate(cursor.getDate() - 1);
             }
@@ -51,16 +60,15 @@
             return;
         }
 
-        const hud = document.createElement("aside");
+        const hud = document.createElement("div");
         hud.className = "mz-player-hud";
         hud.setAttribute("aria-label", "Player progress");
 
-        const dashboardWelcome = document.querySelector(".quest-dashboard .dashboard-welcome");
-        if (dashboardWelcome) {
-            dashboardWelcome.insertAdjacentElement("afterend", hud);
-        } else {
-            nav.insertAdjacentElement("afterend", hud);
-        }
+        // Inserted INSIDE the nav pill itself, before the nav buttons, so
+        // name/level/XP reads as part of the same bar rather than a
+        // separate element. Stars/badges/streak stay reachable via the
+        // nav's own Rewards button, keeping this chip compact.
+        nav.insertAdjacentElement("afterbegin", hud);
         renderHud();
     }
 
@@ -76,16 +84,36 @@
         hud.innerHTML = `
             <a class="mz-hud-player" href="welcome.html" aria-label="Open your quest hub">
                 <span class="mz-hud-avatar" aria-hidden="true">🧠</span>
-                <span class="mz-hud-copy"><small>Level ${player.level}</small><strong>${escapeHtml(name)}</strong></span>
+                <span class="mz-hud-copy"><small>Lvl ${player.level}</small><strong>${escapeHtml(name)}</strong></span>
             </a>
-            <div class="mz-hud-progress" aria-label="${player.levelProgress} of 100 XP toward the next level">
-                <span class="mz-hud-progress-label">Next level · ${player.levelProgress}/100 XP</span>
-                <div class="mz-hud-track"><span style="width:${player.levelProgress}%"></span></div>
+            <div class="mz-hud-progress" aria-label="${player.levelProgress} of 100 XP toward the next level" title="${player.levelProgress}/100 XP toward Level ${player.level + 1}">
+                <div class="mz-hud-track"><span data-style-width="${player.levelProgress}%"></span></div>
             </div>
-            <span class="mz-hud-stat" title="Consistency stars">⭐ ${player.stars}</span>
-            <span class="mz-hud-stat mz-hud-stat-badges" title="Mental badges">🏅 ${player.badges}</span>
-            <button type="button" class="mz-hud-stat rewards-btn" title="Open your rewards">🔥 ${player.streak}</button>
         `;
+
+        applyDynamicStyles(hud);
+    }
+
+    // The Content-Security-Policy forbids inline style attributes, so dynamic
+    // widths, offsets and colours travel as data-* attributes and are applied
+    // here through the CSSOM after insertion. Setting element.style from script
+    // is not restricted by the policy.
+    function applyDynamicStyles(root) {
+        if (!root) {
+            return;
+        }
+
+        root.querySelectorAll("[data-style-width]").forEach(function (element) {
+            element.style.width = element.getAttribute("data-style-width");
+        });
+
+        root.querySelectorAll("[data-style-left]").forEach(function (element) {
+            element.style.left = element.getAttribute("data-style-left");
+        });
+
+        root.querySelectorAll("[data-style-background]").forEach(function (element) {
+            element.style.background = element.getAttribute("data-style-background");
+        });
     }
 
     function escapeHtml(value) {

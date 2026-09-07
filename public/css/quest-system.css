@@ -12,11 +12,15 @@ body.quest-app {
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
 }
 
-body.quest-app.has-site-nav {
-    padding-top: 132px;
+/* Onboarding sets its own pairing (Barlow Condensed for display, Nunito for
+   body) and loads before this file, so it needs the rule above not to win. */
+body.quest-onboarding {
+    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
 }
 
-body.quest-app.quest-no-hud.has-site-nav {
+/* The player chip now sits inside the nav pill rather than in a separate bar
+   below it, so every quest page just needs the nav's own height cleared. */
+body.quest-app.has-site-nav {
     padding-top: var(--site-nav-space);
 }
 
@@ -35,7 +39,7 @@ body.quest-app .page-brand::before {
 }
 
 body.quest-app nav.site-nav {
-    --site-nav-width: 850px;
+    --site-nav-width: 1600px;
 }
 
 body.quest-app .site-nav .nav-links {
@@ -58,8 +62,8 @@ body.quest-app .site-nav .nav-btn.active {
 @media (min-width: 701px) {
     body.quest-app.user-logged-in nav.site-nav,
     body.quest-app.user-logged-in.has-settings nav.site-nav {
-        width: min(850px, calc(100% - var(--nav-inset) - var(--gear-size) - 12px));
-        max-width: min(850px, calc(100% - var(--nav-inset) - var(--gear-size) - 12px));
+        width: min(980px, calc(100% - var(--nav-inset) - var(--gear-size) - 12px));
+        max-width: min(980px, calc(100% - var(--nav-inset) - var(--gear-size) - 12px));
         box-sizing: border-box;
     }
 
@@ -80,29 +84,23 @@ body.quest-app .site-nav .nav-btn.active {
     }
 }
 
+/* Docked directly under the nav pill, same width/alignment, so the player
+   identity + XP reads as part of one nav unit instead of a separate floating
+   card further down the page. */
+/* Lives INSIDE the nav pill itself (inserted as the first child of
+   nav.site-nav, before .nav-links) so identity + XP reads as part of the
+   same bar instead of a separate card. Compact single row, sized to the
+   nav's own height. */
 .mz-player-hud {
-    position: fixed;
-    z-index: 990;
-    top: 70px;
-    left: 50%;
-    display: grid;
-    grid-template-columns: auto minmax(190px, 1fr) auto auto auto;
+    display: flex;
     align-items: center;
-    gap: 14px;
-    width: min(900px, calc(100% - 32px));
-    min-height: 50px;
-    padding: 8px 13px;
+    gap: 8px;
+    height: 100%;
+    padding-right: 10px;
+    margin-right: 4px;
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
     color: #fff;
-    background: linear-gradient(145deg, rgba(7, 26, 45, 0.94), rgba(18, 57, 87, 0.9));
-    border: 1px solid rgba(248, 215, 106, 0.55);
-    border-radius: 18px;
-    box-shadow:
-        0 14px 34px rgba(3, 14, 28, 0.38),
-        0 0 28px rgba(248, 215, 106, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    transform: translateX(-50%);
+    flex-shrink: 0;
 }
 
 body.overlay-open .mz-player-hud {
@@ -111,27 +109,11 @@ body.overlay-open .mz-player-hud {
     pointer-events: none;
 }
 
-body.quest-dashboard.has-site-nav {
-    padding-top: var(--site-nav-space);
-}
-
-body.quest-dashboard .mz-player-hud {
-    position: relative;
-    top: auto;
-    left: auto;
-    z-index: 1;
-    width: 100%;
-    max-width: var(--dashboard-shell-width, 1480px);
-    margin: 0 auto 20px;
-    box-sizing: border-box;
-    transform: none;
-}
-
 .mz-hud-player {
     display: flex;
     align-items: center;
-    gap: 9px;
-    min-width: 155px;
+    gap: 7px;
+    min-width: 0;
     color: inherit;
     text-decoration: none;
 }
@@ -139,43 +121,57 @@ body.quest-dashboard .mz-player-hud {
 .mz-hud-avatar {
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
     background: linear-gradient(145deg, #6ce6d3, #4f9cf9);
     border: 2px solid rgba(255, 255, 255, 0.75);
-    border-radius: 12px;
-    box-shadow: 0 0 16px rgba(103, 232, 210, 0.35);
+    border-radius: 9px;
+    font-size: 0.85rem;
+    box-shadow: 0 0 12px rgba(103, 232, 210, 0.35);
 }
 
 .mz-hud-copy {
+    display: flex;
+    flex-direction: column;
     min-width: 0;
+    line-height: 1.1;
 }
 
 .mz-hud-copy small,
 .mz-hud-progress-label {
-    display: block;
     color: #9ed7ff;
-    font-size: 0.61rem;
+    font-size: 0.58rem;
     font-weight: 900;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
 .mz-hud-copy strong {
-    display: block;
-    max-width: 135px;
+    max-width: 92px;
     overflow: hidden;
-    font-size: 0.84rem;
+    font-size: 0.74rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+.mz-hud-progress {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.mz-hud-progress-label {
+    display: none;
+}
+
 .mz-hud-track {
-    height: 8px;
-    margin-top: 4px;
+    width: 56px;
+    height: 6px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.16);
     border-radius: 999px;
+    flex-shrink: 0;
 }
 
 .mz-hud-track span {
@@ -183,31 +179,17 @@ body.quest-dashboard .mz-player-hud {
     height: 100%;
     background: linear-gradient(90deg, var(--quest-blue), var(--quest-teal), var(--quest-gold));
     border-radius: inherit;
-    box-shadow: 0 0 12px rgba(103, 232, 210, 0.55);
+    box-shadow: 0 0 8px rgba(103, 232, 210, 0.55);
     transition: width 0.35s ease;
 }
 
-.mz-hud-stat {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    min-height: 32px;
-    padding: 5px 9px;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 11px;
-    font: 900 0.76rem 'Nunito', sans-serif;
-    white-space: nowrap;
-}
-
-button.mz-hud-stat {
-    cursor: pointer;
-}
-
-button.mz-hud-stat:hover {
-    background: rgba(255, 255, 255, 0.16);
-    transform: translateY(-1px);
+/* Below the width where the nav pill relocates to a bottom bar (see the
+   700px breakpoint), there isn't room for identity + all the nav buttons —
+   the level/XP chip is dropped there and stays reachable from the dashboard. */
+@media (max-width: 700px) {
+    .mz-player-hud {
+        display: none;
+    }
 }
 
 .quest-page-hero {
@@ -278,10 +260,10 @@ button.mz-hud-stat:hover {
 
 /* Skill Zones */
 body.quest-zones .activity-grid {
-    grid-template-rows: repeat(2, minmax(270px, 1fr));
+    grid-template-rows: minmax(270px, 1fr);
     width: min(1120px, calc(100% - 40px));
     height: auto;
-    min-height: 620px;
+    min-height: 320px;
     margin: 0 auto 60px;
     padding: 0;
 }
@@ -550,14 +532,12 @@ body.quest-onboarding .page-header {
     filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.32));
 }
 
-body.quest-entry .auth-card,
-body.quest-onboarding .card {
+body.quest-entry .auth-card {
     border: 2px solid rgba(129, 230, 217, 0.42);
     box-shadow: 0 24px 58px rgba(2, 12, 25, 0.34);
 }
 
-body.quest-entry .submit-btn,
-body.quest-onboarding button[type="submit"] {
+body.quest-entry .submit-btn {
     color: var(--quest-navy);
     background: linear-gradient(135deg, var(--quest-gold), #fbd38d);
 }
@@ -565,14 +545,6 @@ body.quest-onboarding button[type="submit"] {
 @media (max-width: 900px) {
     body.quest-app nav.site-nav {
         --site-nav-width: calc(100% - var(--nav-inset));
-    }
-
-    .mz-player-hud {
-        grid-template-columns: auto 1fr auto auto;
-    }
-
-    .mz-hud-stat-badges {
-        display: none;
     }
 
     body.quest-zones .activity-grid {
@@ -610,26 +582,6 @@ body.quest-onboarding button[type="submit"] {
     body.quest-app .site-nav .nav-btn {
         padding: 0 8px;
         font-size: 0.68rem;
-    }
-
-    .mz-player-hud {
-        top: 68px;
-        grid-template-columns: 1fr auto auto;
-        gap: 7px;
-        padding: 7px 9px;
-    }
-
-    .mz-hud-player {
-        min-width: 0;
-    }
-
-    .mz-hud-progress,
-    .mz-hud-stat-badges {
-        display: none;
-    }
-
-    .mz-hud-stat {
-        padding: 5px 7px;
     }
 
     .quest-page-hero {

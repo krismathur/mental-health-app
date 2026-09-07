@@ -1,9 +1,63 @@
 const signupForm = document.getElementById("signupForm");
 const loginForm = document.getElementById("loginForm");
 const message = document.getElementById("message");
+const forgotForm = document.getElementById("forgotForm");
+const forgotLink = document.getElementById("forgotLink");
+const backToLogin = document.getElementById("backToLogin");
 
-function showMessage(text) {
+function showMessage(text, ok) {
     message.textContent = text;
+    message.classList.toggle("ok", ok === true);
+}
+
+// The link stays hidden unless the server can actually send mail, so nobody is
+// offered a reset that would dead-end.
+fetch("/api/auth-options")
+    .then(function (response) {
+        return response.ok ? response.json() : null;
+    })
+    .then(function (options) {
+        if (options && options.passwordResetEnabled && forgotLink) {
+            forgotLink.hidden = false;
+        }
+    })
+    .catch(function () {
+        // Leaving the link hidden is the right failure here.
+    });
+
+function showForgot(show) {
+    showMessage("");
+    loginForm.classList.toggle("hidden", show);
+    forgotForm.classList.toggle("hidden", !show);
+}
+
+if (forgotLink) {
+    forgotLink.addEventListener("click", function () {
+        showForgot(true);
+    });
+}
+
+if (backToLogin) {
+    backToLogin.addEventListener("click", function () {
+        showForgot(false);
+    });
+}
+
+if (forgotForm) {
+    forgotForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById("forgotEmail").value.trim();
+
+        const response = await fetch("/api/forgot-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+
+        const result = await response.json();
+        showMessage(result.message, response.ok);
+    });
 }
 
 async function sendUserToNextPage() {

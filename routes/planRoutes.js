@@ -1,23 +1,5 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
-
-const DEBUG_LOG_PATH = path.join(__dirname, "..", ".cursor", "debug-56a177.log");
-
-function debugLog(location, message, data, hypothesisId) {
-    try {
-        fs.appendFileSync(DEBUG_LOG_PATH, JSON.stringify({
-            sessionId: "56a177",
-            location: location,
-            message: message,
-            data: data,
-            timestamp: Date.now(),
-            hypothesisId: hypothesisId
-        }) + "\n");
-    } catch (e) {
-        // ignore logging failures
-    }
-}
+const safety = require("./safety");
 
 function pcmToWav(pcm, sampleRate, numChannels, bitsPerSample) {
     const byteRate = sampleRate * numChannels * bitsPerSample / 8;
@@ -178,12 +160,6 @@ function createPlanRoutes(db) {
         const { name, age, sport, goal, challenge, days, confidence, stress, focus, bounce, mentalSkill, goalCommitment } = req.body;
 
         // #region agent log
-        debugLog("planRoutes.js:generate-plan:entry", "Generate plan requested", {
-            hasUserId: !!req.session.userId,
-            hasDays: !!days,
-            hasMentalSkill: !!mentalSkill,
-            hasGeminiKey: !!process.env.GEMINI_API_KEY
-        }, "F");
         // #endregion
 
         if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_MODEL) {
@@ -281,14 +257,6 @@ Good example: "Sit on your bed, set a timer for 3 minutes, and breathe in for 4 
                     plan = normalizePlanText(rawPlan);
 
                     // #region agent log
-                    debugLog("planRoutes.js:generate-plan:gemini", "Gemini response processed", {
-                        attempt: attempt,
-                        responseOk: responseOk,
-                        hasRawPlan: !!rawPlan,
-                        rawPlanLength: rawPlan ? rawPlan.length : 0,
-                        normalizeOk: !!plan,
-                        planStatus: "approved"
-                    }, "F");
                     // #endregion
                 }
 
@@ -364,7 +332,14 @@ ${text}`;
 
             if (!response.ok) {
                 const apiMessage = data.error?.message || "Could not generate speech.";
-                return res.status(500).json({ message: apiMessage });
+                console.error("[meditation-speech] Gemini TTS request failed:", response.status, apiMessage);
+                // Google returns 429 for both per-minute rate limits and
+                // exhausted free-tier quota. Passing that status through
+                // (instead of flattening everything to 500) lets the client
+                // recognize "quota's dead for a while" and switch the whole
+                // session to the browser voice instead of retrying Gemini
+                // on every remaining segment.
+                return res.status(response.status === 429 ? 429 : 500).json({ message: apiMessage });
             }
 
             const parts = data.candidates?.[0]?.content?.parts || [];
@@ -424,6 +399,17 @@ ${text}`;
                 }
             );
         });
+    }
+
+    // Records that a screening fired, but deliberately NOT the message text.
+    // The message is already in `conversations`; copying a child's crisis
+    // disclosure into a second table just widens the blast radius.
+    function logSafetyEvent(userId, category) {
+        db.run(
+            "INSERT INTO safety_events (user_id, category) VALUES (?, ?)",
+            [userId, category],
+            function () {}
+        );
     }
 
     // A reply that hit the token ceiling can end mid-sentence. Keep whole sentences.
@@ -490,6 +476,25 @@ ${text}`;
 
         if (message.length > 2000) {
             return res.status(400).json({ message: "That message is too long. Try a shorter one." });
+        }
+
+        // Screened in our own code before the model is called at all. A kid in
+        // crisis gets a fixed, human-written reply and real phone numbers rather
+        // than whatever the model decides to say that time.
+        const screened = safety.screen(message);
+
+        if (screened.flagged) {
+            const crisis = safety.crisisResponse(screened.category);
+
+            try {
+                await saveMessage(req.session.userId, "user", message);
+                await saveMessage(req.session.userId, "coach", crisis.reply);
+                logSafetyEvent(req.session.userId, screened.category);
+            } catch (saveError) {
+                // Showing help matters more than recording that we showed it.
+            }
+
+            return res.json(crisis);
         }
 
         if (!process.env.GEMINI_API_KEY || !process.env.GEMINI_MODEL) {
@@ -583,6 +588,13 @@ Reply as the coach with only the words you would send.`;
             return res.status(400).json({ message: "Tell us what went wrong in sports before submitting." });
         }
 
+        const problemScreen = safety.screen(problem);
+
+        if (problemScreen.flagged) {
+            logSafetyEvent(req.session.userId, problemScreen.category);
+            return res.status(200).json(safety.crisisResponse(problemScreen.category));
+        }
+
         const fixClipSearch = require("./fixClipSearch");
 
         db.get(
@@ -605,6 +617,7 @@ Reply as the coach with only the words you would send.`;
                     const video = await fixClipSearch.findClipForProblem(problem, profileSport);
 
                     if (!video || !video.embedUrl) {
+                        console.error("[fix-advice] No clip found for:", problem, "sport:", profileSport);
                         return res.status(404).json({
                             message: "Could not find a matching clip yet. Try again with your sport and the mistake, like: Basketball — I missed a free throw."
                         });
@@ -612,6 +625,7 @@ Reply as the coach with only the words you would send.`;
 
                     res.json({ video: video });
                 } catch (searchError) {
+                    console.error("[fix-advice] Clip search failed:", searchError);
                     res.status(500).json({
                         message: "Could not find a matching clip right now. Please try again."
                     });

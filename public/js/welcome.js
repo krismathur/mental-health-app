@@ -101,70 +101,10 @@ loadProfileFromServer()
 setTimeout(finishWelcomeInit, 6000);
 
 // Open settings and load saved profile data into the form
-function setSettingsTab(tabId) {
-    const tabs = document.querySelectorAll(".settings-tab");
-    const panels = document.querySelectorAll(".settings-tab-panel");
-    const actions = document.querySelector(".settings-form-actions");
-    const tabOrder = ["profile", "checkin", "account"];
-    const nextTab = tabOrder.includes(tabId) ? tabId : "profile";
-
-    tabs.forEach(function (tab) {
-        const selected = tab.dataset.tab === nextTab;
-        tab.classList.toggle("is-active", selected);
-        tab.setAttribute("aria-selected", selected ? "true" : "false");
-        tab.tabIndex = selected ? 0 : -1;
-    });
-
-    panels.forEach(function (panel) {
-        panel.hidden = panel.dataset.tab !== nextTab;
-    });
-
-    if (actions) {
-        actions.hidden = nextTab === "account";
-    }
-}
-
-document.querySelectorAll(".settings-tab").forEach(function (tab) {
-    tab.addEventListener("click", function () {
-        setSettingsTab(tab.dataset.tab);
-    });
-});
-
-const settingsTabList = document.querySelector(".settings-tabs");
-if (settingsTabList) {
-    settingsTabList.addEventListener("keydown", function (event) {
-        const tabs = Array.from(document.querySelectorAll(".settings-tab"));
-        const currentIndex = tabs.findIndex(function (tab) {
-            return tab.classList.contains("is-active");
-        });
-        if (currentIndex < 0) {
-            return;
-        }
-
-        let nextIndex = currentIndex;
-        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-            nextIndex = (currentIndex + 1) % tabs.length;
-        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-            nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-        } else if (event.key === "Home") {
-            nextIndex = 0;
-        } else if (event.key === "End") {
-            nextIndex = tabs.length - 1;
-        } else {
-            return;
-        }
-
-        event.preventDefault();
-        setSettingsTab(tabs[nextIndex].dataset.tab);
-        tabs[nextIndex].focus();
-    });
-}
-
 if (settingsBtn && settingsOverlay) {
     settingsBtn.addEventListener("click", function () {
         loadSettingsIntoForm();
         updateRegenerateButton();
-        setSettingsTab("profile");
         settingsOverlay.classList.remove("overlay-hidden");
     });
 }
@@ -1174,7 +1114,7 @@ async function loadCurrentPlan(profileLoaded) {
                 showPlanMessage("We loaded your plan but could not show it. Tap below to generate a fresh one.", "none");
             }
         } else {
-            showPlanMessage("Visualization, Understanding your mistakes, Resetting your mind, and Good mental choices are the four steps to great mental strength.", "none");
+            showPlanMessage("Guided Mental Rehearsal, Understanding your mistakes, Resetting your mind, and Good mental choices are the four steps to great mental strength.", "none");
         }
     } catch (error) {
         showPlanMessage("Could not load your plan right now.", "none");
@@ -1580,8 +1520,8 @@ function appendMindZoneFeatures(card, dayEntry) {
     const dailyGame = getDailyGame(dayEntry);
     const features = [
         {
-            name: "Visualization",
-            detail: "Complete a guided session connected to " + titleTheme + ".",
+            name: "Guided Mental Rehearsal",
+            detail: "Listen to a guided audio session connected to " + titleTheme + ".",
             href: "meditation.html?open=visualization",
             tone: "viz"
         },

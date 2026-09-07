@@ -1,32 +1,108 @@
 const AVATAR_STORAGE_KEY = "selectedAthleteAvatar";
 const avatarProfileArea = document.getElementById("avatarProfileArea");
 
+function buildEmptyState() {
+    const wrap = document.createElement("div");
+    wrap.className = "avatar-empty-state";
+
+    const icon = document.createElement("span");
+    icon.className = "avatar-empty-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "\uD83E\uDEAA";
+    wrap.appendChild(icon);
+
+    const league = document.createElement("p");
+    league.className = "avatar-profile-league";
+    league.textContent = "CAPTAIN SLOT OPEN";
+    wrap.appendChild(league);
+
+    const heading = document.createElement("h3");
+    heading.textContent = "Choose the athlete who inspires you";
+    wrap.appendChild(heading);
+
+    const blurb = document.createElement("p");
+    blurb.textContent = "Your captain will appear here and join you in the Mental Choice Challenge.";
+    wrap.appendChild(blurb);
+
+    const cta = document.createElement("a");
+    cta.className = "avatar-choose-captain-btn";
+    cta.href = "#";
+    cta.dataset.openStudio = "";
+    cta.textContent = "Customise Athletes";
+    wrap.appendChild(cta);
+
+    return wrap;
+}
+
+function buildProfileCard(character) {
+    const card = document.createElement("div");
+    card.className = "avatar-profile-card";
+
+    const img = document.createElement("img");
+    img.src = character.image;
+    img.alt = character.alt || character.name;
+    card.appendChild(img);
+
+    const league = document.createElement("p");
+    league.className = "avatar-profile-league";
+    league.textContent = character.league;
+    card.appendChild(league);
+
+    const name = document.createElement("h3");
+    name.className = "avatar-profile-name";
+    name.textContent = character.name;
+    card.appendChild(name);
+
+    const tagline = document.createElement("p");
+    tagline.className = "avatar-profile-tagline";
+    tagline.textContent = "You're going to make the best decisions for this athlete";
+    card.appendChild(tagline);
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "avatar-choose-captain-btn";
+    button.dataset.openStudio = "";
+    button.textContent = "Customise Athletes";
+    card.appendChild(button);
+
+    return card;
+}
+
+// Resolves the saved pick against roster.js so a stale or hand-edited
+// localStorage entry can never put an arbitrary path or string into the DOM.
+function resolveSavedCharacter() {
+    let saved = null;
+
+    try {
+        saved = JSON.parse(localStorage.getItem(AVATAR_STORAGE_KEY) || "null");
+    } catch (error) {
+        return null;
+    }
+
+    if (!saved || !window.MindZoneRoster) {
+        return null;
+    }
+
+    if (saved.id) {
+        return window.MindZoneRoster.byId(saved.id);
+    }
+
+    return window.MindZoneRoster.CHARACTERS.find(function (character) {
+        return character.name === saved.name;
+    }) || null;
+}
+
 function loadSelectedAvatar() {
-    const saved = JSON.parse(localStorage.getItem(AVATAR_STORAGE_KEY) || "null");
-    if (!saved || !saved.name) {
-        avatarProfileArea.innerHTML = `
-            <div class="avatar-empty-state">
-                <span class="avatar-empty-icon" aria-hidden="true">🪪</span>
-                <p class="avatar-profile-league">CAPTAIN SLOT OPEN</p>
-                <h3>Choose the athlete who inspires you</h3>
-                <p>Your captain will appear here and join you in the Mental Choice Challenge.</p>
-                <a href="#" class="avatar-choose-captain-btn" data-open-studio>Customise Athletes</a>
-            </div>
-        `;
+    if (!avatarProfileArea) {
         return false;
     }
 
-    avatarProfileArea.innerHTML = `
-        <div class="avatar-profile-card">
-            <img src="${saved.image}" alt="${saved.alt || saved.name}">
-            <p class="avatar-profile-league">${saved.league}</p>
-            <h3 class="avatar-profile-name">${saved.name}</h3>
-            <p class="avatar-profile-tagline">You're going to make the best decisions for this athlete</p>
-            <button type="button" class="avatar-choose-captain-btn" data-open-studio>Customise Athletes</button>
-        </div>
-    `;
+    const character = resolveSavedCharacter();
 
-    return true;
+    avatarProfileArea.textContent = "";
+    avatarProfileArea.appendChild(character ? buildProfileCard(character) : buildEmptyState());
+
+    return Boolean(character);
 }
 
 const hasSelectedAvatar = loadSelectedAvatar();

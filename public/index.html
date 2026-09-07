@@ -8,15 +8,16 @@
         <link rel="stylesheet" href="css/index.css">
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/nav.css">
+        <link rel="stylesheet" href="css/quest-system.css">
     </head>
-    <body class="has-site-nav">
+    <body class="has-site-nav quest-app">
         
         <a class="page-brand" href="index.html">MindZone</a>
 
         <nav class="site-nav">
             <div class="nav-links">
                 <a class="nav-btn" href="index.html">Home</a>
-                <a class="nav-btn rewards-btn" href="#">Rewards</a>
+                <a class="nav-btn rewards-btn" href="#">Mental Locker</a>
                 <a id="authLink" class="nav-btn nav-btn-fill" href="auth.html">Get Started</a>
             </div>
         </nav>
@@ -95,46 +96,31 @@
             <p class="section-subtitle">Discover the mental powers great athletes use in big moments.</p>
 
             <div class="mind-quotes-grid">
-                <article class="mind-quote-card mind-quote-jordan reveal-card">
-                    <div class="mind-quote-photo">
-                        <img src="images/hero-jordan-dunk.jpg" alt="Michael Jordan">
-                        <span class="power-tag">POWER: CONFIDENCE</span>
-                    </div>
-                    <div class="mind-quote-body">
-                        <p class="mind-quote-kicker">This is How I Train My Mind</p>
+                <article class="mind-quote-card mind-quote-confidence reveal-card">
+                    <span class="power-tag">Confidence</span>
+                    <blockquote class="mind-quote-text">“Once you get into the moment, things start to move slowly, you start to see the court very well. I never doubted myself.”</blockquote>
+                    <footer class="mind-quote-attrib">
                         <h3 class="mind-quote-name">Michael Jordan</h3>
-                        <blockquote class="mind-quote-text">
-                            “Once you get into the moment, things start to move slowly, you start to see the court very well. I never doubted myself.”
-                        </blockquote>
-                    </div>
+                        <p class="mind-quote-sport">Basketball</p>
+                    </footer>
                 </article>
 
-                <article class="mind-quote-card mind-quote-ohtani reveal-card">
-                    <div class="mind-quote-photo">
-                        <img src="images/mlb/ohtani.jpg" alt="Shohei Ohtani">
-                        <span class="power-tag">POWER: PRESSURE</span>
-                    </div>
-                    <div class="mind-quote-body">
-                        <p class="mind-quote-kicker">This is How I Train My Mind</p>
+                <article class="mind-quote-card mind-quote-pressure reveal-card">
+                    <span class="power-tag">Pressure</span>
+                    <blockquote class="mind-quote-text">“It’s an honor to feel the pressure, because that means there are a lot of expectations — and I just change that into something positive.”</blockquote>
+                    <footer class="mind-quote-attrib">
                         <h3 class="mind-quote-name">Shohei Ohtani</h3>
-                        <blockquote class="mind-quote-text">
-                            “It’s an honor to feel the pressure, because that means there are a lot of expectations — and I just change that into something positive.”
-                        </blockquote>
-                    </div>
+                        <p class="mind-quote-sport">Baseball</p>
+                    </footer>
                 </article>
 
-                <article class="mind-quote-card mind-quote-alcaraz reveal-card">
-                    <div class="mind-quote-photo">
-                        <img src="images/alcaraz.jpg" alt="Carlos Alcaraz">
-                        <span class="power-tag">POWER: CONTROL</span>
-                    </div>
-                    <div class="mind-quote-body">
-                        <p class="mind-quote-kicker">This is How I Train My Mind</p>
+                <article class="mind-quote-card mind-quote-control reveal-card">
+                    <span class="power-tag">Control</span>
+                    <blockquote class="mind-quote-text">“Winning is winning, but what matters most is how you manage your level and your emotions — especially when you’re at your best or your worst.”</blockquote>
+                    <footer class="mind-quote-attrib">
                         <h3 class="mind-quote-name">Carlos Alcaraz</h3>
-                        <blockquote class="mind-quote-text">
-                            “Winning is winning, but what matters most is how you manage your level and your emotions — especially when you’re at your best or your worst.”
-                        </blockquote>
-                    </div>
+                        <p class="mind-quote-sport">Tennis</p>
+                    </footer>
                 </article>
             </div>
         </section>
@@ -153,7 +139,7 @@
                     <span class="preview-icon">⚡</span>
                     <h3>Mental XP</h3>
                     <p>Level up by finishing activities and games.</p>
-                    <div class="preview-meter"><span style="--preview-progress: 72%"></span></div>
+                    <div class="preview-meter"><span></span></div>
                 </article>
                 <article class="preview-card preview-stars reveal-card">
                     <span class="preview-icon">⭐</span>
@@ -213,8 +199,8 @@
             <div class="rewards-panel">
                 <div class="rewards-header">
                     <div>
-                        <p class="rewards-kicker">Mental Strength Rewards</p>
-                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                        <p class="rewards-kicker">YOUR MENTAL LOCKER</p>
+                        <h2>See What Your Training Has Unlocked</h2>
                     </div>
                     <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
                 </div>
@@ -241,6 +227,18 @@
                         <h3>Mental Badges</h3>
                         <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
                     </button>
+
+                    <button type="button" class="reward-card" data-reward="streak">
+                        <span class="reward-icon">🔥</span>
+                        <h3>Streak</h3>
+                        <p>Log in on consecutive days to build your streak.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="mood">
+                        <span class="reward-icon">😊</span>
+                        <h3>Mood</h3>
+                        <p>See your daily check-ins and this week's mood trend.</p>
+                    </button>
                 </div>
 
                 <div id="rewardDetails" class="reward-details" hidden></div>
@@ -249,5 +247,6 @@
 
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
+        <script src="js/quest-system.js"></script>
     </body>
 </html>

@@ -110,10 +110,29 @@ function renderStartStats() {
                 ${meta.label}
                 <span class="stat-pill-level">Lv ${statLevel(points)}</span>
             </span>
-            <span class="stat-bar"><span style="width:${Math.round(statFraction(points) * 100)}%"></span></span>
+            <span class="stat-bar"><span data-style-width="${Math.round(statFraction(points) * 100)}%"></span></span>
         `;
+
+        applyDynamicStyles(pill);
         container.appendChild(pill);
     }
+}
+
+// The Content-Security-Policy forbids inline style attributes, so dynamic
+// widths and colours travel as data-* attributes and are applied here through
+// the CSSOM after insertion. Setting element.style from script is fine.
+function applyDynamicStyles(root) {
+    if (!root) {
+        return;
+    }
+
+    root.querySelectorAll("[data-style-width]").forEach(function (element) {
+        element.style.width = element.getAttribute("data-style-width");
+    });
+
+    root.querySelectorAll("[data-style-background]").forEach(function (element) {
+        element.style.background = element.getAttribute("data-style-background");
+    });
 }
 
 function renderBadgeStrip(container, ids, highlight) {
@@ -144,12 +163,14 @@ function renderCharacterCards() {
             + (character.id === state.progress.character ? " is-selected" : "");
         card.dataset.characterId = character.id;
         card.innerHTML = `
-            <span class="character-swatch" style="background:${character.coat}"></span>
+            <span class="character-swatch" data-style-background="${character.coat}"></span>
             <div>
                 <div class="character-name">${character.name}</div>
                 <div class="character-trait">${character.trait}</div>
             </div>
         `;
+
+        applyDynamicStyles(card);
 
         card.addEventListener("click", function () {
             state.progress.character = character.id;

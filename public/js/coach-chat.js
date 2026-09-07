@@ -42,6 +42,70 @@
         return row;
     }
 
+
+    // A crisis reply is not a normal chat bubble. It gets its own card with real
+    // phone numbers, it is visually distinct, and it never scrolls away behind
+    // a wall of later messages the way a bubble would.
+    function addCrisisCard(text, resources) {
+        const row = document.createElement("div");
+        row.className = "coach-msg coach-msg-coach";
+
+        const card = document.createElement("div");
+        card.className = "coach-bubble coach-crisis-card";
+        card.setAttribute("role", "alert");
+
+        const heading = document.createElement("p");
+        heading.className = "coach-crisis-heading";
+        heading.textContent = "You deserve real support right now";
+        card.appendChild(heading);
+
+        const body = document.createElement("p");
+        body.className = "coach-crisis-text";
+        body.textContent = text;
+        card.appendChild(body);
+
+        const list = document.createElement("ul");
+        list.className = "coach-crisis-list";
+
+        (resources || []).forEach(function (resource) {
+            const item = document.createElement("li");
+
+            const name = document.createElement("span");
+            name.className = "coach-crisis-name";
+            name.textContent = resource.name;
+            item.appendChild(name);
+
+            const contact = document.createElement("strong");
+            contact.className = "coach-crisis-contact";
+            contact.textContent = resource.contact;
+            item.appendChild(contact);
+
+            const detail = document.createElement("span");
+            detail.className = "coach-crisis-detail";
+            detail.textContent = resource.detail;
+            item.appendChild(detail);
+
+            if (resource.url) {
+                const link = document.createElement("a");
+                link.className = "coach-crisis-link";
+                link.href = resource.url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "Open website";
+                item.appendChild(link);
+            }
+
+            list.appendChild(item);
+        });
+
+        card.appendChild(list);
+        row.appendChild(card);
+        messagesBox.appendChild(row);
+        scrollToLatest();
+
+        return row;
+    }
+
     function showTyping() {
         const row = document.createElement("div");
         row.className = "coach-msg coach-msg-coach coach-typing-row";
@@ -117,7 +181,11 @@
                 return;
             }
 
-            addMessage("coach", data.reply);
+            if (data.crisis) {
+                addCrisisCard(data.reply, data.resources);
+            } else {
+                addMessage("coach", data.reply);
+            }
         } catch (error) {
             typingRow.remove();
             showNotice("Could not reach the coach right now. Please try again.");

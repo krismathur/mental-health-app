@@ -1,0 +1,107 @@
+/* Shared styling for the Privacy Policy and Terms pages.
+   Deliberately plain and high-contrast: these are documents a parent reads,
+   not another gamified screen. */
+body.legal-page {
+    margin: 0;
+    background: #f4f7fb;
+    font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #2d3748;
+    line-height: 1.65;
+}
+
+.legal-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 100px 22px 80px;
+}
+
+.legal-card {
+    background: #fff;
+    border: 1px solid #dfe6ee;
+    border-radius: 18px;
+    padding: 36px 40px;
+    box-shadow: 0 12px 32px rgba(45, 55, 72, 0.07);
+}
+
+.legal-card h1 {
+    margin: 0 0 6px;
+    font-size: 1.85rem;
+    font-weight: 900;
+    color: #1a2c46;
+}
+
+.legal-updated {
+    margin: 0 0 26px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #718096;
+}
+
+.legal-card h2 {
+    margin: 30px 0 10px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #1a2c46;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #edf2f7;
+}
+
+.legal-card p,
+.legal-card li {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3d4a5c;
+}
+
+.legal-card ul {
+    padding-left: 20px;
+}
+
+.legal-card li {
+    margin-bottom: 7px;
+}
+
+.legal-card a {
+    color: #2b6cb0;
+    font-weight: 700;
+}
+
+.legal-card strong {
+    color: #1a2c46;
+    font-weight: 800;
+}
+
+/* The crisis box. Same warm palette as the coach's help card so the two
+   read as the same voice. */
+.legal-crisis {
+    margin: 26px 0;
+    padding: 18px 20px;
+    border-radius: 13px;
+    background: #fffaf0;
+    border: 1px solid #e3b778;
+}
+
+.legal-crisis h2 {
+    margin-top: 0;
+    border: none;
+    color: #8a5a17;
+}
+
+.legal-crisis li {
+    color: #4a3418;
+}
+
+
+.legal-back {
+    display: inline-block;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #2b6cb0;
+}
+
+@media (max-width: 620px) {
+    .legal-wrap { padding: 86px 14px 60px; }
+    .legal-card { padding: 24px 20px; border-radius: 14px; }
+    .legal-card h1 { font-size: 1.5rem; }
+}

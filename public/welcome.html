@@ -27,7 +27,7 @@
             <div class="nav-links">
                 <a class="nav-btn" href="index.html">Home</a>
                 <a class="nav-btn video-library-btn" href="#">Videos</a>
-                <a class="nav-btn rewards-btn" href="#">Rewards</a>
+                <a class="nav-btn rewards-btn" href="#">Mental Locker</a>
                 <button type="button" id="moodTrendBtn" class="nav-btn">Mood Trend</button>
             </div>
         </nav>
@@ -360,15 +360,10 @@
                     <button type="button" id="closeSettingsBtn" class="close-btn">&times;</button>
                 </div>
 
-                <div class="settings-tabs" role="tablist" aria-label="Settings sections">
-                    <button type="button" class="settings-tab is-active" id="settingsTabProfile" role="tab" aria-selected="true" aria-controls="settingsPanelProfile" data-tab="profile">Profile</button>
-                    <button type="button" class="settings-tab" id="settingsTabCheckin" role="tab" aria-selected="false" aria-controls="settingsPanelCheckin" data-tab="checkin" tabindex="-1">Check-in</button>
-                    <button type="button" class="settings-tab" id="settingsTabAccount" role="tab" aria-selected="false" aria-controls="settingsPanelAccount" data-tab="account" tabindex="-1">Account</button>
-                </div>
-
                 <form id="settingsForm" class="settings-form">
                     <div class="settings-tab-panels">
-                        <section class="settings-tab-panel settings-onboarding-section" id="settingsPanelProfile" role="tabpanel" data-tab="profile" aria-labelledby="settingsTabProfile">
+                        <section class="settings-tab-panel settings-onboarding-section" id="settingsPanelProfile">
+                            <h3 class="settings-section-heading">Profile</h3>
                             <p class="settings-tab-lead">MindZone uses this to personalize your training plan.</p>
 
                             <div class="settings-fields-grid">
@@ -414,9 +409,9 @@
                             </div>
                         </section>
 
-                        <section class="settings-tab-panel settings-onboarding-section" id="settingsPanelCheckin" role="tabpanel" data-tab="checkin" aria-labelledby="settingsTabCheckin" hidden>
+                        <section class="settings-tab-panel settings-onboarding-section" id="settingsPanelCheckin">
                             <div class="star-section">
-                                <h3>Quick Check-In</h3>
+                                <h3 class="settings-section-heading">Check-In</h3>
                                 <p class="star-hint">1 = low · 5 = high</p>
 
                                 <div class="star-row">
@@ -466,9 +461,11 @@
                             </div>
                         </section>
 
-                        <section class="settings-tab-panel settings-onboarding-section" id="settingsPanelAccount" role="tabpanel" data-tab="account" aria-labelledby="settingsTabAccount" hidden>
+                        <section class="settings-tab-panel settings-onboarding-section" id="settingsPanelAccount">
+                            <h3 class="settings-section-heading">Account</h3>
                             <div class="settings-account">
                                 <p class="settings-tab-lead">Rebuild your plan with the latest profile, or log out of MindZone.</p>
+                                <p class="settings-regen-note">Saving above only updates your profile — it will <strong>not</strong> change your current plan. Your plan only changes when you press "Regenerate Plan" below, and doing so replaces your current plan with a new one.</p>
                                 <button type="button" id="regenerateBtn" class="settings-action-btn secondary" hidden>Regenerate Plan 🔄</button>
                                 <button type="button" id="logoutBtn" class="settings-action-btn settings-logout-btn">Log Out</button>
                             </div>
@@ -476,6 +473,7 @@
                     </div>
 
                     <div class="settings-form-actions">
+                        <p class="settings-save-note">Saving keeps your existing plan as-is.</p>
                         <button type="button" id="saveSettingsBtn" class="settings-action-btn">Save Changes 💾</button>
                     </div>
                 </form>
@@ -626,8 +624,8 @@
             <div class="rewards-panel">
                 <div class="rewards-header">
                     <div>
-                        <p class="rewards-kicker">Mental Strength Rewards</p>
-                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                        <p class="rewards-kicker">YOUR MENTAL LOCKER</p>
+                        <h2>See What Your Training Has Unlocked</h2>
                     </div>
                     <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
                 </div>
@@ -653,6 +651,18 @@
                         <span class="reward-icon">🏅</span>
                         <h3>Mental Badges</h3>
                         <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="streak">
+                        <span class="reward-icon">🔥</span>
+                        <h3>Streak</h3>
+                        <p>Log in on consecutive days to build your streak.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="mood">
+                        <span class="reward-icon">😊</span>
+                        <h3>Mood</h3>
+                        <p>See your daily check-ins and this week's mood trend.</p>
                     </button>
                 </div>
 

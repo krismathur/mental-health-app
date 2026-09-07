@@ -19,7 +19,7 @@
             <div class="nav-links">
                 <a class="nav-btn" href="index.html">Home</a>
                 <a class="nav-btn video-library-btn" href="#">Videos</a>
-                <a class="nav-btn rewards-btn" href="#">Rewards</a>
+                <a class="nav-btn rewards-btn" href="#">Mental Locker</a>
             </div>
         </nav>
 
@@ -63,8 +63,8 @@
             <div class="rewards-panel">
                 <div class="rewards-header">
                     <div>
-                        <p class="rewards-kicker">Mental Strength Rewards</p>
-                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                        <p class="rewards-kicker">YOUR MENTAL LOCKER</p>
+                        <h2>See What Your Training Has Unlocked</h2>
                     </div>
                     <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
                 </div>
@@ -91,6 +91,18 @@
                         <h3>Mental Badges</h3>
                         <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
                     </button>
+
+                    <button type="button" class="reward-card" data-reward="streak">
+                        <span class="reward-icon">🔥</span>
+                        <h3>Streak</h3>
+                        <p>Log in on consecutive days to build your streak.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="mood">
+                        <span class="reward-icon">😊</span>
+                        <h3>Mood</h3>
+                        <p>See your daily check-ins and this week's mood trend.</p>
+                    </button>
                 </div>
 
                 <div id="rewardDetails" class="reward-details" hidden></div>
@@ -101,6 +113,8 @@
         <script src="js/nav.js"></script>
         <script src="js/rewards.js"></script>
         <script src="js/quest-system.js"></script>
+        <script src="js/roster.js"></script>
+        <script src="js/avatar-migration.js"></script>
         <script src="js/mental-training.js"></script>
     </body>
 </html>

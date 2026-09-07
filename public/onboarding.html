@@ -4,7 +4,7 @@
         <title>Build Your Player Card - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/onboarding.css">
         <link rel="stylesheet" href="css/rewards.css">
         <link rel="stylesheet" href="css/video-library.css">
@@ -19,7 +19,7 @@
             <div class="nav-links">
                 <a class="nav-btn" href="index.html">Home</a>
                 <a class="nav-btn video-library-btn" href="#">Videos</a>
-                <a class="nav-btn rewards-btn" href="#">Rewards</a>
+                <a class="nav-btn rewards-btn" href="#">Mental Locker</a>
             </div>
         </nav>
 
@@ -27,42 +27,47 @@
 
             <div class="page-header">
                 <div class="header-text">
-                    <span class="badge">PLAYER SETUP · FINAL LEVEL</span>
-                    <h1>Build Your Player Card 🏆</h1>
-                    <p class="tagline">Tell Coach Krish about your sport and goals so your first quest fits you.</p>
+                    <h1>Build your player card</h1>
+                    <p class="tagline">Tell Coach Krish about your sport and what you want to work on. Your first quest gets built from these answers.</p>
                 </div>
                 <img class="entry-krish" src="images/krish-quest-guide.png" alt="" aria-hidden="true">
             </div>
 
             <div class="progress-bar" aria-label="Progress">
-                <div class="progress-step done">
-                    <span class="step-icon">✅</span>
+                <div class="progress-step done" data-step="0">
+                    <span class="step-icon">&check;</span>
                     <span>Account</span>
                 </div>
-                <div class="progress-line done"></div>
-                <div class="progress-step active">
-                    <span class="step-icon">📝</span>
-                    <span>Your Info</span>
+                <div class="progress-line done" data-line="0"></div>
+                <div class="progress-step active" data-step="1">
+                    <span class="step-icon">1</span>
+                    <span>Basics</span>
                 </div>
-                <div class="progress-line"></div>
-                <div class="progress-step">
-                    <span class="step-icon">🎯</span>
-                    <span>Your Plan</span>
+                <div class="progress-line" data-line="1"></div>
+                <div class="progress-step" data-step="2">
+                    <span class="step-icon">2</span>
+                    <span>Goals</span>
+                </div>
+                <div class="progress-line" data-line="2"></div>
+                <div class="progress-step" data-step="3">
+                    <span class="step-icon">3</span>
+                    <span>Check-In</span>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-top">
-                    <img src="images/card-mind.jpg" alt="" class="card-thumb">
                     <div>
-                        <h2>About You</h2>
-                        <p class="subtitle">No wrong answers — just be honest!</p>
+                        <h2 id="stepTitle">About You</h2>
+                        <p id="stepSubtitle" class="subtitle">No wrong answers &mdash; just be honest!</p>
                     </div>
+                    <p class="card-count" aria-hidden="true"><b id="stepNow">1</b>/3</p>
                 </div>
 
-                <form id="onboardingForm">
-                    <div class="form-section">
-                        <h3 class="section-label">👤 The basics</h3>
+                <form id="onboardingForm" novalidate>
+
+                    <section class="step is-active" data-step="1">
+                        <h3 class="section-label">The basics</h3>
 
                         <label for="name">Your Name <span class="req">*</span></label>
                         <input id="name" type="text" placeholder="What should we call you?" required>
@@ -89,10 +94,10 @@
                                 <label><input type="radio" name="mentalSkill" value="10"> 10</label>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <div class="form-section">
-                        <h3 class="section-label">🎯 Your goals</h3>
+                    <section class="step" data-step="2">
+                        <h3 class="section-label">Your goals</h3>
 
                         <label for="goal">What do you want to get better at? <span class="req">*</span></label>
                         <input id="goal" type="text" placeholder="Stay calm before games, focus better..." required>
@@ -119,11 +124,11 @@
 
                         <label for="weeks">How many weeks do you want your plan to be? <span class="req">*</span></label>
                         <input id="weeks" type="number" min="1" max="4" placeholder="Try 2 weeks!" required>
-                    </div>
+                    </section>
 
-                    <div class="star-section">
-                        <h3>⭐ Quick Check-In</h3>
-                        <p class="star-hint">Tap a number for each one. 1 = not much · 5 = a lot!</p>
+                    <section class="step" data-step="3">
+                        <h3 class="section-label">Quick check-in</h3>
+                        <p class="star-hint">Tap a number for each one. 1 = not much &middot; 5 = a lot!</p>
 
                         <div class="star-row">
                             <p class="star-question">How confident do you feel before games or practice?</p>
@@ -169,9 +174,42 @@
                                 <label><input type="radio" name="bounce" value="5"><span class="star-num">5</span><span class="star-emoji">🚀</span></label>
                             </div>
                         </div>
-                    </div>
 
-                    <button id="submitBtn" type="submit">Unlock My First Quest 🔓</button>
+                        <div class="consent-section">
+                            <h3 class="section-label">Before you start</h3>
+
+                            <p class="consent-intro">
+                                MindZone is for athletes aged 10&ndash;18, so a parent or guardian
+                                needs to know you're using it.
+                            </p>
+
+                            <label class="consent-check" for="parentConsent">
+                                <input id="parentConsent" type="checkbox" required>
+                                <span>
+                                    My parent or guardian said it&rsquo;s okay for me to use MindZone,
+                                    and they know it saves my answers and my chats with the coach.
+                                    <span class="req">*</span>
+                                </span>
+                            </label>
+
+                            <p class="consent-note">
+                                MindZone is a training app, not therapy, and the coach is an AI &mdash;
+                                not a doctor or counselor. If something serious is going on, please talk
+                                to a trusted adult. Read our
+                                <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and
+                                <a href="terms.html" target="_blank" rel="noopener">Terms</a>.
+                            </p>
+                        </div>
+
+                    </section>
+
+                    <p id="formError" class="form-error" role="alert" hidden></p>
+
+                    <div class="step-nav">
+                        <button type="button" id="backBtn" class="nav-back" hidden>&larr; Back</button>
+                        <button type="button" id="nextBtn" class="nav-next">Next &rarr;</button>
+                        <button type="submit" id="submitBtn" class="nav-next" hidden>Unlock My First Quest 🔓</button>
+                    </div>
                 </form>
             </div>
 
@@ -334,8 +372,8 @@
             <div class="rewards-panel">
                 <div class="rewards-header">
                     <div>
-                        <p class="rewards-kicker">Mental Strength Rewards</p>
-                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                        <p class="rewards-kicker">YOUR MENTAL LOCKER</p>
+                        <h2>See What Your Training Has Unlocked</h2>
                     </div>
                     <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
                 </div>
@@ -361,6 +399,18 @@
                         <span class="reward-icon">🏅</span>
                         <h3>Mental Badges</h3>
                         <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="streak">
+                        <span class="reward-icon">🔥</span>
+                        <h3>Streak</h3>
+                        <p>Log in on consecutive days to build your streak.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="mood">
+                        <span class="reward-icon">😊</span>
+                        <h3>Mood</h3>
+                        <p>See your daily check-ins and this week's mood trend.</p>
                     </button>
                 </div>
 

@@ -4,9 +4,9 @@ body {
     color: #fff;
     min-height: 100vh;
     background-color: #0f2b4a;
-    background-image: url('../images/baseball-pitcher-hitter.png');
+    background-image: url('../images/bg-welcome-lifting.jpg');
     background-size: cover;
-    background-position: center 55%;
+    background-position: center 42%;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
@@ -2749,38 +2749,35 @@ body.welcome-page .arcade-panel .game-go {
     margin-top: 14px;
 }
 
-.settings-tabs {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-    margin-bottom: 16px;
-    padding: 4px;
-    border-radius: 14px;
-    background: #edf2f7;
+.settings-section-heading {
+    margin: 0 0 6px;
+    color: #1a365d;
+    font-size: 1.05rem;
+    font-weight: 900;
 }
 
-.settings-tab {
-    flex: 1;
-    border: 0;
-    background: transparent;
-    color: #4a5568;
-    padding: 10px 12px;
-    border-radius: 10px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.92rem;
-    font-weight: 800;
-    cursor: pointer;
+.settings-tab-panel + .settings-tab-panel {
+    margin-top: 16px;
 }
 
-.settings-tab.is-active {
-    background: white;
-    color: #2b6cb0;
-    box-shadow: 0 1px 4px rgba(26, 54, 93, 0.12);
+.settings-regen-note {
+    margin: 10px 0 14px;
+    padding: 10px 14px;
+    background: #fffbea;
+    border: 1px solid #f6e05e;
+    border-radius: 12px;
+    color: #744210;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.5;
 }
 
-.settings-tab:focus-visible {
-    outline: 2px solid #63b3ed;
-    outline-offset: 2px;
+.settings-save-note {
+    margin: 0 0 8px;
+    color: #718096;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 .settings-form {
@@ -3110,7 +3107,13 @@ body.welcome-page .tool-checkin:hover {
 body.welcome-page .tool-plan::before,
 body.welcome-page .tool-plan::after,
 body.welcome-page .tool-checkin::before,
-body.welcome-page .tool-checkin::after {
+body.welcome-page .tool-checkin::after,
+body.welcome-page .tool-ai-coach::before,
+body.welcome-page .tool-ai-coach::after,
+body.welcome-page .weekly-goal-card::before,
+body.welcome-page .weekly-goal-card::after,
+body.welcome-page .daily-plan-card::before,
+body.welcome-page .daily-plan-card::after {
     display: none;
 }
 
@@ -4056,7 +4059,7 @@ body.welcome-page .dashboard-welcome {
 }
 
 body.welcome-page .dashboard-welcome::after {
-    background: rgba(248, 215, 106, 0.22);
+    display: none;
 }
 
 body.welcome-page .dashboard-kicker,
@@ -4174,4 +4177,100 @@ body.welcome-page #emotionCheckinSection .emotion-cell.is-selected {
 body.welcome-page #emotionCheckinSection .emotion-save-btn:not(:disabled) {
     background: linear-gradient(135deg, #1d6fd4 0%, #3ec6ff 52%, #67e8d2 100%);
     box-shadow: 0 10px 24px rgba(62, 198, 255, 0.38);
+}
+
+/* Crisis help card.
+   Deliberately not red: a kid who just typed something painful should see
+   something calm and warm, not an error state. It is wider than a normal
+   bubble and carries its own heading so it reads as a real resource, not
+   another line of chat. */
+.coach-crisis-card {
+    max-width: 94%;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: linear-gradient(160deg, rgba(255, 247, 237, 0.97) 0%, rgba(254, 243, 226, 0.97) 100%);
+    border: 1px solid rgba(217, 151, 68, 0.45);
+    box-shadow: 0 10px 28px rgba(120, 72, 20, 0.28);
+    color: #4a3418;
+    white-space: normal;
+}
+
+.coach-crisis-heading {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    color: #8a5a17;
+}
+
+.coach-crisis-text {
+    margin: 0 0 14px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: #4a3418;
+}
+
+.coach-crisis-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+}
+
+.coach-crisis-list li {
+    display: grid;
+    gap: 2px;
+    padding: 11px 13px;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(217, 151, 68, 0.28);
+}
+
+.coach-crisis-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #9a6b28;
+}
+
+.coach-crisis-contact {
+    font-size: 1.06rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: #7a3f12;
+}
+
+.coach-crisis-detail {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: #5c4523;
+}
+
+.coach-crisis-link {
+    justify-self: start;
+    margin-top: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #a8571b;
+    text-decoration: underline;
+}
+
+.coach-crisis-link:hover,
+.coach-crisis-link:focus-visible {
+    color: #7a3f12;
+}
+
+@media (max-width: 520px) {
+    .coach-crisis-card {
+        max-width: 100%;
+        padding: 15px 16px;
+    }
+
+    .coach-crisis-contact {
+        font-size: 1rem;
+    }
 }

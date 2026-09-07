@@ -10,7 +10,9 @@ const meditationProgramTitle = document.getElementById("meditationProgramTitle")
 const meditationProgramSubtitle = document.getElementById("meditationProgramSubtitle");
 const meditationVoiceCircle = document.getElementById("meditationVoiceCircle");
 const meditationVoiceStatus = document.getElementById("meditationVoiceStatus");
+const meditationResumeBtn = document.getElementById("meditationResumeBtn");
 const meditationStopBtn = document.getElementById("meditationStopBtn");
+let meditationPendingResume = null;
 
 let meditationSession = {
     active: false,
@@ -24,6 +26,13 @@ let meditationSession = {
 let meditationVoiceCache = null;
 let meditationAudio = null;
 let meditationAudioCache = new Map();
+const meditationVoiceBars = meditationVoiceCircle
+    ? Array.from(meditationVoiceCircle.querySelectorAll(".voice-bar"))
+    : [];
+let meditationAudioCtx = null;
+let meditationAnalyser = null;
+let meditationAnalyserSource = null;
+let meditationVisualizerFrame = null;
 const MEDITATION_BREATH_PAUSE_MS = 3000;
 const MEDITATION_AUDIO_PLAYBACK_RATE = 1.12;
 const MEDITATION_BROWSER_RATE = 1.1;
@@ -50,7 +59,7 @@ const openAvatarBtn = document.getElementById("openAvatarBtn");
 const avatarOverlay = document.getElementById("avatarOverlay");
 const avatarOverlayBackdrop = document.getElementById("avatarOverlayBackdrop");
 const closeAvatarBtn = document.getElementById("closeAvatarBtn");
-const avatarPlayerCards = document.querySelectorAll(".avatar-player-card");
+let avatarPlayerCards = [];
 const avatarProceedBtn = document.getElementById("avatarProceedBtn");
 const AVATAR_STORAGE_KEY = "selectedAthleteAvatar";
 
@@ -67,6 +76,9 @@ const closeFixVideoBtn = document.getElementById("closeFixVideoBtn");
 
 function resetFixResults() {
     closeFixVideoPlayer();
+    if (fixWhatWentWrongInput) {
+        fixWhatWentWrongInput.value = "";
+    }
 }
 
 function openFixVideoPlayer(video) {
@@ -75,7 +87,7 @@ function openFixVideoPlayer(video) {
     }
 
     if (fixVideoReason) {
-        fixVideoReason.textContent = "Watch this moment.";
+        fixVideoReason.textContent = video.reason || "Watch this moment.";
     }
 
     fixVideoFullscreen.classList.remove("is-playing");
@@ -519,6 +531,59 @@ function prepareMeditationSpeech() {
     window.speechSynthesis.resume();
 }
 
+// Browsers only grant permission to produce sound while a real user gesture
+// is on the stack. A guided session waits on a TTS network round-trip before
+// it ever plays anything, so by the time playback starts the gesture is long
+// gone and both speechSynthesis and a freshly-created Audio element get
+// silently blocked — no error, no sound. The fix is to claim permission for
+// both channels synchronously inside the click, then reuse those same
+// already-permitted objects for every segment.
+function unlockMeditationAudio() {
+    // A silent utterance spoken inside the gesture marks speechSynthesis as
+    // user-activated for the rest of the page's life.
+    if (window.speechSynthesis) {
+        try {
+            const primer = new SpeechSynthesisUtterance(" ");
+            primer.volume = 0;
+            window.speechSynthesis.speak(primer);
+        } catch (error) {
+            console.error("[meditation] speechSynthesis primer failed:", error);
+        }
+    }
+
+    // Permission for media elements is granted per element, so one element is
+    // created and unlocked here and then reused for every Gemini segment
+    // rather than calling `new Audio()` mid-session (which would be blocked).
+    if (!meditationAudio) {
+        meditationAudio = new Audio();
+        meditationAudio.preload = "auto";
+    }
+
+    try {
+        // A 1-sample silent WAV: enough to satisfy the "played after a
+        // gesture" requirement without the user hearing anything.
+        const primerSrc = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=";
+        meditationAudio.src = primerSrc;
+        const primed = meditationAudio.play();
+        if (primed && typeof primed.then === "function") {
+            primed.then(function () {
+                // The real first segment may already have swapped the src in
+                // by the time this resolves — only stop the primer itself.
+                if (meditationAudio && meditationAudio.src === primerSrc) {
+                    meditationAudio.pause();
+                }
+            }).catch(function (error) {
+                console.error("[meditation] audio unlock was refused:", error.name);
+            });
+        }
+    } catch (error) {
+        console.error("[meditation] audio unlock threw:", error);
+    }
+
+    // The analyser graph also needs resuming from inside a gesture.
+    getMeditationAudioContext();
+}
+
 function renderMeditationPrograms() {
     if (!meditationProgramList) {
         return;
@@ -549,6 +614,10 @@ function renderMeditationPrograms() {
                 return item.id === card.dataset.programId;
             });
             if (program) {
+                // Must run synchronously here, while this click still counts
+                // as a user gesture — startMeditationProgram awaits the
+                // network before it plays anything.
+                unlockMeditationAudio();
                 startMeditationProgram(program);
             }
         });
@@ -581,15 +650,159 @@ function setMeditationVoiceStatus(message) {
     }
 }
 
+// Browsers can silently refuse to play audio that starts after an async
+// delay (e.g. waiting on a TTS network request) because the click that
+// started the session is no longer considered a "fresh" user gesture by the
+// time playback actually attempts to start. When that happens there is no
+// error visible to the user otherwise — surface a button whose click IS a
+// fresh gesture, so retrying from it reliably works.
+function showMeditationResumePrompt(retryFn) {
+    meditationPendingResume = retryFn;
+    if (meditationResumeBtn) {
+        meditationResumeBtn.hidden = false;
+    }
+    setMeditationVoiceStatus("Your browser paused this session's audio. Tap below to continue.");
+}
+
+function hideMeditationResumePrompt() {
+    meditationPendingResume = null;
+    if (meditationResumeBtn) {
+        meditationResumeBtn.hidden = true;
+    }
+}
+
+if (meditationResumeBtn) {
+    meditationResumeBtn.addEventListener("click", function () {
+        const retryFn = meditationPendingResume;
+        hideMeditationResumePrompt();
+        unlockMeditationAudio();
+        if (typeof retryFn === "function") {
+            retryFn();
+        }
+    });
+}
+
 function setMeditationCircleState(state) {
     if (!meditationVoiceCircle) {
         return;
+    }
+
+    if (state !== "speaking") {
+        stopMeditationVoiceVisualizer();
     }
 
     meditationVoiceCircle.classList.remove("speaking", "breathing");
     if (state) {
         meditationVoiceCircle.classList.add(state);
     }
+}
+
+function getMeditationAudioContext() {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) {
+        return null;
+    }
+
+    if (!meditationAudioCtx) {
+        meditationAudioCtx = new Ctx();
+    }
+
+    if (meditationAudioCtx.state === "suspended") {
+        meditationAudioCtx.resume().catch(function () {});
+    }
+
+    return meditationAudioCtx;
+}
+
+function stopMeditationVoiceVisualizer() {
+    if (meditationVisualizerFrame) {
+        cancelAnimationFrame(meditationVisualizerFrame);
+        meditationVisualizerFrame = null;
+    }
+
+    if (meditationVoiceCircle) {
+        meditationVoiceCircle.removeAttribute("data-live");
+    }
+
+    meditationVoiceBars.forEach(function (bar) {
+        bar.style.height = "";
+    });
+}
+
+// Drives the Siri-style bars from the real audio waveform while Gemini
+// speech is playing, so the circle actually reacts to the voice instead of
+// just looping a canned animation.
+function startMeditationAudioVisualizer(audioEl) {
+    if (!meditationVoiceBars.length) {
+        return;
+    }
+
+    const ctx = getMeditationAudioContext();
+    if (!ctx) {
+        return;
+    }
+
+    // A MediaElementSource can be created only once per <audio> element, and
+    // the element is now reused across segments — so build the graph once and
+    // keep it, rather than rebuilding it per segment (which would throw and
+    // leave the audio routed nowhere).
+    if (!meditationAnalyserSource) {
+        try {
+            meditationAnalyserSource = ctx.createMediaElementSource(audioEl);
+            meditationAnalyser = ctx.createAnalyser();
+            meditationAnalyser.fftSize = 64;
+            meditationAnalyserSource.connect(meditationAnalyser);
+            meditationAnalyser.connect(ctx.destination);
+        } catch (error) {
+            // Some browsers restrict this API. Fall back to the idle CSS
+            // pulse rather than breaking playback.
+            console.error("[meditation] visualizer unavailable:", error.name);
+            meditationAnalyserSource = null;
+            meditationAnalyser = null;
+            return;
+        }
+    }
+
+    if (!meditationAnalyser) {
+        return;
+    }
+
+    const data = new Uint8Array(meditationAnalyser.frequencyBinCount);
+    const barCount = meditationVoiceBars.length;
+    meditationVoiceCircle.setAttribute("data-live", "1");
+
+    function tick() {
+        if (!meditationSession.active || !meditationVoiceCircle.classList.contains("speaking")) {
+            stopMeditationVoiceVisualizer();
+            return;
+        }
+
+        meditationAnalyser.getByteFrequencyData(data);
+        const step = Math.max(1, Math.floor(data.length / barCount));
+
+        for (let i = 0; i < barCount; i++) {
+            const value = data[i * step] || 0;
+            meditationVoiceBars[i].style.height = (14 + (value / 255) * 46) + "px";
+        }
+
+        meditationVisualizerFrame = requestAnimationFrame(tick);
+    }
+
+    tick();
+}
+
+// The browser's speechSynthesis voice does not expose raw audio for
+// analysis, so word-boundary events drive a lighter-weight pulse instead —
+// still tied to real speech progress rather than a purely canned loop.
+function pulseMeditationVoiceBarsOnBoundary() {
+    if (!meditationVoiceBars.length || !meditationVoiceCircle) {
+        return;
+    }
+
+    meditationVoiceCircle.setAttribute("data-live", "1");
+    meditationVoiceBars.forEach(function (bar) {
+        bar.style.height = (14 + Math.random() * 40) + "px";
+    });
 }
 
 function softenMeditationText(text) {
@@ -611,11 +824,13 @@ function stopMeditationSession() {
     }
 
     if (meditationAudio) {
+        // Kept (not nulled) so the playback permission earned during the
+        // starting click survives for the next segment/session.
         meditationAudio.pause();
         meditationAudio.onended = null;
         meditationAudio.onerror = null;
-        meditationAudio.src = "";
-        meditationAudio = null;
+        meditationAudio.onplaying = null;
+        meditationAudio.removeAttribute("src");
     }
 
     if (window.speechSynthesis) {
@@ -624,6 +839,7 @@ function stopMeditationSession() {
 
     meditationAudioCache.clear();
     setMeditationCircleState("");
+    hideMeditationResumePrompt();
 }
 
 function handleMeditationSegmentEnd(segment) {
@@ -685,22 +901,50 @@ function speakMeditationSegmentWithBrowser(segment) {
     setMeditationCircleState("speaking");
 
     let handled = false;
+    let started = false;
+
+    // Some browsers silently refuse speechSynthesis.speak() after a delay
+    // since the user's last click (the same gesture-expiry issue that
+    // affects Audio.play()) — but unlike Audio.play(), speak() returns no
+    // promise, so a refusal here can fire NO events at all. Without this
+    // watchdog the UI would sit on "speaking" forever with total silence.
+    const watchdog = setTimeout(function () {
+        if (handled || started || !meditationSession.active) {
+            return;
+        }
+        handled = true;
+        console.error("[meditation] speechSynthesis never started speaking (likely blocked by the browser).");
+        showMeditationResumePrompt(function () {
+            speakMeditationSegmentWithBrowser(segment);
+        });
+    }, 3000);
+
+    utterance.onstart = function () {
+        started = true;
+        clearTimeout(watchdog);
+        hideMeditationResumePrompt();
+    };
 
     utterance.onend = function () {
         if (handled || !meditationSession.active) {
             return;
         }
         handled = true;
+        clearTimeout(watchdog);
         handleMeditationSegmentEnd(segment);
     };
 
-    utterance.onerror = function () {
+    utterance.onerror = function (event) {
         if (handled || !meditationSession.active) {
             return;
         }
         handled = true;
+        clearTimeout(watchdog);
+        console.error("[meditation] speechSynthesis error:", event.error);
         skipMeditationSegment("Could not play that line. Continuing...");
     };
+
+    utterance.onboundary = pulseMeditationVoiceBarsOnBoundary;
 
     window.speechSynthesis.speak(utterance);
 }
@@ -717,7 +961,9 @@ async function fetchMeditationAudio(text) {
     });
 
     if (!response.ok) {
-        throw new Error("TTS request failed");
+        const error = new Error("TTS request failed");
+        error.status = response.status;
+        throw error;
     }
 
     const data = await response.json();
@@ -751,15 +997,18 @@ async function playGeminiMeditationAudio(segment, data) {
         return;
     }
 
-    if (meditationAudio) {
-        meditationAudio.pause();
-        meditationAudio.onended = null;
-        meditationAudio.onerror = null;
-        meditationAudio.src = "";
-        meditationAudio = null;
+    // Reuse the element unlocked during the starting click — creating a new
+    // Audio() here would have no playback permission and fail silently.
+    if (!meditationAudio) {
+        meditationAudio = new Audio();
     }
 
-    meditationAudio = new Audio("data:" + data.mimeType + ";base64," + data.audioBase64);
+    meditationAudio.pause();
+    meditationAudio.onended = null;
+    meditationAudio.onerror = null;
+    meditationAudio.onplaying = null;
+
+    meditationAudio.src = "data:" + data.mimeType + ";base64," + data.audioBase64;
     meditationAudio.playbackRate = MEDITATION_AUDIO_PLAYBACK_RATE;
 
     meditationAudio.onended = function () {
@@ -767,13 +1016,16 @@ async function playGeminiMeditationAudio(segment, data) {
     };
 
     meditationAudio.onplaying = function () {
+        hideMeditationResumePrompt();
         prefetchNextMeditationSegment();
+        startMeditationAudioVisualizer(meditationAudio);
     };
 
     meditationAudio.onerror = function () {
         if (!meditationSession.active) {
             return;
         }
+        console.error("[meditation] Gemini audio element error:", meditationAudio && meditationAudio.error);
         // Stay on Gemini for the whole program — never switch to browser mid-session.
         skipMeditationSegment("Could not play that line. Continuing...");
     };
@@ -793,14 +1045,39 @@ async function speakMeditationSegmentWithGemini(segment, isRetry) {
             return;
         }
 
+        console.error("[meditation] Gemini playback failed:", error);
+
+        if (error.name === "NotAllowedError") {
+            // The browser blocked play() because too much time passed since
+            // the user's last click (usually the TTS network round-trip).
+            // Retrying here would just fail again — a real click is needed.
+            showMeditationResumePrompt(function () {
+                speakMeditationSegmentWithGemini(segment, isRetry);
+            });
+            return;
+        }
+
+        if (error.status === 429) {
+            // Hourly speech quota is exhausted for the rest of this window —
+            // retrying Gemini per segment would just fail again and stall
+            // the session. Switch the whole session to the browser voice so
+            // long programs keep talking instead of going silent.
+            meditationSession.engine = "browser";
+            speakMeditationSegmentWithBrowser(segment);
+            return;
+        }
+
         if (!isRetry) {
-            // Clear a bad cache entry and retry Gemini once — do not fall back to browser.
+            // Clear a bad cache entry and retry Gemini once before giving up on it.
             meditationAudioCache.delete(segment.text);
             await speakMeditationSegmentWithGemini(segment, true);
             return;
         }
 
-        skipMeditationSegment("Could not play that line. Continuing...");
+        // Gemini TTS failed twice in a row for a reason other than quota.
+        // Rather than going silent for the rest of the session, keep talking
+        // with the browser's built-in voice for this segment.
+        speakMeditationSegmentWithBrowser(segment);
     }
 }
 
@@ -877,10 +1154,12 @@ openMeditationBtn.addEventListener("click", function () {
     openOverlay(meditationOverlay);
 });
 
-openAvatarBtn.addEventListener("click", function () {
-    restoreAvatarSelection();
-    openOverlay(avatarOverlay);
-});
+if (openAvatarBtn) {
+    openAvatarBtn.addEventListener("click", function () {
+        restoreAvatarSelection();
+        openOverlay(avatarOverlay);
+    });
+}
 
 openFixBtn.addEventListener("click", function () {
     resetFixResults();
@@ -921,17 +1200,77 @@ avatarOverlayBackdrop.addEventListener("click", function () {
     closeOverlay(avatarOverlay);
 });
 
+// The picker is rendered from roster.js rather than hardcoded in the markup,
+// so a card carries its character id and the roster stays the only source of
+// truth for names, leagues, and art paths.
+function renderAvatarPicker() {
+    const container = document.getElementById("avatarLeagueColumns");
+
+    if (!container || !window.MindZoneRoster) {
+        return [];
+    }
+
+    const roster = window.MindZoneRoster;
+    container.textContent = "";
+
+    roster.LEAGUES.forEach(function (league) {
+        const characters = roster.byLeague(league.id);
+
+        if (!characters.length) {
+            return;
+        }
+
+        const column = document.createElement("div");
+        column.className = "avatar-league-column avatar-" + league.id + "-column";
+
+        const label = document.createElement("span");
+        label.className = "avatar-league-label";
+        label.textContent = league.label;
+        column.appendChild(label);
+
+        const grid = document.createElement("div");
+        grid.className = "avatar-player-grid";
+
+        characters.forEach(function (character) {
+            const card = document.createElement("div");
+            card.className = "avatar-player-card";
+            card.dataset.characterId = character.id;
+
+            const img = document.createElement("img");
+            img.src = character.image;
+            img.alt = character.alt;
+            card.appendChild(img);
+
+            const name = document.createElement("span");
+            name.className = "avatar-player-name";
+            name.textContent = character.name;
+            card.appendChild(name);
+
+            grid.appendChild(card);
+        });
+
+        column.appendChild(grid);
+        container.appendChild(column);
+    });
+
+    return Array.prototype.slice.call(container.querySelectorAll(".avatar-player-card"));
+}
+
 function getAvatarCardData(card) {
-    const column = card.closest(".avatar-league-column");
-    const league = column ? column.querySelector(".avatar-league-label").textContent.trim() : "";
-    const nameEl = card.querySelector(".avatar-player-name");
-    const imgEl = card.querySelector("img");
+    const character = window.MindZoneRoster
+        ? window.MindZoneRoster.byId(card.dataset.characterId)
+        : null;
+
+    if (!character) {
+        return { id: "", league: "", name: "", image: "", alt: "" };
+    }
 
     return {
-        league: league,
-        name: nameEl ? nameEl.textContent.trim() : "",
-        image: imgEl ? imgEl.getAttribute("src") : "",
-        alt: imgEl ? imgEl.getAttribute("alt") : ""
+        id: character.id,
+        league: character.league,
+        name: character.name,
+        image: character.image,
+        alt: character.alt
     };
 }
 
@@ -954,11 +1293,15 @@ function restoreAvatarSelection() {
 
     avatarPlayerCards.forEach(function (card) {
         const data = getAvatarCardData(card);
-        const isSelected = data.name === saved.name && data.league === saved.league;
+        const isSelected = saved.id
+            ? data.id === saved.id
+            : data.name === saved.name && data.league === saved.league;
         card.classList.toggle("selected", isSelected);
         card.setAttribute("aria-pressed", isSelected ? "true" : "false");
     });
 }
+
+avatarPlayerCards = renderAvatarPicker();
 
 avatarPlayerCards.forEach(function (card) {
     const data = getAvatarCardData(card);

@@ -13,9 +13,9 @@ body {
     color: #fff;
     min-height: 100vh;
     background-color: #0b1a2a;
-    background-image: url("../images/ronaldo-siu.jpg");
+    background-image: url("../images/bg-home-goal.jpg");
     background-size: cover;
-    background-position: center 78%;
+    background-position: center 62%;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
@@ -384,7 +384,7 @@ footer {
     padding: 0 24px 24px;
 }
 
-/* Mind training quotes — Jordan / Ohtani / Alcaraz */
+/* Mind training quote cards — confidence / pressure / control */
 .mind-quotes {
     max-width: 1120px;
     margin: 0 auto 96px;
@@ -397,147 +397,96 @@ footer {
     gap: 28px;
 }
 
+/* One continuous card: a pull-quote with the speaker underneath. There is no
+   photo slot — the quote is the content, so it gets the space and the scale. */
 .mind-quote-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    border-radius: 22px;
+    padding: 30px 28px 26px;
+    border-radius: 20px;
+    background: linear-gradient(165deg, rgba(18, 30, 48, 0.82), rgba(10, 18, 30, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     overflow: hidden;
-    background: rgba(12, 16, 22, 0.28);
-    border: 1px solid rgba(255, 255, 255, 0.26);
-    box-shadow:
-        0 10px 28px rgba(0, 0, 0, 0.28),
-        0 0 0 1px rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    transform: translateY(0) scale(1);
     transition:
         transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.35s ease;
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+}
+
+/* Accent rail down the left edge carries the power colour. */
+.mind-quote-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--power-accent, #63b3ed);
 }
 
 .mind-quote-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow:
-        0 22px 44px rgba(0, 0, 0, 0.38),
-        0 0 0 1px rgba(255, 255, 255, 0.35);
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.26);
+    box-shadow: 0 22px 46px rgba(0, 0, 0, 0.44);
 }
 
-.mind-quote-photo {
-    position: relative;
-    height: 260px;
-    flex: 0 0 260px;
-    overflow: hidden;
-    background: #0f1f33;
-}
+.mind-quote-confidence { --power-accent: #f6c344; }
+.mind-quote-pressure   { --power-accent: #e26a6a; }
+.mind-quote-control    { --power-accent: #5ec8b4; }
 
-.mind-quote-photo::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to top,
-        rgba(10, 22, 40, 0.55) 0%,
-        transparent 45%
-    );
-    pointer-events: none;
-}
-
-.mind-quote-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
-    transition: transform 0.5s ease;
-}
-
-.mind-quote-card:hover .mind-quote-photo img {
-    transform: scale(1.06);
-}
-
-.mind-quote-body {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding: 18px 20px 20px;
-    position: relative;
-}
-
-.mind-quote-body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 22px;
-    right: 22px;
-    height: 3px;
+.power-tag {
+    align-self: flex-start;
+    margin-bottom: 18px;
+    padding: 5px 12px;
     border-radius: 999px;
-    background: linear-gradient(90deg, #2b6cb0, #63b3ed);
-}
-
-.mind-quote-jordan .mind-quote-body::before {
-    background: linear-gradient(90deg, #c53030, #f6ad55);
-}
-
-.mind-quote-ohtani .mind-quote-body::before {
-    background: linear-gradient(90deg, #2b6cb0, #90cdf4);
-}
-
-.mind-quote-alcaraz .mind-quote-body::before {
-    background: linear-gradient(90deg, #276749, #68d391);
-}
-
-.mind-quote-kicker {
-    margin-top: 10px;
-    font-size: 0.72rem;
+    background: color-mix(in srgb, var(--power-accent) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--power-accent) 45%, transparent);
+    color: var(--power-accent);
+    font-size: 0.66rem;
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #2b6cb0;
-}
-
-.mind-quote-jordan .mind-quote-kicker {
-    color: #c53030;
-}
-
-.mind-quote-ohtani .mind-quote-kicker {
-    color: #2b6cb0;
-}
-
-.mind-quote-alcaraz .mind-quote-kicker {
-    color: #276749;
-}
-
-.mind-quote-name {
-    margin: 8px 0 14px;
-    font-size: 1.45rem;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
 }
 
 .mind-quote-text {
+    flex: 1 1 auto;
+    margin: 0 0 22px;
+    font-size: 1.16rem;
+    line-height: 1.5;
+    font-weight: 500;
+    font-style: normal;
+    color: rgba(255, 255, 255, 0.94);
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+}
+
+.mind-quote-attrib {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mind-quote-name {
     margin: 0;
-    font-size: 0.98rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.86);
-    font-style: italic;
-    quotes: none;
-    position: relative;
-    padding-left: 14px;
-    border-left: 3px solid rgba(43, 108, 176, 0.35);
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.01em;
 }
 
-.mind-quote-jordan .mind-quote-text {
-    border-left-color: rgba(197, 48, 48, 0.4);
-}
-
-.mind-quote-ohtani .mind-quote-text {
-    border-left-color: rgba(43, 108, 176, 0.45);
-}
-
-.mind-quote-alcaraz .mind-quote-text {
-    border-left-color: rgba(39, 103, 73, 0.45);
+.mind-quote-sport {
+    margin: 0;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
 }
 
 @media (max-width: 900px) {
@@ -822,34 +771,6 @@ footer {
     max-width: 1180px;
 }
 
-.mind-quote-card {
-    border-width: 2px;
-}
-
-.power-tag {
-    position: absolute;
-    z-index: 2;
-    left: 14px;
-    bottom: 13px;
-    padding: 7px 10px;
-    color: #102a43;
-    background: #f6e05e;
-    border: 2px solid rgba(255, 255, 255, 0.85);
-    border-radius: 999px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.24);
-    font-size: 0.65rem;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-}
-
-.mind-quote-ohtani .power-tag {
-    background: #90cdf4;
-}
-
-.mind-quote-alcaraz .power-tag {
-    background: #9ae6b4;
-}
-
 .reward-preview {
     max-width: 1180px;
     margin: 0 auto 96px;
@@ -931,7 +852,7 @@ footer {
 
 .preview-meter span {
     display: block;
-    width: var(--preview-progress);
+    width: var(--preview-progress, 72%);
     height: 100%;
     background: linear-gradient(90deg, #3182ce, #63b3ed);
     border-radius: inherit;

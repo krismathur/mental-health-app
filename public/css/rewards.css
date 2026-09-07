@@ -130,7 +130,7 @@
 
 .rewards-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 16px;
 }
 
@@ -223,21 +223,11 @@
 }
 
 .streak-details .locked-gemstone {
-    min-height: 70px;
+    /* Tall enough for the stone plus its name underneath. */
+    min-height: 88px;
     border-radius: 12px;
-}
-
-.streak-details .locked-gemstone::before {
-    top: 10px;
-    width: 46px;
-    height: 46px;
-    border-width: 3px;
-}
-
-.streak-details .locked-gemstone::after {
-    top: 16px;
-    width: 20px;
-    height: 30px;
+    --gem-top: 10px;
+    --gem-size: 46px;
 }
 
 .streak-details .badge-corner-number {
@@ -395,11 +385,37 @@
 .badge-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+}
+
+/* The rewards panel does not scroll, so the badges view has to fit the
+   viewport: keep the summary on one compact row above the 2x5 grid. */
+.badge-details .badge-summary {
     gap: 14px;
+    margin-bottom: 10px;
+}
+
+.badge-details .color-badge {
+    width: 58px;
+    height: 58px;
+    font-size: 1.8rem;
+}
+
+.badge-details .reward-big-number {
+    font-size: 1.3rem;
+}
+
+.badge-details .badge-summary p:not(.reward-big-number):not(.badge-progress) {
+    display: none;
+}
+
+.badge-details .mental-meter {
+    height: 10px;
+    margin: 0 0 12px;
 }
 
 .locked-badge {
-    min-height: 145px;
+    min-height: 96px;
     display: flex;
     position: relative;
     align-items: center;
@@ -413,9 +429,9 @@
 .locked-badge::before {
     content: "";
     position: absolute;
-    top: 20px;
-    width: 88px;
-    height: 88px;
+    top: 12px;
+    width: 56px;
+    height: 56px;
     background: linear-gradient(145deg, #d1d5db, #8a94a3);
     clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
     border: 4px solid #6b7280;
@@ -425,9 +441,9 @@
 .locked-badge::after {
     content: "";
     position: absolute;
-    top: 96px;
-    width: 56px;
-    height: 36px;
+    top: 60px;
+    width: 36px;
+    height: 24px;
     background: linear-gradient(90deg, #737b88 0 45%, #9ca3af 45% 55%, #737b88 55% 100%);
     clip-path: polygon(0 0, 100% 0, 82% 100%, 50% 72%, 18% 100%);
 }
@@ -441,21 +457,43 @@
     background: linear-gradient(90deg, #2b6cb0 0 45%, #63b3ed 45% 55%, #2b6cb0 55% 100%);
 }
 
+/* Sized and positioned to match .locked-badge::before exactly, so the icon
+   always sits centred on the hexagon. */
+.badge-icon {
+    position: absolute;
+    top: 12px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    font-size: 1.55rem;
+    line-height: 1;
+    filter: grayscale(1) brightness(0.75);
+    opacity: 0.65;
+}
+
+.locked-badge.earned-badge .badge-icon {
+    opacity: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
 .badge-corner-number {
     position: absolute;
-    top: 10px;
-    right: 12px;
+    top: 6px;
+    right: 7px;
     z-index: 2;
-    min-width: 30px;
-    height: 30px;
+    min-width: 22px;
+    height: 22px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px;
+    padding: 0 5px;
     background: linear-gradient(135deg, #fbd38d, #f6ad55);
     color: #1a202c;
     border-radius: 999px;
-    font-size: 0.95rem;
+    font-size: 0.74rem;
     font-weight: 900;
     font-style: italic;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
@@ -466,11 +504,56 @@
     background: radial-gradient(circle at 35% 30%, #e9d8fd, #805ad5 55%, #44337a 100%);
 }
 
+.mood-orb {
+    background: radial-gradient(circle at 35% 30%, #fefcbf, #68d391 55%, #276749 100%);
+}
+
+.mood-week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.mood-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+}
+
+.mood-slot-logged {
+    background: rgba(104, 211, 145, 0.14);
+    border-color: rgba(104, 211, 145, 0.4);
+}
+
+.mood-slot-day {
+    color: #bee3f8;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.mood-slot-emoji {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
 .gemstone-grid {
     margin-top: 4px;
 }
 
 .locked-gemstone {
+    /* The stone and its label are positioned from these two values, so the
+       compact streak view can resize the gem by overriding them alone. */
+    --gem-top: 24px;
+    --gem-size: 78px;
+
     min-height: 145px;
     display: flex;
     position: relative;
@@ -482,37 +565,44 @@
     overflow: hidden;
 }
 
-.locked-gemstone::before {
-    content: "";
+/* The stone is real faceted SVG geometry now (see buildGemSvg in
+   rewards.js), which replaces the old flat clip-path face and its shine. */
+.gemstone-svg {
     position: absolute;
-    top: 24px;
-    width: 78px;
-    height: 78px;
-    background: linear-gradient(145deg, #cbd5e0, #718096);
-    clip-path: polygon(50% 0%, 92% 25%, 92% 75%, 50% 100%, 8% 75%, 8% 25%);
-    border: 4px solid #64748b;
-    box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.24), 0 10px 22px rgba(0, 0, 0, 0.22);
+    top: var(--gem-top);
+    width: var(--gem-size);
+    height: var(--gem-size);
+    overflow: visible;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
 }
 
-.locked-gemstone::after {
-    content: "";
+.locked-gemstone:not(.earned-gemstone) .gemstone-svg {
+    opacity: 0.5;
+}
+
+.earned-gemstone .gemstone-svg {
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
+}
+
+/* The stone's name, sitting just below the face. */
+.gemstone-name {
     position: absolute;
-    top: 34px;
-    width: 34px;
-    height: 54px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent 70%);
-    clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
-    opacity: 0.55;
+    top: calc(var(--gem-top) + var(--gem-size) + 6px);
+    z-index: 1;
+    width: 100%;
+    padding: 0 4px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+    box-sizing: border-box;
 }
 
-.locked-gemstone.earned-gemstone::before {
-    background: linear-gradient(145deg, #e9d8fd, #b794f4, #63b3ed);
-    border-color: #d6bcfa;
-    box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.34), 0 0 18px rgba(128, 90, 213, 0.35);
-}
-
-.locked-gemstone.earned-gemstone::after {
-    opacity: 0.75;
+.locked-gemstone.earned-gemstone .gemstone-name {
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
 .reward-screen-flash {
@@ -588,17 +678,13 @@
     }
 
     .streak-details .locked-gemstone {
-        min-height: 54px;
+        min-height: 62px;
+        --gem-size: 34px;
     }
 
-    .streak-details .locked-gemstone::before {
-        width: 34px;
-        height: 34px;
-    }
-
-    .streak-details .locked-gemstone::after {
-        width: 15px;
-        height: 23px;
+    /* No room for the stone's name at this size. */
+    .gemstone-name {
+        display: none;
     }
 
     .xp-detail,

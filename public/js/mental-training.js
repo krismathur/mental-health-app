@@ -481,6 +481,29 @@ function hideIntroMessage() {
     }, { once: true });
 }
 
+// The Content-Security-Policy forbids inline style attributes, so dynamic
+// widths, offsets and colours travel as data-* attributes and are applied
+// here through the CSSOM after insertion. Setting element.style from script
+// is not restricted by the policy.
+function applyDynamicStyles(root) {
+    if (!root) {
+        return;
+    }
+
+    root.querySelectorAll("[data-style-width]").forEach(function (element) {
+        element.style.width = element.getAttribute("data-style-width");
+    });
+
+    root.querySelectorAll("[data-style-left]").forEach(function (element) {
+        element.style.left = element.getAttribute("data-style-left");
+    });
+
+    root.querySelectorAll("[data-style-background]").forEach(function (element) {
+        element.style.background = element.getAttribute("data-style-background");
+    });
+}
+
+
 function renderFinishTarget(theme, finish, reachedFinish) {
     if (theme.finishClass === "finish-hoop") {
         return `
@@ -585,14 +608,16 @@ function renderProgressBar(options) {
                 <span class="athlete-action-burst" aria-hidden="true"></span>
             </div>
             <div class="mental-training-progress-track${reachedFinish ? " is-scored score-" + theme.sport : ""}">
-                <div class="mental-training-progress-fill" style="width: ${barProgress}%"></div>
-                <div class="mental-training-progress-marker ${theme.ballClass}" style="left: ${barProgress}%">
+                <div class="mental-training-progress-fill" data-style-width="${barProgress}%"></div>
+                <div class="mental-training-progress-marker ${theme.ballClass}" data-style-left="${barProgress}%">
                     <span class="progress-ball-shape" aria-hidden="true"></span>
                 </div>
                 ${renderFinishTarget(theme, finish, reachedFinish)}
             </div>
         </div>
     `;
+
+    applyDynamicStyles(mentalTrainingBottom);
 
     if (options.playAction) {
         // Wait one frame so CSS can apply before animating.

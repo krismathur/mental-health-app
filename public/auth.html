@@ -49,8 +49,8 @@
                     </div>
 
                     <div class="tabs">
-                        <button class="tab active" id="tabLogin" onclick="showTab('login')">👋 Log In</button>
-                        <button class="tab" id="tabSignup" onclick="showTab('signup')">🚀 Sign Up</button>
+                        <button class="tab active" id="tabLogin">👋 Log In</button>
+                        <button class="tab" id="tabSignup">🚀 Sign Up</button>
                     </div>
 
                     <!-- Sign Up Form -->
@@ -59,7 +59,7 @@
                         <input id="signupEmail" type="email" placeholder="you@email.com" required>
 
                         <label>Password <span class="req">*</span></label>
-                        <input id="signupPassword" type="password" placeholder="At least 6 characters" required>
+                        <input id="signupPassword" type="password" placeholder="At least 8 characters" required>
 
                         <button type="submit" class="submit-btn">Create My Player Profile</button>
                     </form>
@@ -73,6 +73,20 @@
                         <input id="loginPassword" type="password" placeholder="Your password" required>
 
                         <button type="submit" class="submit-btn">Enter My Quest</button>
+
+                        <button type="button" id="forgotLink" class="link-btn" hidden>Forgot your password?</button>
+                    </form>
+
+                    <!-- Forgot Password Form -->
+                    <form id="forgotForm" class="auth-form hidden">
+                        <p class="form-note">Enter your email and we'll send you a link to pick a new password.</p>
+
+                        <label>Email <span class="req">*</span></label>
+                        <input id="forgotEmail" type="email" placeholder="you@email.com" required>
+
+                        <button type="submit" class="submit-btn">Send Reset Link</button>
+
+                        <button type="button" id="backToLogin" class="link-btn">Back to log in</button>
                     </form>
 
                     <p id="message"></p>
@@ -81,40 +95,7 @@
             </div>
         </div>
 
-        <script>
-            function showTab(tab) {
-                const signup = document.getElementById("signupForm");
-                const login = document.getElementById("loginForm");
-                const tabSignup = document.getElementById("tabSignup");
-                const tabLogin = document.getElementById("tabLogin");
-                const message = document.getElementById("message");
-                const cardTitle = document.getElementById("authCardTitle");
-                const cardSubtitle = document.getElementById("authCardSubtitle");
-
-                message.textContent = "";
-
-                if (tab === "signup") {
-                    signup.classList.remove("hidden");
-                    login.classList.add("hidden");
-                    tabSignup.classList.add("active");
-                    tabLogin.classList.remove("active");
-                    cardTitle.textContent = "Create your player profile";
-                    cardSubtitle.textContent = "Unlock a personalized quest built around your sport.";
-                } else {
-                    login.classList.remove("hidden");
-                    signup.classList.add("hidden");
-                    tabLogin.classList.add("active");
-                    tabSignup.classList.remove("active");
-                    cardTitle.textContent = "Welcome back, athlete";
-                    cardSubtitle.textContent = "Log in and continue your active quest.";
-                }
-            }
-
-            const params = new URLSearchParams(window.location.search);
-            if (params.get("tab") === "signup") {
-                showTab("signup");
-            }
-        </script>
+        <script src="js/auth-tabs.js"></script>
         <script src="js/auth.js"></script>
     
 
@@ -272,8 +253,8 @@
             <div class="rewards-panel">
                 <div class="rewards-header">
                     <div>
-                        <p class="rewards-kicker">Mental Strength Rewards</p>
-                        <h2>Train Your Mind. Stack Your Wins.</h2>
+                        <p class="rewards-kicker">YOUR MENTAL LOCKER</p>
+                        <h2>See What Your Training Has Unlocked</h2>
                     </div>
                     <button type="button" id="closeRewardsBtn" class="rewards-close-btn">&times;</button>
                 </div>
@@ -299,6 +280,18 @@
                         <span class="reward-icon">🏅</span>
                         <h3>Mental Badges</h3>
                         <p>Unlock badges for focus, calm, confidence, and bounce-back skills.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="streak">
+                        <span class="reward-icon">🔥</span>
+                        <h3>Streak</h3>
+                        <p>Log in on consecutive days to build your streak.</p>
+                    </button>
+
+                    <button type="button" class="reward-card" data-reward="mood">
+                        <span class="reward-icon">😊</span>
+                        <h3>Mood</h3>
+                        <p>See your daily check-ins and this week's mood trend.</p>
                     </button>
                 </div>
 

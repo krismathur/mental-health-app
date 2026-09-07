@@ -428,6 +428,65 @@ function extractLengthLabel(videoRenderer) {
     return videoRenderer.lengthText.accessibility?.accessibilityData?.label || "";
 }
 
+// Preferred path: the official YouTube Data API. Scraping the public search
+// page (below) gets flagged by Google's abuse detection and redirected to a
+// captcha, which made clip search fail for every query. Set YOUTUBE_API_KEY
+// (and enable "YouTube Data API v3" on the Google Cloud project) to use this.
+async function searchYouTubeApi(searchQuery) {
+    const key = process.env.YOUTUBE_API_KEY || process.env.GEMINI_API_KEY;
+    if (!key) {
+        throw new Error("No YouTube API key configured");
+    }
+
+    const url = "https://www.googleapis.com/youtube/v3/search"
+        + "?part=snippet&type=video&videoEmbeddable=true&maxResults=15"
+        + "&q=" + encodeURIComponent(searchQuery)
+        + "&key=" + encodeURIComponent(key);
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok) {
+        const reason = data?.error?.message || ("HTTP " + response.status);
+        throw new Error("YouTube Data API error: " + reason);
+    }
+
+    return (data.items || [])
+        .filter(function (item) {
+            return item.id && item.id.videoId;
+        })
+        .map(function (item) {
+            return {
+                videoId: item.id.videoId,
+                title: item.snippet?.title || "",
+                // The search endpoint does not return durations; scoring
+                // treats 0 as "unknown" rather than filtering the clip out.
+                lengthSeconds: 0,
+                lengthLabel: "",
+                author: item.snippet?.channelTitle || "YouTube"
+            };
+        });
+}
+
+// One clip lookup runs up to ~9 queries. Once the Data API has proven
+// unavailable (no key, or the API not enabled on the project) there is no
+// point paying a failed round-trip on each of them, so it is only retried
+// after a restart.
+let youtubeApiUnavailable = false;
+
+async function searchYouTube(searchQuery) {
+    if (!youtubeApiUnavailable) {
+        try {
+            return await searchYouTubeApi(searchQuery);
+        } catch (apiError) {
+            youtubeApiUnavailable = true;
+            console.error("[fix-advice] Data API unavailable, using scrape fallback for this run:", apiError.message);
+        }
+    }
+
+    return await searchYouTubeHtml(searchQuery);
+}
+
 async function searchYouTubeHtml(searchQuery) {
     const url = "https://www.youtube.com/results?search_query=" + encodeURIComponent(searchQuery);
     const response = await fetch(url, {
@@ -732,10 +791,10 @@ async function findClipForProblem(problem, profileSport) {
     let candidates = [];
     for (let i = 0; i < queries.length; i += 1) {
         try {
-            const found = await searchYouTubeHtml(queries[i]);
+            const found = await searchYouTube(queries[i]);
             candidates = candidates.concat(found);
         } catch (error) {
-            // try next query
+            console.error("[fix-advice] YouTube search failed for query \"" + queries[i] + "\":", error.message);
         }
 
         const rankedSoFar = rankCandidates(uniqueById(candidates), meta);
@@ -751,7 +810,7 @@ async function findClipForProblem(problem, profileSport) {
         for (let i = 0; i < meta.actionGroup.searchTerms.length; i += 1) {
             const forcedQuery = sportLabel + " " + meta.actionGroup.searchTerms[i];
             try {
-                candidates = uniqueById(candidates.concat(await searchYouTubeHtml(forcedQuery)));
+                candidates = uniqueById(candidates.concat(await searchYouTube(forcedQuery)));
             } catch (error) {
                 // continue
             }

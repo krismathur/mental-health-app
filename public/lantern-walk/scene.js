@@ -11,7 +11,7 @@
  * turns the current world state into pixels: update(dt, world) then render.
  */
 
-import * as THREE from "three";
+import * as THREE from "./vendor/three.module.js";
 
 const NIGHT = 0x0a1626;
 const LANTERN_COLOR = 0xffb24d;
