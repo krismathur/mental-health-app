@@ -8,17 +8,17 @@
    fixed, negative z-index pseudo-element, exposing the white page root
    (broken white band under the nav). Painting html dark prevents that. */
 html {
-    background-color: #08213b;
+    background-color: #0e1729;
 }
 
 body {
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    background-color: #08213b;
+    background-color: #0e1729;
     background-image:
         radial-gradient(circle at 18% 18%, rgba(99, 179, 237, 0.32), transparent 24%),
         radial-gradient(circle at 82% 14%, rgba(251, 211, 141, 0.22), transparent 22%),
         radial-gradient(circle at 50% 92%, rgba(104, 211, 145, 0.18), transparent 28%),
-        linear-gradient(135deg, #020617 0%, #08213b 42%, #111827 100%);
+        linear-gradient(135deg, #020617 0%, #0e1729 42%, #111827 100%);
     color: #2d3748;
     min-height: 100vh;
     position: relative;

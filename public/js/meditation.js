@@ -1332,7 +1332,7 @@ avatarProceedBtn.addEventListener("click", function () {
     }
 
     selectAvatarCard(selectedCard);
-    window.location.href = "avatar.html";
+    closeOverlay(avatarOverlay);
 });
 
 closeFixBtn.addEventListener("click", function () {

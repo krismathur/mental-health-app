@@ -12,7 +12,7 @@ body {
     font-family: 'Segoe UI', Arial, sans-serif;
     color: #fff;
     min-height: 100vh;
-    background-color: #0b1a2a;
+    background-color: #0e1729;
     background-image: url("../images/bg-home-goal.jpg");
     background-size: cover;
     background-position: center 62%;
@@ -27,12 +27,7 @@ body::before {
     inset: 0;
     z-index: 0;
     background:
-        linear-gradient(
-            180deg,
-            rgba(6, 14, 26, 0.48) 0%,
-            rgba(6, 14, 26, 0.42) 45%,
-            rgba(6, 14, 26, 0.62) 100%
-        );
+        radial-gradient(120% 80% at 50% 0%, rgba(14, 23, 41, 0.55), rgba(14, 23, 41, 0.94));
     backdrop-filter: blur(0.8px);
     -webkit-backdrop-filter: blur(0.8px);
     pointer-events: none;
