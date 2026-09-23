@@ -285,7 +285,20 @@ form.addEventListener("submit", async function (event) {
 
     const originalLabel = button.textContent;
 
+    // Looked up at click time. This script runs before the overlay is in the
+    // document, so a lookup at load time would miss it.
+    function showPlanLoading() {
+        document.getElementById("planLoading").hidden = false;
+        document.body.classList.add("plan-is-loading");
+    }
+
+    function hidePlanLoading() {
+        document.getElementById("planLoading").hidden = true;
+        document.body.classList.remove("plan-is-loading");
+    }
+
     function failed(message) {
+        hidePlanLoading();
         showError(message);
         button.disabled = false;
         button.textContent = originalLabel;
@@ -293,6 +306,7 @@ form.addEventListener("submit", async function (event) {
 
     button.disabled = true;
     button.textContent = "Building your plan...";
+    showPlanLoading();
 
     try {
         const response = await fetch("/api/profile", {

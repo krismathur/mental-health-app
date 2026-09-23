@@ -1,0 +1,52 @@
+/*
+ * Shared surface — the onboarding "player card" treatment, site-wide.
+ *
+ * Onboarding set the tone: deep navy card stock, a photograph held well back
+ * behind a gradient veil, and chalk-white type. This file owns that base so
+ * every page starts from the same palette; a page stylesheet then only says
+ * what is different about that page, which in practice is which photograph
+ * shows through.
+ *
+ * Loaded first, before any page stylesheet, so pages can still override.
+ */
+
+:root {
+    --ink: #0e1729;
+    --stock: #17223c;
+    --rise: #212e4e;
+    --edge: #2c3a5e;
+    --chalk: #edf2fa;
+    --mute: #8795b4;
+    --clay: #ff6b35;
+    --clay-deep: #e0521f;
+    --go: #4fd1a5;
+}
+
+/* Safari fails to paint the body background behind a fixed, negative
+   z-index pseudo-element, exposing the white page root as a band under the
+   nav. Painting html dark prevents that everywhere. */
+html {
+    background-color: var(--ink);
+}
+
+body {
+    color: var(--chalk);
+    min-height: 100vh;
+    background-color: var(--ink);
+    background-size: cover;
+    background-position: center 40%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+/* The photograph is atmosphere, not content. Pages that set no image get the
+   same navy wash from this gradient alone. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(120% 80% at 50% 0%, rgba(14, 23, 41, 0.55), rgba(14, 23, 41, 0.94));
+    z-index: 0;
+    pointer-events: none;
+}

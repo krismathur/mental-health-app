@@ -8,29 +8,18 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Navy base, chalk type and the gradient veil come from theme.css. */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    color: #fff;
-    min-height: 100vh;
-    background-color: #0e1729;
     background-image: url("../images/bg-home-goal.jpg");
-    background-size: cover;
     background-position: center 62%;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
 }
 
-/* Darkened + softly blurred veil over the hero photo so text stays readable */
+/* The hero photo is busier than the other pages', so it takes a slight blur
+   on top of the shared veil to keep the headline readable. */
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    background:
-        radial-gradient(120% 80% at 50% 0%, rgba(14, 23, 41, 0.55), rgba(14, 23, 41, 0.94));
     backdrop-filter: blur(0.8px);
     -webkit-backdrop-filter: blur(0.8px);
-    pointer-events: none;
 }
 
 .hero,

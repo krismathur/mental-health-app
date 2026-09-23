@@ -1,56 +1,58 @@
 /* Shared styling for the Privacy Policy and Terms pages.
-   Deliberately plain and high-contrast: these are documents a parent reads,
-   not another gamified screen. */
+   Still deliberately plain — these are documents a parent reads, not another
+   gamified screen — but on the same navy card stock as the rest of the site
+   so they don't read as a different product. Palette comes from theme.css. */
 body.legal-page {
     margin: 0;
-    background: #f4f7fb;
     font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
-    color: #2d3748;
     line-height: 1.65;
 }
 
+/* Lifted above the shared veil, which is fixed at z-index 0. */
 .legal-wrap {
+    position: relative;
+    z-index: 1;
     max-width: 780px;
     margin: 0 auto;
     padding: 100px 22px 80px;
 }
 
 .legal-card {
-    background: #fff;
-    border: 1px solid #dfe6ee;
+    background: var(--stock);
+    border: 1px solid var(--edge);
     border-radius: 18px;
     padding: 36px 40px;
-    box-shadow: 0 12px 32px rgba(45, 55, 72, 0.07);
+    box-shadow: 0 26px 60px rgba(4, 9, 20, 0.55);
 }
 
 .legal-card h1 {
     margin: 0 0 6px;
     font-size: 1.85rem;
     font-weight: 900;
-    color: #1a2c46;
+    color: var(--chalk);
 }
 
 .legal-updated {
     margin: 0 0 26px;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #718096;
+    color: var(--mute);
 }
 
 .legal-card h2 {
     margin: 30px 0 10px;
     font-size: 1.1rem;
     font-weight: 900;
-    color: #1a2c46;
+    color: var(--chalk);
     padding-bottom: 6px;
-    border-bottom: 2px solid #edf2f7;
+    border-bottom: 2px solid var(--edge);
 }
 
 .legal-card p,
 .legal-card li {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #3d4a5c;
+    color: var(--chalk);
 }
 
 .legal-card ul {
@@ -62,33 +64,39 @@ body.legal-page {
 }
 
 .legal-card a {
-    color: #2b6cb0;
+    color: var(--clay);
     font-weight: 700;
+    text-underline-offset: 2px;
+}
+
+.legal-card a:hover,
+.legal-card a:focus-visible {
+    color: var(--chalk);
 }
 
 .legal-card strong {
-    color: #1a2c46;
+    color: var(--chalk);
     font-weight: 800;
 }
 
-/* The crisis box. Same warm palette as the coach's help card so the two
-   read as the same voice. */
+/* The crisis box. Carries the one warm accent on the page so it is the first
+   thing found when someone is scanning for help. */
 .legal-crisis {
     margin: 26px 0;
     padding: 18px 20px;
     border-radius: 13px;
-    background: #fffaf0;
-    border: 1px solid #e3b778;
+    background: rgba(255, 107, 53, 0.12);
+    border: 1px solid var(--clay);
 }
 
 .legal-crisis h2 {
     margin-top: 0;
     border: none;
-    color: #8a5a17;
+    color: var(--clay);
 }
 
 .legal-crisis li {
-    color: #4a3418;
+    color: #ffd6c2;
 }
 
 
@@ -97,7 +105,7 @@ body.legal-page {
     margin-top: 30px;
     font-size: 0.9rem;
     font-weight: 800;
-    color: #2b6cb0;
+    color: var(--clay);
 }
 
 @media (max-width: 620px) {

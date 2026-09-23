@@ -1,23 +1,9 @@
+/* Navy base, chalk type and the gradient veil come from theme.css. */
 body {
     margin: 0;
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    color: #fff;
-    min-height: 100vh;
-    background-color: #0e1729;
     background-image: url('../images/bg-welcome-lifting.jpg');
-    background-size: cover;
     background-position: center 42%;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(120% 80% at 50% 0%, rgba(14, 23, 41, 0.55), rgba(14, 23, 41, 0.94));
-    z-index: 0;
-    pointer-events: none;
 }
 
 .hero,

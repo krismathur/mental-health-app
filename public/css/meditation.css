@@ -4,53 +4,24 @@
     box-sizing: border-box;
 }
 
-/* Dark root fallback: Safari fails to paint the body background behind a
-   fixed, negative z-index pseudo-element, exposing the white page root
-   (broken white band under the nav). Painting html dark prevents that. */
-html {
-    background-color: #0e1729;
-}
-
+/* Navy base, chalk type and the gradient veil come from theme.css. This page
+   has no photograph behind it, so it shows the navy wash on its own. */
 body {
     font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    background-color: #0e1729;
-    background-image:
-        radial-gradient(circle at 18% 18%, rgba(99, 179, 237, 0.32), transparent 24%),
-        radial-gradient(circle at 82% 14%, rgba(251, 211, 141, 0.22), transparent 22%),
-        radial-gradient(circle at 50% 92%, rgba(104, 211, 145, 0.18), transparent 28%),
-        linear-gradient(135deg, #020617 0%, #0e1729 42%, #111827 100%);
-    color: #2d3748;
-    min-height: 100vh;
     position: relative;
     overflow-x: hidden;
 }
 
+/* The activity boxes and overlays here are not all on explicit z-index
+   layers, so the veil sits behind the content rather than over it. */
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(circle at 50% 50%, transparent 0 18%, rgba(99, 179, 237, 0.12) 19%, transparent 20%),
-        radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(251, 211, 141, 0.08) 35%, transparent 36%),
-        linear-gradient(115deg, transparent 0 44%, rgba(99, 179, 237, 0.08) 45% 46%, transparent 47%),
-        linear-gradient(35deg, transparent 0 58%, rgba(251, 211, 141, 0.06) 59% 60%, transparent 61%);
-    opacity: 0.9;
     z-index: -1;
 }
 
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image:
-        radial-gradient(circle, rgba(190, 227, 248, 0.7) 0 1.5px, transparent 2px),
-        radial-gradient(circle, rgba(251, 211, 141, 0.55) 0 1.5px, transparent 2px);
-    background-size: 110px 110px, 170px 170px;
-    background-position: 20px 30px, 80px 90px;
-    opacity: 0.22;
-    z-index: -1;
+/* The overlay panels are white sheets, so they keep the dark document text
+   the page used to carry on the body itself. */
+.med-panel {
+    color: #2d3748;
 }
 
 .activity-grid {
