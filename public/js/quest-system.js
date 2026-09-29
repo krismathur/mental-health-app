@@ -82,7 +82,7 @@
         const name = localStorage.getItem("mindzone_name") || "Athlete";
 
         hud.innerHTML = `
-            <a class="mz-hud-player" href="welcome.html" aria-label="Open your quest hub">
+            <a class="mz-hud-player" href="welcome.html" aria-label="Open your Daily Training">
                 <span class="mz-hud-avatar" aria-hidden="true">🧠</span>
                 <span class="mz-hud-copy"><small>Lvl ${player.level}</small><strong>${escapeHtml(name)}</strong></span>
             </a>

@@ -139,7 +139,7 @@
 
         if (loggedIn) {
             navLinks.innerHTML = `
-                <a class="nav-btn" data-nav-key="dashboard" href="welcome.html">🏠 Quest Hub</a>
+                <a class="nav-btn" data-nav-key="dashboard" href="welcome.html">🏠 Daily Training</a>
                 <a class="nav-btn" data-nav-key="training" href="meditation.html">⚡ Skill Zones</a>
                 <a class="nav-btn arcade-btn" data-nav-key="arcade" href="welcome.html?open=arcade">🎮 Arcade</a>
                 <button type="button" class="nav-btn video-library-btn" data-nav-key="videos">🎬 Film Room</button>

@@ -1114,7 +1114,7 @@ async function loadCurrentPlan(profileLoaded) {
                 showPlanMessage("We loaded your plan but could not show it. Tap below to generate a fresh one.", "none");
             }
         } else {
-            showPlanMessage("Guided Mental Rehearsal, Understanding your mistakes, Resetting your mind, and Good mental choices are the four steps to great mental strength.", "none");
+            showPlanMessage("Guided Mental Rehearsal, Visualize Your Best, Resetting your mind, and Good mental choices are the four steps to great mental strength.", "none");
         }
     } catch (error) {
         showPlanMessage("Could not load your plan right now.", "none");
@@ -1520,8 +1520,8 @@ function appendMindZoneFeatures(card, dayEntry) {
             tone: "viz"
         },
         {
-            name: "Understanding your mistakes",
-            detail: "Write one sports mistake from practice or a game and watch the matching clip.",
+            name: "Visualize Your Best",
+            detail: "Choose one specific sport skill, watch it performed well, and picture yourself doing it.",
             href: "meditation.html?open=fix",
             tone: "fix"
         },

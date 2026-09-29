@@ -575,7 +575,7 @@ body::before {
     }
 }
 
-/* Fix What Went Wrong overlay */
+/* Visualize Your Best overlay */
 .fix-panel {
     background: #050505;
     border: 3px solid #e53e3e;
@@ -1767,10 +1767,17 @@ body::before {
 }
 
 .fix-prompt {
+    margin: 0;
     color: #f7fafc;
     font-size: 1.1rem;
     font-weight: 800;
     line-height: 1.5;
+}
+
+.fix-field-label {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 900;
 }
 
 .fix-sport-note {
@@ -1786,9 +1793,7 @@ body::before {
 }
 
 .fix-input {
-    flex: 1;
     width: 100%;
-    min-height: 200px;
     padding: 16px;
     border: 2px solid #e53e3e;
     border-radius: 10px;
@@ -1798,6 +1803,16 @@ body::before {
     font-family: 'Nunito', sans-serif;
     line-height: 1.6;
     resize: vertical;
+}
+
+input.fix-input {
+    min-height: 54px;
+    resize: none;
+}
+
+.fix-skill-input {
+    flex: 1;
+    min-height: 130px;
 }
 
 .fix-input::placeholder {
@@ -2210,6 +2225,73 @@ body.fix-video-open {
 
 .fix-video-fullscreen.is-playing .fix-video-shell {
     transform: translateY(0) scale(1);
+}
+
+.fix-video-stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.fix-video-stage[hidden],
+.fix-visualization-stage[hidden] {
+    display: none !important;
+}
+
+.fix-visualization-stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: clamp(28px, 7vw, 72px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at 50% 30%, rgba(66, 153, 225, 0.3), transparent 48%),
+        rgba(6, 14, 30, 0.9);
+    color: #ffffff;
+    text-align: center;
+}
+
+.fix-visualization-kicker {
+    margin: 0;
+    color: #63b3ed;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+}
+
+.fix-visualization-stage h2 {
+    max-width: 760px;
+    margin: 0;
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    line-height: 1.1;
+}
+
+.fix-visualization-stage > p:not(.fix-visualization-kicker) {
+    max-width: 600px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 800;
+}
+
+.fix-visualization-countdown {
+    display: grid;
+    place-items: center;
+    width: 104px;
+    height: 104px;
+    border: 3px solid #63b3ed;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 3rem;
+    line-height: 1;
+    box-shadow: 0 0 34px rgba(99, 179, 237, 0.35);
 }
 
 .fix-video-close {

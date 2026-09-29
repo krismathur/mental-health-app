@@ -49,13 +49,13 @@
                 <button type="button" id="openMeditationBtn" class="open-now-btn">Start Mission →</button>
             </div>
 
-            <!-- Bottom-left: Fix What Went Wrong -->
+            <!-- Bottom-left: performance visualization -->
             <div class="activity-box fix-box">
-                <span class="zone-kicker">COMEBACK CORNER</span>
-                <h2 class="activity-title">Fix What Went Wrong</h2>
-                <p class="zone-description">Turn one real mistake into a clear adjustment for the next play.</p>
-                <div class="zone-meta"><span>⏱ 3 min</span><span>⚡ +20 XP</span><span>🔄 Reset</span></div>
-                <button type="button" id="openFixBtn" class="open-now-btn">Build My Comeback →</button>
+                <span class="zone-kicker">VISUALIZATION LAB</span>
+                <h2 class="activity-title">Visualize Your Best</h2>
+                <p class="zone-description">Watch a skill performed well, then picture yourself doing it with the same control and confidence.</p>
+                <div class="zone-meta"><span>⏱ 2 min</span><span>⚡ +20 XP</span><span>🎯 Perform</span></div>
+                <button type="button" id="openFixBtn" class="open-now-btn">Build My Visualization →</button>
             </div>
 
             <!-- Bottom-right: Reset Mind -->
@@ -122,29 +122,36 @@
             </div>
         </div>
 
-        <!-- Fix What Went Wrong overlay (hidden until Open Now is clicked) -->
+        <!-- Performance visualization overlay (hidden until Open Now is clicked) -->
         <div id="fixOverlay" class="overlay overlay-hidden">
             <div class="overlay-backdrop" id="fixOverlayBackdrop"></div>
             <div class="med-panel fix-panel">
                 <div class="med-header fix-header">
-                    <h2>Fix What Went Wrong</h2>
+                    <h2>Visualize Your Best</h2>
                     <button type="button" id="closeFixBtn" class="close-btn fix-close-btn">&times;</button>
                 </div>
 
                 <div class="fix-feature-area">
-                    <label for="fixWhatWentWrongInput" class="fix-prompt">
-                        What happened wrong today in sports.
-                    </label>
+                    <p class="fix-prompt">Visualization helps your brain rehearse the movement, timing, and confidence you want to bring into competition.</p>
                     <p class="fix-sport-note">
-                        Important: say your sport and the exact mistake. We will play a short clip (30 seconds max) of a pro athlete doing that same thing.
+                        Choose one specific skill. We’ll find a clip, up to one minute, showing a high-level athlete doing it well. Then you’ll picture yourself doing the same thing.
                     </p>
-                    <textarea
-                        id="fixWhatWentWrongInput"
+                    <label for="fixSportInput" class="fix-field-label">What sport do you play?</label>
+                    <input
+                        id="fixSportInput"
                         class="fix-input"
-                        rows="8"
-                        placeholder="Example: Football — I fumbled the ball"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Example: Tennis"
+                    >
+                    <label for="fixSkillInput" class="fix-field-label">What specifically do you want to get better at?</label>
+                    <textarea
+                        id="fixSkillInput"
+                        class="fix-input fix-skill-input"
+                        rows="4"
+                        placeholder="Example: Hitting my forehand with topspin"
                     ></textarea>
-                    <button type="button" id="fixSubmitBtn" class="fix-submit-btn">Show Matching Clip</button>
+                    <button type="button" id="fixSubmitBtn" class="fix-submit-btn">Find My Visualization Clip</button>
                 </div>
             </div>
         </div>
@@ -154,20 +161,28 @@
             <div class="fix-video-atmosphere" aria-hidden="true"></div>
             <div class="fix-video-shell">
                 <button type="button" id="closeFixVideoBtn" class="fix-video-close" aria-label="Close video">&times;</button>
-                <p id="fixVideoReason" class="fix-video-reason">Watch this moment.</p>
-                <div class="fix-video-frame-wrap">
-                    <div class="fix-video-glow" aria-hidden="true"></div>
-                    <iframe
-                        id="fixVideoFrame"
-                        class="fix-video-frame"
-                        title="Sports moment"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                    ></iframe>
-                    <div class="fix-video-shield" aria-hidden="true"></div>
-                    <div class="fix-video-vignette" aria-hidden="true"></div>
+                <div id="fixVideoStage" class="fix-video-stage">
+                    <p id="fixVideoReason" class="fix-video-reason">Watch the movement, timing, and confidence.</p>
+                    <div class="fix-video-frame-wrap">
+                        <div class="fix-video-glow" aria-hidden="true"></div>
+                        <iframe
+                            id="fixVideoFrame"
+                            class="fix-video-frame"
+                            title="Sports skill visualization clip"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                        ></iframe>
+                        <div class="fix-video-shield" aria-hidden="true"></div>
+                        <div class="fix-video-vignette" aria-hidden="true"></div>
+                    </div>
+                    <p class="fix-video-caption">Study the skill · notice the rhythm and control</p>
                 </div>
-                <p class="fix-video-caption">Pro game moment · stadium sound only</p>
+                <div id="fixVisualizationStage" class="fix-visualization-stage" hidden role="status" aria-live="polite">
+                    <p class="fix-visualization-kicker">YOUR TURN</p>
+                    <h2>Now visualize yourself doing the same thing for 10 seconds.</h2>
+                    <p>See the movement clearly. Feel the timing, control, and confidence.</p>
+                    <strong id="fixVisualizationCountdown" class="fix-visualization-countdown">10</strong>
+                </div>
             </div>
         </div>
 

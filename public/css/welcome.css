@@ -3970,7 +3970,7 @@ body.welcome-page .game-go {
     }
 }
 
-/* Quest Hub: mood check-in sits under plan + coach; chat matches plan height. */
+/* Daily Training: mood check-in sits under plan + coach; chat matches plan height. */
 @media (min-width: 901px) {
     body.welcome-page .top-row {
         align-items: stretch;

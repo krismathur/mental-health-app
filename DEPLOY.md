@@ -30,6 +30,7 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 | `SESSION_SECRET` | yes (production) | Long random string. Changing it logs everyone out. |
 | `GEMINI_API_KEY` | yes | Coach, plans, and meditation audio all need it. |
 | `GEMINI_MODEL` | yes | e.g. `gemini-2.5-flash` |
+| `YOUTUBE_API_KEY` | yes for visualization clips | Enable YouTube Data API v3 for the key used by Visualize Your Best. |
 | `NODE_ENV` | yes | Set to `production`. Turns on HTTPS redirect, secure cookies, HSTS, real cache headers. |
 | `PORT` | no | Defaults to 3000; most hosts inject their own. |
 | `DATA_DIR` | **strongly recommended** | Absolute path to the persistent disk. Defaults to `./data`, which many hosts wipe on redeploy. |
@@ -39,7 +40,7 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 
 ```bash
 npm ci --omit=dev     # install
-npm test              # 21 tests, no API key or network needed
+npm test              # 26 tests, no API key or network needed
 NODE_ENV=production npm start
 ```
 
@@ -107,4 +108,3 @@ Tokens are 32 random bytes, stored only as a SHA-256 hash, valid for one hour,
 and single use. Completing a reset also deletes every open session for that
 account, so a reset actually evicts an intruder instead of leaving their
 session alive.
-

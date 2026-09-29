@@ -68,17 +68,67 @@ const fixOverlay = document.getElementById("fixOverlay");
 const fixOverlayBackdrop = document.getElementById("fixOverlayBackdrop");
 const closeFixBtn = document.getElementById("closeFixBtn");
 const fixSubmitBtn = document.getElementById("fixSubmitBtn");
-const fixWhatWentWrongInput = document.getElementById("fixWhatWentWrongInput");
+const fixSportInput = document.getElementById("fixSportInput");
+const fixSkillInput = document.getElementById("fixSkillInput");
 const fixVideoFullscreen = document.getElementById("fixVideoFullscreen");
 const fixVideoFrame = document.getElementById("fixVideoFrame");
+const fixVideoStage = document.getElementById("fixVideoStage");
 const fixVideoReason = document.getElementById("fixVideoReason");
+const fixVisualizationStage = document.getElementById("fixVisualizationStage");
+const fixVisualizationCountdown = document.getElementById("fixVisualizationCountdown");
 const closeFixVideoBtn = document.getElementById("closeFixVideoBtn");
+let fixClipEndTimeout = null;
+let fixVisualizationInterval = null;
+
+function clearFixTimers() {
+    if (fixClipEndTimeout) {
+        clearTimeout(fixClipEndTimeout);
+        fixClipEndTimeout = null;
+    }
+    if (fixVisualizationInterval) {
+        clearInterval(fixVisualizationInterval);
+        fixVisualizationInterval = null;
+    }
+}
 
 function resetFixResults() {
     closeFixVideoPlayer();
-    if (fixWhatWentWrongInput) {
-        fixWhatWentWrongInput.value = "";
+    if (fixSportInput) {
+        fixSportInput.value = "";
     }
+    if (fixSkillInput) {
+        fixSkillInput.value = "";
+    }
+}
+
+function beginFixVisualization() {
+    clearFixTimers();
+    if (fixVideoFrame) {
+        fixVideoFrame.onload = null;
+        fixVideoFrame.src = "";
+    }
+    if (fixVideoStage) {
+        fixVideoStage.hidden = true;
+    }
+    if (fixVisualizationStage) {
+        fixVisualizationStage.hidden = false;
+    }
+
+    let secondsLeft = 10;
+    if (fixVisualizationCountdown) {
+        fixVisualizationCountdown.textContent = String(secondsLeft);
+    }
+
+    fixVisualizationInterval = setInterval(function () {
+        secondsLeft -= 1;
+        if (fixVisualizationCountdown) {
+            fixVisualizationCountdown.textContent = String(Math.max(0, secondsLeft));
+        }
+        if (secondsLeft <= 0) {
+            clearFixTimers();
+            completeMeditationActivity();
+        }
+    }, 1000);
 }
 
 function openFixVideoPlayer(video) {
@@ -87,11 +137,22 @@ function openFixVideoPlayer(video) {
     }
 
     if (fixVideoReason) {
-        fixVideoReason.textContent = video.reason || "Watch this moment.";
+        fixVideoReason.textContent = video.reason || "Watch the movement, timing, and confidence.";
     }
 
+    clearFixTimers();
+    if (fixVideoStage) {
+        fixVideoStage.hidden = false;
+    }
+    if (fixVisualizationStage) {
+        fixVisualizationStage.hidden = true;
+    }
     fixVideoFullscreen.classList.remove("is-playing");
     // Load with autoplay after a user click (submit) so browsers allow sound + playback.
+    const clipSeconds = Math.min(60, Math.max(1, Number(video.end) - Number(video.start) || 60));
+    fixVideoFrame.onload = function () {
+        fixClipEndTimeout = setTimeout(beginFixVisualization, (clipSeconds * 1000) + 1200);
+    };
     fixVideoFrame.src = video.embedUrl;
     fixVideoFullscreen.hidden = false;
     fixVideoFullscreen.classList.remove("fix-video-hidden");
@@ -104,8 +165,16 @@ function openFixVideoPlayer(video) {
 }
 
 function closeFixVideoPlayer() {
+    clearFixTimers();
     if (fixVideoFrame) {
+        fixVideoFrame.onload = null;
         fixVideoFrame.src = "";
+    }
+    if (fixVideoStage) {
+        fixVideoStage.hidden = false;
+    }
+    if (fixVisualizationStage) {
+        fixVisualizationStage.hidden = true;
     }
     if (fixVideoFullscreen) {
         fixVideoFullscreen.hidden = true;
@@ -1347,25 +1416,31 @@ fixOverlayBackdrop.addEventListener("click", function () {
 if (closeFixVideoBtn) {
     closeFixVideoBtn.addEventListener("click", function () {
         closeFixVideoPlayer();
-        completeMeditationActivity();
     });
 }
 
 fixSubmitBtn.addEventListener("click", async function () {
-    const text = fixWhatWentWrongInput.value.trim();
-    if (!text) {
-        alert("Type what happened wrong today in sports before you submit.");
+    const sport = fixSportInput.value.trim();
+    const skill = fixSkillInput.value.trim();
+    if (!sport) {
+        alert("Type in your sport first.");
+        fixSportInput.focus();
+        return;
+    }
+    if (!skill) {
+        alert("Tell us the specific skill you want to improve.");
+        fixSkillInput.focus();
         return;
     }
 
     fixSubmitBtn.disabled = true;
-    fixSubmitBtn.textContent = "Finding a 30s clip...";
+    fixSubmitBtn.textContent = "Finding your clip...";
 
     try {
         const response = await fetch("/api/fix-advice", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ problem: text })
+            body: JSON.stringify({ sport: sport, skill: skill })
         });
 
         const data = await response.json();
@@ -1385,7 +1460,7 @@ fixSubmitBtn.addEventListener("click", async function () {
         alert("Something went wrong. Please try again.");
     } finally {
         fixSubmitBtn.disabled = false;
-        fixSubmitBtn.textContent = "Show Matching Clip";
+        fixSubmitBtn.textContent = "Find My Visualization Clip";
     }
 });
 
@@ -1410,8 +1485,6 @@ startBreathingBtn.addEventListener("click", function () {
 
 finishBreathingBtn.addEventListener("click", function () {
     completeMeditationActivity();
-    resetBreathingView();
-    alert("Great reset! You finished your breathing exercise.");
 });
 
 function openOverlay(overlay) {
@@ -1439,6 +1512,7 @@ function completeMeditationActivity() {
             activityCompletions: 1
         });
     }
+    window.location.assign("welcome.html");
 }
 
 (function openFeatureFromQuery() {
@@ -1479,4 +1553,3 @@ function completeMeditationActivity() {
         setTimeout(launch, 50);
     }
 })();
-

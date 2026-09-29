@@ -20,11 +20,29 @@
     --body: 'Nunito', 'Segoe UI', Arial, sans-serif;
 }
 
-/* Palette, navy base and the gradient veil over the photograph now live in
-   theme.css, shared with every other page. All this page adds is the court. */
+/* Keep the onboarding background treatment from 20fba18. The shared theme
+   supplies the palette, while this page keeps its original court overlay. */
 body {
     font-family: var(--body);
+    color: var(--chalk);
+    min-height: 100vh;
+    background-color: var(--ink);
     background-image: url('../images/onboarding-court.jpg');
+    background-size: cover;
+    background-position: center 40%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(120% 80% at 50% 0%, rgba(14, 23, 41, 0.55), rgba(14, 23, 41, 0.94)),
+        var(--ink);
+    z-index: 0;
+    pointer-events: none;
 }
 
 .page {

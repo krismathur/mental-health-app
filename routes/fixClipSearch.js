@@ -1,10 +1,10 @@
 /**
- * For every Fix prompt, search YouTube for a real short CLIP of a pro athlete
- * doing the same action the user described. Playback is hard-capped at 30 seconds.
- * Matching is strict: the clip title must reflect the user's action keywords.
+ * Search YouTube for a short clip of a high-level athlete performing the exact
+ * skill the user wants to visualize. Playback is hard-capped at one minute.
+ * Matching is strict: the clip title must reflect the user's skill keywords.
  */
 
-const MAX_CLIP_SECONDS = 30;
+const MAX_CLIP_SECONDS = 60;
 
 const STOP_WORDS = {
     a: true, an: true, the: true, and: true, or: true, but: true, to: true, of: true,
@@ -21,79 +21,73 @@ const ACTION_GROUPS = [
         id: "penalty",
         patterns: ["penalty", "penatly", "penaly", "penalties", "pk", "spot kick"],
         titleMust: ["penalty", "penaly", "penalties", "pk"],
-        searchTerms: ["missed penalty kick clip", "penalty miss highlight"]
+        searchTerms: ["perfect penalty kick goal clip", "penalty kick scored highlight"]
     },
     {
         id: "free_throw",
         patterns: ["free throw", "freethrow", "foul shot", "ft"],
         titleMust: ["free throw", "freethrow", "foul shot"],
-        searchTerms: ["missed free throw clip", "brick free throw highlight"]
+        searchTerms: ["perfect free throw made clip", "free throw shooting highlight"]
     },
     {
         id: "layup",
         patterns: ["layup", "lay up", "lay-up"],
         titleMust: ["layup", "lay up"],
-        searchTerms: ["missed layup clip", "open layup miss highlight"]
+        searchTerms: ["perfect layup finish clip", "layup made highlight"]
     },
     {
         id: "three_pointer",
         patterns: ["three pointer", "3 pointer", "three-point", "3pt", "three"],
         titleMust: ["three", "3-point", "3pt", "triple"],
-        searchTerms: ["missed three pointer clip", "missed 3 pointer highlight"]
+        searchTerms: ["three pointer made clip", "perfect 3 pointer highlight"]
     },
     {
         id: "shot",
         patterns: ["shot", "shoot", "jumper", "jump shot"],
         titleMust: ["shot", "jumper", "miss"],
-        searchTerms: ["missed shot clip", "missed jumper highlight"]
+        searchTerms: ["perfect shot made clip", "jump shot made highlight"]
     },
     {
         id: "goal",
         patterns: ["goal", "finish", "finishing", "open net"],
         titleMust: ["goal", "finish", "open net", "miss"],
-        searchTerms: ["missed open goal clip", "missed sitters highlight"]
+        searchTerms: ["perfect goal finish clip", "great finishing goal highlight"]
     },
     {
         id: "catch_error",
         patterns: ["drop", "dropped", "popup", "pop up", "catch", "error"],
         titleMust: ["drop", "dropped", "error", "catch", "popup"],
-        searchTerms: ["dropped catch error clip", "dropped popup highlight"]
+        searchTerms: ["great catch clip", "perfect catch highlight"]
     },
     {
         id: "strikeout",
         patterns: ["strikeout", "struck out", "k'd", "whiff"],
         titleMust: ["strikeout", "struck out", "whiff", "k"],
-        searchTerms: ["strikeout clip", "whiff strikeout highlight"]
+        searchTerms: ["perfect baseball swing hit clip", "pro baseball hitting highlight"]
     },
     {
         id: "double_fault",
         patterns: ["double fault", "fault", "serve"],
         titleMust: ["double fault", "fault", "serve"],
-        searchTerms: ["double fault clip", "missed serve highlight"]
+        searchTerms: ["perfect tennis serve clip", "ace serve highlight"]
     },
     {
         id: "turnover",
         patterns: ["turnover", "giveaway", "fumble", "intercept"],
         titleMust: ["turnover", "fumble", "intercept", "giveaway"],
-        searchTerms: ["turnover clip", "fumble highlight"]
+        searchTerms: ["ball security technique game clip", "clean possession highlight"]
     },
     {
         id: "pass",
         patterns: ["bad pass", "errant pass", "threw away", "pass"],
         titleMust: ["pass", "turnover", "throw"],
-        searchTerms: ["bad pass turnover clip", "errant pass highlight"]
+        searchTerms: ["perfect pass game clip", "accurate pass highlight"]
     },
     {
         id: "serve",
         patterns: ["serve", "ace", "service"],
         titleMust: ["serve", "service", "ace", "fault"],
-        searchTerms: ["missed serve clip", "service error highlight"]
-    },
-    {
-        id: "generic_miss",
-        patterns: ["missed", "miss", "blew", "choked", "failed", "messed up", "went wrong"],
-        titleMust: ["miss", "missed", "fail", "error", "blow"],
-        searchTerms: ["missed play clip", "costly mistake highlight"]
+        searchTerms: ["perfect serve clip", "ace service highlight"]
     }
 ];
 
@@ -281,6 +275,16 @@ function parseClockToSeconds(label) {
     return 9999;
 }
 
+function parseIsoDuration(value) {
+    const match = String(value || "").match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+    if (!match) {
+        return 0;
+    }
+    return (Number(match[1] || 0) * 3600)
+        + (Number(match[2] || 0) * 60)
+        + Number(match[3] || 0);
+}
+
 function sportSearchLabel(sport) {
     const key = String(sport || "").toLowerCase().trim();
     if (key === "football") {
@@ -336,9 +340,9 @@ async function buildSearchMeta(problem, profileSport) {
         };
     }
 
-    const prompt = `A young athlete described ONE specific sports mistake. Create YouTube searches for a SHORT real-game CLIP of a pro doing that SAME action.
+    const prompt = `A young athlete named ONE specific sports skill they want to visualize. Create YouTube searches for a SHORT clip of a high-level athlete doing that skill correctly.
 
-Athlete wrote: "${problem}"
+Skill: "${problem}"
 Sport: "${profileSport || sport}"
 Detected action type: "${actionGroup ? actionGroup.id : "unknown"}"
 
@@ -347,16 +351,17 @@ Important sport meanings:
 - Use "soccer" only when they mean soccer/futbol.
 
 Rules:
-1. The search MUST keep the exact action (if they said penalty, search penalty; if free throw, search free throw).
-2. Prefer famous pros in that sport in REAL professional games (NBA, NFL, MLB, Premier League, etc.).
-3. Add: clip OR highlight OR miss.
-4. Prefer RAW in-game broadcast footage with stadium sound only — NO narrator, NO commentary, NO reaction channels, NO talking.
-5. Never search tutorials, drills, workouts, form breakdowns, compilations, or full matches.
-6. If sport is football/American football, search NFL clips (Mahomes, Brady, etc.), never soccer.
-7. Prefer short clips under 45 seconds from real pro games.
+1. Keep the exact requested skill ("forehand with topspin" must not become a generic tennis clip).
+2. Show the skill being performed successfully, not a mistake or failure.
+3. Prefer famous pros in real games or high-level demonstrations.
+4. Add: clip OR highlight OR slow motion.
+5. Prefer footage where the movement is easy to see, with no reaction channels or talking heads.
+6. Avoid long tutorials, compilations, and full matches.
+7. If sport is football/American football, search NFL clips, never soccer.
+8. Prefer clips under 60 seconds.
 
 Return ONLY JSON:
-{"searchQuery":"NFL fumble real game clip no commentary","altQueries":["Patrick Mahomes fumble NFL broadcast","american football turnover pro game clip"],"sport":"football","action":"fumbled the ball","athleteHint":"Patrick Mahomes","mustHaveInTitle":["fumble","turnover"]}`;
+{"searchQuery":"Roger Federer forehand topspin slow motion clip","altQueries":["pro tennis topspin forehand highlight","ATP forehand topspin slow motion"],"sport":"tennis","action":"forehand with topspin","athleteHint":"Roger Federer","mustHaveInTitle":["forehand","topspin"]}`;
 
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
@@ -451,17 +456,36 @@ async function searchYouTubeApi(searchQuery) {
         throw new Error("YouTube Data API error: " + reason);
     }
 
-    return (data.items || [])
+    const searchItems = (data.items || [])
         .filter(function (item) {
             return item.id && item.id.videoId;
-        })
+        });
+    const ids = searchItems.map(function (item) { return item.id.videoId; });
+    let durationById = {};
+
+    if (ids.length) {
+        const detailsUrl = "https://www.googleapis.com/youtube/v3/videos"
+            + "?part=contentDetails,status&id=" + encodeURIComponent(ids.join(","))
+            + "&key=" + encodeURIComponent(key);
+        const detailsResponse = await fetch(detailsUrl);
+        const detailsData = await detailsResponse.json();
+
+        if (detailsResponse.ok) {
+            durationById = (detailsData.items || []).reduce(function (result, item) {
+                if (item.status?.embeddable !== false) {
+                    result[item.id] = parseIsoDuration(item.contentDetails?.duration);
+                }
+                return result;
+            }, {});
+        }
+    }
+
+    return searchItems
         .map(function (item) {
             return {
                 videoId: item.id.videoId,
                 title: item.snippet?.title || "",
-                // The search endpoint does not return durations; scoring
-                // treats 0 as "unknown" rather than filtering the clip out.
-                lengthSeconds: 0,
+                lengthSeconds: durationById[item.id.videoId] || 0,
                 lengthLabel: "",
                 author: item.snippet?.channelTitle || "YouTube"
             };
@@ -565,11 +589,11 @@ function scoreCandidate(item, meta) {
         }
     }
 
-    if (duration <= MAX_CLIP_SECONDS) {
+    if (duration <= 30) {
         score += 45;
-    } else if (duration <= 45) {
+    } else if (duration <= MAX_CLIP_SECONDS) {
         score += 22;
-    } else if (duration <= 90) {
+    } else if (duration <= 120) {
         score += 10;
     } else if (duration <= 180) {
         score += 2;
@@ -644,15 +668,15 @@ function softRankCandidates(candidates) {
 
         if (!softTitleOk(title)) {
             score = -100;
-        } else if (duration <= MAX_CLIP_SECONDS) {
+        } else if (duration <= 30) {
             score += 40;
-        } else if (duration <= 90) {
+        } else if (duration <= MAX_CLIP_SECONDS) {
             score += 15;
         } else if (duration <= 180) {
             score += 5;
         }
 
-        if (/miss|error|fail|drop|fault|turnover|fumble|whiff|brick/.test(title)) {
+        if (/perfect|made|goal|winner|ace|topspin|slow motion|technique|highlight/.test(title)) {
             score += 12;
         }
 
@@ -677,10 +701,10 @@ async function pickBestWithGemini(ranked, meta) {
     }
 
     const top = ranked.slice(0, 8);
-    const prompt = `Pick the ONE YouTube clip that best matches the athlete's exact mistake, then choose WHERE the action starts.
+    const prompt = `Pick the ONE YouTube clip that best shows the athlete's requested skill being performed correctly, then choose WHERE the action starts.
 
-Athlete wrote: "${meta.problem}"
-Required action: "${meta.action}"
+Requested skill: "${meta.problem}"
+Required movement: "${meta.action}"
 Sport: "${meta.sport}"
 
 Clips:
@@ -689,12 +713,12 @@ ${top.map(function (entry, index) {
 }).join("\n")}
 
 Rules:
-- Choose the clip whose TITLE clearly shows the SAME action (penalty miss vs free throw miss are different).
-- Prefer REAL professional game footage of famous athletes (NBA/NFL/MLB/Premier League quality).
-- Prefer clips with NO narrator, NO commentary, NO reaction channels, NO talking heads — stadium/game sound only.
-- Reject tutorials/compilations/narrated/explained videos.
-- startSecond = the exact second the sports ACTION begins (skip intros, logos, talking).
-- We play ONLY startSecond through startSecond+30, then stop. Do not include lead-in talking.
+- Choose the clip whose title most clearly matches the exact requested skill.
+- The athlete should perform the skill successfully and with good form.
+- Prefer professional game footage or a clear high-level demonstration.
+- Reject mistakes, failures, reaction channels, long tutorials, and compilations.
+- startSecond = the exact second the skill begins (skip intros, logos, and talking).
+- We play ONLY startSecond through startSecond+60, then stop.
 
 Return ONLY JSON: {"videoId":"...","startSecond":0,"why":"short reason"}`;
 
@@ -844,7 +868,7 @@ async function findClipForProblem(problem, profileSport) {
         embedUrl: buildEmbedUrl(best.videoId, start, end),
         watchUrl: "https://www.youtube.com/watch?v=" + best.videoId + "&t=" + start + "s",
         searchQuery: meta.searchQuery,
-        reason: "Watch this moment matched to what you wrote."
+        reason: "Watch how the athlete performs this skill with control and confidence."
     };
 }
 

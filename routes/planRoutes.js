@@ -200,7 +200,7 @@ Return ONLY valid JSON in this exact shape (no markdown, no extra text):
       "whatToDo": [
         "One short instruction for Visualisation for Athletes.",
         "One short instruction for Reset Mind.",
-        "One short instruction for Fix What Went Wrong.",
+        "One short instruction for Visualize Your Best.",
         "One short instruction for Your Mental Choices.",
         "One short instruction reminding them to play the game assigned on their dashboard."
       ],
@@ -223,7 +223,7 @@ Writing rules (very important):
 - Every day MUST include these 4 MindZone features in whatToDo (tie each one to today's theme):
   1) Visualisation for Athletes — open Activities and finish a guided visualisation session
   2) Reset Mind — do a breathing exercise to calm down
-  3) Fix What Went Wrong — describe a sports mistake and watch the matching clip
+  3) Visualize Your Best — choose one sport skill, watch it performed well, and picture doing it yourself
   4) Your Mental Choices — practice good vs bad mental choices with their athlete avatar
 - The dashboard assigns one MindZone game each day. Remind the athlete that playing that assigned game is a required part of finishing the daily plan.
 - Use words a ${age}-year-old can easily understand.
@@ -583,12 +583,18 @@ Reply as the coach with only the words you would send.`;
             return res.status(401).json({ message: "Please log in first." });
         }
 
-        const problem = (req.body.problem || "").trim();
-        if (!problem) {
-            return res.status(400).json({ message: "Tell us what went wrong in sports before submitting." });
+        const sport = String(req.body.sport || "").trim().slice(0, 80);
+        const skill = String(req.body.skill || "").trim().slice(0, 300);
+        if (!sport) {
+            return res.status(400).json({ message: "Tell us which sport you play." });
+        }
+        if (!skill) {
+            return res.status(400).json({ message: "Tell us the specific skill you want to improve." });
         }
 
-        const problemScreen = safety.screen(problem);
+        const visualizationRequest = sport + " — " + skill;
+
+        const problemScreen = safety.screen(visualizationRequest);
 
         if (problemScreen.flagged) {
             logSafetyEvent(req.session.userId, problemScreen.category);
@@ -605,21 +611,15 @@ Reply as the coach with only the words you would send.`;
                     return res.status(500).json({ message: "Could not load your profile." });
                 }
 
-                const profileSport = profile && profile.sport ? profile.sport : "";
-
-                if (!fixClipSearch.hasSportContext(problem, profileSport)) {
-                    return res.status(400).json({
-                        message: "Please include your sport (for example: Soccer — I missed an easy penalty kick)."
-                    });
-                }
+                const profileSport = sport || (profile && profile.sport ? profile.sport : "");
 
                 try {
-                    const video = await fixClipSearch.findClipForProblem(problem, profileSport);
+                    const video = await fixClipSearch.findClipForProblem(skill, profileSport);
 
                     if (!video || !video.embedUrl) {
-                        console.error("[fix-advice] No clip found for:", problem, "sport:", profileSport);
+                        console.error("[fix-advice] No clip found for skill:", skill, "sport:", profileSport);
                         return res.status(404).json({
-                            message: "Could not find a matching clip yet. Try again with your sport and the mistake, like: Basketball — I missed a free throw."
+                            message: "Could not find a matching clip yet. Try a more specific skill, like: hitting my forehand with topspin."
                         });
                     }
 

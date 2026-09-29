@@ -215,10 +215,23 @@ test("login rejects a wrong password without revealing which field was wrong", a
 test("protected routes reject anonymous callers", async function () {
     const client = makeClient();
 
-    for (const [method, url] of [["GET", "/api/me"], ["GET", "/api/profile"], ["GET", "/api/coach-history"], ["DELETE", "/api/account"]]) {
+    for (const [method, url] of [["GET", "/api/me"], ["GET", "/api/profile"], ["GET", "/api/coach-history"], ["POST", "/api/fix-advice"], ["DELETE", "/api/account"]]) {
         const result = await client(method, url);
         assert.strictEqual(result.status, 401, method + " " + url + " should require login");
     }
+});
+
+test("visualization clip requests require both a sport and a specific skill", async function () {
+    const client = makeClient();
+    await client("POST", "/api/signup", { email: freshEmail(), password: "StrongPass2026" });
+
+    const missingSport = await client("POST", "/api/fix-advice", { skill: "hitting my forehand with topspin" });
+    assert.strictEqual(missingSport.status, 400);
+    assert.match(missingSport.body.message, /which sport/i);
+
+    const missingSkill = await client("POST", "/api/fix-advice", { sport: "Tennis" });
+    assert.strictEqual(missingSkill.status, 400);
+    assert.match(missingSkill.body.message, /specific skill/i);
 });
 
 test("a profile cannot be saved without parental consent", async function () {
