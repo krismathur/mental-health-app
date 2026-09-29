@@ -8,6 +8,8 @@
 const STORAGE_KEY = "mindzone_mountain_progress";
 const POINTS_PER_LEVEL = 40;
 
+import { DIFFICULTY_ORDER, normalizeDifficulty } from "./difficulty.mjs";
+
 export const STAT_META = [
     { key: "resilience", label: "Resilience", icon: "💪" },
     { key: "persistence", label: "Persistence", icon: "🔁" },
@@ -26,11 +28,14 @@ export const BADGES = [
 function emptyProgress() {
     return {
         character: "rio",
+        difficulty: "medium",
         stats: { resilience: 0, persistence: 0, problemSolving: 0, confidence: 0 },
         badges: [],
         crystals: 0,
         climbs: 0,
-        bestMeters: 0
+        bestMeters: 0,
+        winsByDifficulty: { easy: 0, medium: 0, hard: 0 },
+        bestMetersByDifficulty: { easy: 0, medium: 0, hard: 0 }
     };
 }
 
@@ -48,6 +53,7 @@ export function loadProgress() {
         if (typeof parsed.character === "string") {
             progress.character = parsed.character;
         }
+        progress.difficulty = normalizeDifficulty(parsed.difficulty);
         if (Array.isArray(parsed.badges)) {
             progress.badges = parsed.badges.filter(function (id) {
                 return typeof id === "string";
@@ -60,6 +66,12 @@ export function loadProgress() {
         progress.crystals = Number.isFinite(parsed.crystals) ? parsed.crystals : 0;
         progress.climbs = Number.isFinite(parsed.climbs) ? parsed.climbs : 0;
         progress.bestMeters = Number.isFinite(parsed.bestMeters) ? parsed.bestMeters : 0;
+        for (const difficulty of DIFFICULTY_ORDER) {
+            const wins = parsed.winsByDifficulty && parsed.winsByDifficulty[difficulty];
+            const best = parsed.bestMetersByDifficulty && parsed.bestMetersByDifficulty[difficulty];
+            progress.winsByDifficulty[difficulty] = Number.isFinite(wins) ? wins : 0;
+            progress.bestMetersByDifficulty[difficulty] = Number.isFinite(best) ? best : 0;
+        }
     } catch (error) {
         localStorage.removeItem(STORAGE_KEY);
     }

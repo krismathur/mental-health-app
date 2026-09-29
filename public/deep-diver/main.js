@@ -9,7 +9,8 @@
 import { loadAssets } from "./assets.js";
 import { playSound, unlockAudio, isMuted, toggleMute } from "./audio.js";
 import { CHARACTERS, getCharacter } from "./characters.js";
-import { Game, FIXED_STEP, TUNING } from "./engine.js";
+import { getDifficulty } from "./difficulty.mjs";
+import { Game, FIXED_STEP } from "./engine.js";
 import { draw } from "./render.js";
 import {
     getSetback,
@@ -94,6 +95,18 @@ function renderStartStats() {
         applyDynamicStyles(pill);
         container.appendChild(pill);
     }
+}
+
+function renderDifficultyPicker() {
+    const selected = getDifficulty(state.progress.difficulty);
+    state.progress.difficulty = selected.id;
+
+    document.querySelectorAll("[data-difficulty]").forEach(function (button) {
+        button.setAttribute("aria-checked", String(button.dataset.difficulty === selected.id));
+    });
+
+    el("difficultyDescription").textContent = selected.description
+        + (selected.xpBonus ? " Finish it for +" + selected.xpBonus + " bonus XP." : "");
 }
 
 // The Content-Security-Policy forbids inline style attributes, so dynamic
@@ -239,7 +252,7 @@ function clearInput() {
 
 function startDive() {
     state.character = getCharacter(state.progress.character);
-    state.game = new Game();
+    state.game = new Game(state.progress.difficulty);
     state.setbacksSeen = {};
     state.runStatPoints = 0;
     state.accumulator = 0;
@@ -252,7 +265,8 @@ function startDive() {
     showOverlay("setbackOverlay", false);
     showOverlay("completeOverlay", false);
 
-    toast(state.game.level.subtitle, 3200);
+    el("hudDifficulty").textContent = state.game.difficulty.label;
+    toast(state.game.difficulty.label + " · " + state.game.level.subtitle, 3200);
     updateHud();
 }
 
@@ -392,9 +406,14 @@ function completeDive() {
     progress.crystals += stats.treasureValue;
     progress.dives += 1;
     progress.bestMeters = Math.max(progress.bestMeters, stats.deepestMeters);
+    progress.winsByDifficulty[state.game.difficulty.id] += 1;
+    progress.bestMetersByDifficulty[state.game.difficulty.id] = Math.max(
+        progress.bestMetersByDifficulty[state.game.difficulty.id],
+        stats.deepestMeters
+    );
     saveProgress(progress);
 
-    const xp = 25 + Math.round(stats.treasureValue / 4) + state.runStatPoints;
+    const xp = 25 + Math.round(stats.treasureValue / 4) + state.runStatPoints + state.game.difficulty.xpBonus;
 
     // Feed the same XP meters the rest of MindZone uses.
     if (typeof window.addRewardProgress === "function") {
@@ -411,6 +430,7 @@ function completeDive() {
         <div class="score-tile"><b>${stats.treasureValue}</b><span>Gold</span></div>
         <div class="score-tile"><b>${stats.deepestMeters}m</b><span>Deepest Dive</span></div>
         <div class="score-tile"><b>${stats.oxygenGrabbed}</b><span>Air Bubbles</span></div>
+        <div class="score-tile"><b>${state.game.difficulty.label}</b><span>Difficulty</span></div>
         <div class="score-tile"><b>+${xp}</b><span>MindZone XP</span></div>
     `;
 
@@ -432,7 +452,7 @@ function updateHud() {
     el("hudTreasureTotal").textContent = "/" + stats.treasureTotal;
     el("hudDepth").textContent = String(game.depthMeters());
 
-    const fraction = game.oxygen / TUNING.maxOxygen;
+    const fraction = game.oxygen / game.tuning.maxOxygen;
     const fill = el("oxygenFill");
     fill.style.width = Math.round(fraction * 100) + "%";
     fill.className = fraction <= 0.3 ? "is-low" : "";
@@ -532,6 +552,15 @@ function frame(now) {
 // ------------------------------------------------------------------- wiring
 
 function wireUi() {
+    document.querySelectorAll("[data-difficulty]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            state.progress.difficulty = getDifficulty(button.dataset.difficulty).id;
+            saveProgress(state.progress);
+            playSound("click");
+            renderDifficultyPicker();
+        });
+    });
+
     el("playBtn").addEventListener("click", function () {
         unlockAudio();
         playSound("click");
@@ -592,6 +621,7 @@ async function boot() {
     setupTouchControls();
     renderStartStats();
     renderBadgeStrip(el("startBadges"), state.progress.badges);
+    renderDifficultyPicker();
 
     await loadAssets();
 

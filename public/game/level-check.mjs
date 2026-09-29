@@ -6,6 +6,7 @@
  */
 
 import { Game, FIXED_STEP } from "./engine.js";
+import { DIFFICULTY_ORDER } from "./difficulty.mjs";
 import { LEVELS } from "./levels.js";
 
 // The intended climb, ledge by ledge. Only used by the bot, not by the game.
@@ -20,9 +21,9 @@ const PATHS = {
 const MAX_SECONDS = 400;
 const STUCK_SECONDS = 18;
 
-function run(level, jumpLead) {
+function run(level, jumpLead, difficulty) {
     const path = PATHS[level.id];
-    const game = new Game(level);
+    const game = new Game(level, difficulty);
     const input = { left: false, right: false, jump: true, jumpPressed: false };
 
     const byId = {};
@@ -120,32 +121,34 @@ function run(level, jumpLead) {
 let failures = 0;
 
 for (const level of LEVELS) {
-    let best = null;
+    for (const difficulty of DIFFICULTY_ORDER) {
+        let best = null;
 
-    // A human varies their timing, so try a few take-off distances.
-    for (const jumpLead of [40, 55, 70, 85, 100]) {
-        const result = run(level, jumpLead);
-        if (!best || result.reached > best.reached || (result.ok && !best.ok)) {
-            best = Object.assign({ jumpLead: jumpLead }, result);
+        // A human varies their timing, so try a few take-off distances.
+        for (const jumpLead of [28, 40, 55, 70, 85, 100, 115]) {
+            const result = run(level, jumpLead, difficulty);
+            if (!best || result.reached > best.reached || (result.ok && !best.ok)) {
+                best = Object.assign({ jumpLead: jumpLead }, result);
+            }
+            if (result.ok) {
+                break;
+            }
         }
-        if (result.ok) {
-            break;
-        }
-    }
 
-    const path = PATHS[level.id];
-    if (best.ok) {
-        console.log(
-            `PASS  ${level.id}: summit reached in ${best.seconds.toFixed(1)}s ` +
-            `(lead ${best.jumpLead}, ${best.setbacks} setbacks, ` +
-            `${best.crystals}/${best.total} crystals on the way)`
-        );
-    } else {
-        failures += 1;
-        console.log(
-            `FAIL  ${level.id}: stuck at ${best.stuckAt} ` +
-            `(ledge ${best.reached}/${path.length}, ${best.setbacks} setbacks)`
-        );
+        const path = PATHS[level.id];
+        if (best.ok) {
+            console.log(
+                `PASS  ${level.id} (${difficulty}): summit reached in ${best.seconds.toFixed(1)}s ` +
+                `(lead ${best.jumpLead}, ${best.setbacks} setbacks, ` +
+                `${best.crystals}/${best.total} crystals on the way)`
+            );
+        } else {
+            failures += 1;
+            console.log(
+                `FAIL  ${level.id} (${difficulty}): stuck at ${best.stuckAt} ` +
+                `(ledge ${best.reached}/${path.length}, ${best.setbacks} setbacks)`
+            );
+        }
     }
 }
 

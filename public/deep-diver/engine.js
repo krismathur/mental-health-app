@@ -11,6 +11,7 @@
  */
 
 import { cloneWorld } from "./levels.js";
+import { getDifficulty, prepareDiveWorld } from "./difficulty.mjs";
 
 export const FIXED_STEP = 1 / 120;
 
@@ -48,8 +49,10 @@ function overlaps(ax, ay, aw, ah, bx, by, bw, bh) {
 }
 
 export class Game {
-    constructor() {
-        this.level = cloneWorld();
+    constructor(difficultyId) {
+        this.difficulty = getDifficulty(difficultyId);
+        this.tuning = Object.assign({}, TUNING, this.difficulty.tuning);
+        this.level = prepareDiveWorld(cloneWorld(), this.difficulty.id);
         this.events = [];
         this.viewWidth = 960;
         this.viewHeight = 620;
@@ -68,10 +71,10 @@ export class Game {
         this.particles = [];
 
         this.player = {
-            x: level.spawn.x - TUNING.playerWidth / 2,
+            x: level.spawn.x - this.tuning.playerWidth / 2,
             y: level.spawn.y,
-            w: TUNING.playerWidth,
-            h: TUNING.playerHeight,
+            w: this.tuning.playerWidth,
+            h: this.tuning.playerHeight,
             vx: 0,
             vy: 0,
             facing: 1,
@@ -79,7 +82,7 @@ export class Game {
             invuln: 0
         };
 
-        this.oxygen = TUNING.maxOxygen;
+        this.oxygen = this.tuning.maxOxygen;
         this.carrying = null;
         this.rescuing = null;
         this.lowAirWarned = false;
@@ -214,22 +217,22 @@ export class Game {
 
     updatePlayer(dt, input) {
         const player = this.player;
-        const maxSpeed = this.abilities.kick > 0 ? TUNING.kickMaxSpeed : TUNING.maxSpeed;
+        const maxSpeed = this.abilities.kick > 0 ? this.tuning.kickMaxSpeed : this.tuning.maxSpeed;
 
         const dx = (input.right ? 1 : 0) - (input.left ? 1 : 0);
         const dy = (input.down ? 1 : 0) - (input.up ? 1 : 0);
 
         if (dx !== 0) {
-            player.vx += dx * TUNING.swimAccel * dt;
+            player.vx += dx * this.tuning.swimAccel * dt;
             player.facing = dx;
         }
         if (dy !== 0) {
-            player.vy += dy * TUNING.swimAccel * dt;
+            player.vy += dy * this.tuning.swimAccel * dt;
         }
 
         // Idle drift: divers float gently upward when they stop kicking.
         if (dx === 0 && dy === 0) {
-            player.vy += TUNING.idleBuoyancy * dt;
+            player.vy += this.tuning.idleBuoyancy * dt;
         }
 
         // Currents shove sideways unless steady fins are on.
@@ -250,7 +253,7 @@ export class Game {
         }
 
         // Water drag pulls everything back toward stillness.
-        const drag = Math.max(0, 1 - TUNING.waterDrag * dt);
+        const drag = Math.max(0, 1 - this.tuning.waterDrag * dt);
         player.vx *= drag;
         player.vy *= drag;
 
@@ -320,19 +323,19 @@ export class Game {
 
     updateOxygen(dt) {
         if (this.atSurface()) {
-            this.oxygen = Math.min(TUNING.maxOxygen, this.oxygen + TUNING.surfaceRefillPerSecond * dt);
+            this.oxygen = Math.min(this.tuning.maxOxygen, this.oxygen + this.tuning.surfaceRefillPerSecond * dt);
             return;
         }
 
-        let drain = this.carrying ? TUNING.drainCarrying : TUNING.drainPerSecond;
+        let drain = this.carrying ? this.tuning.drainCarrying : this.tuning.drainPerSecond;
         if (this.abilities.calm > 0) {
-            drain *= TUNING.calmDrainScale;
+            drain *= this.tuning.calmDrainScale;
         }
 
         const before = this.oxygen;
         this.oxygen = Math.max(0, this.oxygen - drain * dt);
 
-        if (!this.lowAirWarned && this.oxygen <= TUNING.lowOxygen && before > TUNING.lowOxygen) {
+        if (!this.lowAirWarned && this.oxygen <= this.tuning.lowOxygen && before > this.tuning.lowOxygen) {
             this.lowAirWarned = true;
             this.registerSetback("lowair", false);
             return;
@@ -375,7 +378,7 @@ export class Game {
         };
 
         this.rescuing.t += dt;
-        this.oxygen = Math.min(TUNING.maxOxygen, this.oxygen + 45 * dt);
+        this.oxygen = Math.min(this.tuning.maxOxygen, this.oxygen + 45 * dt);
 
         const dx = target.x - player.x;
         const dy = target.y - player.y;
@@ -389,7 +392,7 @@ export class Game {
             player.vy = 0;
             player.invuln = 2;
 
-            this.oxygen = TUNING.maxOxygen;
+            this.oxygen = this.tuning.maxOxygen;
             this.lowAirWarned = false;
             this.rescuing = null;
 
@@ -455,13 +458,13 @@ export class Game {
 
             if (overlaps(player.x, player.y, player.w, player.h, bubble.x - 26, bubble.y - 26, 52, 52)) {
                 bubble.taken = true;
-                bubble.timer = TUNING.oxygenRespawn;
-                this.oxygen = Math.min(TUNING.maxOxygen, this.oxygen + TUNING.oxygenPickup);
+                bubble.timer = this.tuning.oxygenRespawn;
+                this.oxygen = Math.min(this.tuning.maxOxygen, this.oxygen + this.tuning.oxygenPickup);
                 this.stats.oxygenGrabbed += 1;
                 this.spawnSparkle(bubble.x, bubble.y);
                 this.emit("oxygen");
 
-                if (this.oxygen > TUNING.lowOxygen) {
+                if (this.oxygen > this.tuning.lowOxygen) {
                     this.lowAirWarned = false;
                 }
             }
@@ -482,11 +485,11 @@ export class Game {
             const jx = jelly.drawX === undefined ? jelly.x : jelly.drawX;
             const jy = jelly.drawY === undefined ? jelly.y : jelly.drawY;
 
-            if (Math.hypot(cx - jx, cy - jy) < TUNING.jellyRadius + 26) {
-                player.invuln = TUNING.stingInvulnSeconds;
+            if (Math.hypot(cx - jx, cy - jy) < this.tuning.jellyRadius + 26) {
+                player.invuln = this.tuning.stingInvulnSeconds;
                 player.vx = (cx - jx) * 6;
                 player.vy = (cy - jy) * 6;
-                this.oxygen = Math.max(1, this.oxygen - TUNING.stingOxygen);
+                this.oxygen = Math.max(1, this.oxygen - this.tuning.stingOxygen);
                 this.stats.stings += 1;
 
                 const dropped = Boolean(this.carrying);

@@ -32,6 +32,16 @@
                         back is the real skill.
                     </p>
 
+                    <div class="difficulty-picker" aria-labelledby="difficultyTitle">
+                        <p id="difficultyTitle" class="difficulty-title">Choose difficulty</p>
+                        <div class="difficulty-options" role="radiogroup" aria-label="Dive difficulty">
+                            <button type="button" class="difficulty-option" data-difficulty="easy" role="radio" aria-checked="false">Easy</button>
+                            <button type="button" class="difficulty-option" data-difficulty="medium" role="radio" aria-checked="true">Medium</button>
+                            <button type="button" class="difficulty-option" data-difficulty="hard" role="radio" aria-checked="false">Hard</button>
+                        </div>
+                        <p id="difficultyDescription" class="difficulty-description"></p>
+                    </div>
+
                     <button type="button" id="playBtn" class="game-btn game-btn-primary">Start Diving</button>
 
                     <div class="start-stats" id="startStats"></div>
@@ -79,6 +89,7 @@
                         </div>
 
                         <div class="hud-right">
+                            <span class="hud-chip hud-difficulty" id="hudDifficulty">Medium</span>
                             <span class="hud-chip hud-carrying" id="hudCarrying" hidden></span>
                             <span class="hud-chip hud-ability" id="hudAbility" hidden></span>
                             <button type="button" id="pauseBtn" class="game-icon-btn" aria-label="Pause">⏸</button>

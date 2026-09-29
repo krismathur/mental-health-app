@@ -9,6 +9,7 @@
 import { loadAssets } from "./assets.js";
 import { playSound, unlockAudio, isMuted, toggleMute } from "./audio.js";
 import { CHARACTERS, getCharacter } from "./characters.js";
+import { getDifficulty } from "./difficulty.mjs";
 import { getLevel } from "./levels.js";
 import { Game, FIXED_STEP } from "./engine.js";
 import { draw } from "./render.js";
@@ -97,6 +98,18 @@ function renderStartStats() {
         applyDynamicStyles(pill);
         container.appendChild(pill);
     }
+}
+
+function renderDifficultyPicker() {
+    const selected = getDifficulty(state.progress.difficulty);
+    state.progress.difficulty = selected.id;
+
+    document.querySelectorAll("[data-difficulty]").forEach(function (button) {
+        button.setAttribute("aria-checked", String(button.dataset.difficulty === selected.id));
+    });
+
+    el("difficultyDescription").textContent = selected.description
+        + (selected.xpBonus ? " Finish it for +" + selected.xpBonus + " bonus XP." : "");
 }
 
 // The Content-Security-Policy forbids inline style attributes, so dynamic
@@ -266,7 +279,7 @@ function startLevel() {
     const level = getLevel(0);
 
     state.character = getCharacter(state.progress.character);
-    state.game = new Game(level);
+    state.game = new Game(level, state.progress.difficulty);
     state.setbacksSeen = {};
     state.runStatPoints = 0;
     state.stumbleIndex = 0;
@@ -280,7 +293,8 @@ function startLevel() {
     showOverlay("setbackOverlay", false);
     showOverlay("completeOverlay", false);
 
-    toast(level.subtitle, 3200);
+    el("hudDifficulty").textContent = state.game.difficulty.label;
+    toast(state.game.difficulty.label + " · " + level.subtitle, 3200);
     updateHud();
 }
 
@@ -428,9 +442,14 @@ function completeLevel() {
     progress.crystals += stats.crystals;
     progress.climbs += 1;
     progress.bestMeters = Math.max(progress.bestMeters, stats.bestHeightMeters);
+    progress.winsByDifficulty[state.game.difficulty.id] += 1;
+    progress.bestMetersByDifficulty[state.game.difficulty.id] = Math.max(
+        progress.bestMetersByDifficulty[state.game.difficulty.id],
+        stats.bestHeightMeters
+    );
     saveProgress(progress);
 
-    const xp = 25 + stats.crystals * 3 + state.runStatPoints;
+    const xp = 25 + stats.crystals * 3 + state.runStatPoints + state.game.difficulty.xpBonus;
 
     // Feed the same XP meters the rest of MindZone uses.
     if (typeof window.addRewardProgress === "function") {
@@ -447,6 +466,7 @@ function completeLevel() {
         <div class="score-tile"><b>${stats.crystals}/${stats.crystalTotal}</b><span>Crystals</span></div>
         <div class="score-tile"><b>${stats.bestHeightMeters}m</b><span>Climbed</span></div>
         <div class="score-tile"><b>${stats.setbacks}</b><span>Comebacks</span></div>
+        <div class="score-tile"><b>${state.game.difficulty.label}</b><span>Difficulty</span></div>
         <div class="score-tile"><b>+${xp}</b><span>MindZone XP</span></div>
     `;
 
@@ -560,6 +580,15 @@ function frame(now) {
 // ------------------------------------------------------------------- wiring
 
 function wireUi() {
+    document.querySelectorAll("[data-difficulty]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            state.progress.difficulty = getDifficulty(button.dataset.difficulty).id;
+            saveProgress(state.progress);
+            playSound("click");
+            renderDifficultyPicker();
+        });
+    });
+
     el("playBtn").addEventListener("click", function () {
         unlockAudio();
         playSound("click");
@@ -620,6 +649,7 @@ async function boot() {
     setupTouchControls();
     renderStartStats();
     renderBadgeStrip(el("startBadges"), state.progress.badges);
+    renderDifficultyPicker();
 
     await loadAssets();
 

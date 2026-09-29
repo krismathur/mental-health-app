@@ -6,7 +6,7 @@
  * gameplay stays identical no matter the display refresh rate.
  */
 
-import { cloneLevel } from "./levels.js";
+import { getDifficulty, prepareMountainLevel } from "./difficulty.mjs";
 
 export const FIXED_STEP = 1 / 120;
 
@@ -43,8 +43,10 @@ function overlaps(ax, ay, aw, ah, bx, by, bw, bh) {
 }
 
 export class Game {
-    constructor(level) {
-        this.level = cloneLevel(level);
+    constructor(level, difficultyId) {
+        this.difficulty = getDifficulty(difficultyId);
+        this.tuning = Object.assign({}, TUNING, this.difficulty.tuning);
+        this.level = prepareMountainLevel(level, this.difficulty.id);
         this.events = [];
         this.viewWidth = 960;
         this.viewHeight = 620;
@@ -64,9 +66,9 @@ export class Game {
 
         this.player = {
             x: level.spawn.x,
-            y: level.spawn.y - TUNING.playerHeight,
-            w: TUNING.playerWidth,
-            h: TUNING.playerHeight,
+            y: level.spawn.y - this.tuning.playerHeight,
+            w: this.tuning.playerWidth,
+            h: this.tuning.playerHeight,
             vx: 0,
             vy: 0,
             onGround: false,
@@ -208,7 +210,7 @@ export class Game {
                 platform.timer -= dt;
                 if (platform.timer <= 0) {
                     platform.gone = true;
-                    platform.cooldown = TUNING.crumbleRespawn;
+                    platform.cooldown = this.tuning.crumbleRespawn;
 
                     if (this.player.groundId === platform.id) {
                         this.crumbleUnderfoot = true;
@@ -228,16 +230,16 @@ export class Game {
         // ---- horizontal ----
         const direction = (input.right ? 1 : 0) - (input.left ? 1 : 0);
         const accel = player.onGround
-            ? (slippery ? TUNING.iceAccel : TUNING.moveAccel)
-            : TUNING.airAccel;
+            ? (slippery ? this.tuning.iceAccel : this.tuning.moveAccel)
+            : this.tuning.airAccel;
 
         if (direction !== 0) {
             player.vx += direction * accel * dt;
             player.facing = direction;
         } else {
             const friction = player.onGround
-                ? (slippery ? TUNING.iceFriction : TUNING.groundFriction)
-                : TUNING.airDrag;
+                ? (slippery ? this.tuning.iceFriction : this.tuning.groundFriction)
+                : this.tuning.airDrag;
             const drop = friction * dt;
             player.vx = Math.abs(player.vx) <= drop ? 0 : player.vx - Math.sign(player.vx) * drop;
         }
@@ -248,25 +250,25 @@ export class Game {
         }
 
         // Wind may briefly push past the normal cap, which is what sells it.
-        const cap = TUNING.maxSpeed * (wind !== 0 ? 1.4 : 1);
+        const cap = this.tuning.maxSpeed * (wind !== 0 ? 1.4 : 1);
         player.vx = Math.max(-cap, Math.min(cap, player.vx));
 
         // ---- jumping ----
         if (player.onGround) {
-            player.coyote = TUNING.coyoteTime;
+            player.coyote = this.tuning.coyoteTime;
         } else {
             player.coyote -= dt;
         }
 
         if (input.jumpPressed) {
-            player.jumpBuffer = TUNING.jumpBufferTime;
+            player.jumpBuffer = this.tuning.jumpBufferTime;
             input.jumpPressed = false;
         } else {
             player.jumpBuffer -= dt;
         }
 
         if (player.jumpBuffer > 0 && player.coyote > 0) {
-            player.vy = this.abilities.boost > 0 ? TUNING.boostJumpVelocity : TUNING.jumpVelocity;
+            player.vy = this.abilities.boost > 0 ? this.tuning.boostJumpVelocity : this.tuning.jumpVelocity;
             player.onGround = false;
             player.jumpBuffer = 0;
             player.coyote = 0;
@@ -277,12 +279,12 @@ export class Game {
 
         // Tapping jump gives a short hop, holding it gives the full arc.
         if (!input.jump && player.vy < -220) {
-            player.vy *= TUNING.jumpCut;
+            player.vy *= this.tuning.jumpCut;
         }
 
         // ---- gravity ----
-        const gravity = TUNING.gravity * (this.abilities.floaty > 0 && player.vy > 0 ? TUNING.floatyGravity : 1);
-        player.vy = Math.min(player.vy + gravity * dt, TUNING.maxFallSpeed);
+        const gravity = this.tuning.gravity * (this.abilities.floaty > 0 && player.vy > 0 ? this.tuning.floatyGravity : 1);
+        player.vy = Math.min(player.vy + gravity * dt, this.tuning.maxFallSpeed);
 
         // ---- integrate with axis-separated collision ----
         const wasOnGround = player.onGround;
@@ -377,7 +379,7 @@ export class Game {
 
                 if (platform.type === "crumble" && !platform.crumbling) {
                     platform.crumbling = true;
-                    platform.timer = TUNING.crumbleDelay;
+                    platform.timer = this.tuning.crumbleDelay;
                     this.emit("crumbleStart");
                 }
             } else if (dy < 0 && platform.solid) {
@@ -514,11 +516,11 @@ export class Game {
     judgeLanding() {
         const drop = this.player.y - this.airborneFromY;
 
-        if (drop < TUNING.stumbleFall) {
+        if (drop < this.tuning.stumbleFall) {
             return;
         }
 
-        if (drop < TUNING.bigFall) {
+        if (drop < this.tuning.bigFall) {
             this.emit("stumble");
             return;
         }
