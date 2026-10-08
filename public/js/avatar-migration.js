@@ -23,7 +23,7 @@
         return;
     }
 
-    if (localStorage.getItem(MIGRATION_KEY) === MIGRATION_VERSION) {
+    if (window.MindZoneStorage.getItem(MIGRATION_KEY) === MIGRATION_VERSION) {
         return;
     }
 
@@ -53,7 +53,7 @@
 
     function readJSON(key) {
         try {
-            return JSON.parse(localStorage.getItem(key) || "null");
+            return JSON.parse(window.MindZoneStorage.getItem(key) || "null");
         } catch (error) {
             return null;
         }
@@ -84,13 +84,13 @@
 
     // Nothing saved: nothing to migrate, just stamp so this never runs again.
     if (!savedAvatar && !savedLook) {
-        localStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
+        window.MindZoneStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
         return;
     }
 
     // Already on the new roster (e.g. a second tab migrated first).
     if (savedLook && savedLook.player && roster.byId(savedLook.player)) {
-        localStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
+        window.MindZoneStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
         return;
     }
 
@@ -99,13 +99,13 @@
     if (!character) {
         // Unrecognisable saved state — clear it so the player is prompted to
         // pick again rather than staring at a broken card.
-        localStorage.removeItem(AVATAR_KEY);
-        localStorage.removeItem(LOOK_KEY);
-        localStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
+        window.MindZoneStorage.removeItem(AVATAR_KEY);
+        window.MindZoneStorage.removeItem(LOOK_KEY);
+        window.MindZoneStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
         return;
     }
 
-    localStorage.setItem(AVATAR_KEY, JSON.stringify({
+    window.MindZoneStorage.setItem(AVATAR_KEY, JSON.stringify({
         id: character.id,
         league: character.league,
         name: character.name,
@@ -114,7 +114,7 @@
     }));
 
     // Gear choices survive the swap; only the player identity and skin change.
-    localStorage.setItem(LOOK_KEY, JSON.stringify({
+    window.MindZoneStorage.setItem(LOOK_KEY, JSON.stringify({
         player: character.id,
         skin: (savedLook && savedLook.skin) || character.skin,
         top: (savedLook && savedLook.top) || "none",
@@ -123,5 +123,5 @@
         shoes: (savedLook && savedLook.shoes) || "none"
     }));
 
-    localStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
+    window.MindZoneStorage.setItem(MIGRATION_KEY, MIGRATION_VERSION);
 }(window));

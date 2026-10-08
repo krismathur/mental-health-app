@@ -5,6 +5,7 @@
  * Run it after editing levels.js:  node public/game/level-check.mjs
  */
 
+import { pathToFileURL } from "node:url";
 import { Game, FIXED_STEP } from "./engine.js";
 import { DIFFICULTY_ORDER } from "./difficulty.mjs";
 import { LEVELS } from "./levels.js";
@@ -21,7 +22,7 @@ const PATHS = {
 const MAX_SECONDS = 400;
 const STUCK_SECONDS = 18;
 
-function run(level, jumpLead, difficulty) {
+export function run(level, jumpLead, difficulty) {
     const path = PATHS[level.id];
     const game = new Game(level, difficulty);
     const input = { left: false, right: false, jump: true, jumpPressed: false };
@@ -118,6 +119,7 @@ function run(level, jumpLead, difficulty) {
     };
 }
 
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 let failures = 0;
 
 for (const level of LEVELS) {
@@ -125,7 +127,7 @@ for (const level of LEVELS) {
         let best = null;
 
         // A human varies their timing, so try a few take-off distances.
-        for (const jumpLead of [28, 40, 55, 70, 85, 100, 115]) {
+        for (const jumpLead of [8, 16, 24, 28, 40, 55, 70, 85, 100, 115]) {
             const result = run(level, jumpLead, difficulty);
             if (!best || result.reached > best.reached || (result.ok && !best.ok)) {
                 best = Object.assign({ jumpLead: jumpLead }, result);
@@ -153,3 +155,5 @@ for (const level of LEVELS) {
 }
 
 process.exit(failures === 0 ? 0 : 1);
+
+}

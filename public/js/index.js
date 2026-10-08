@@ -1,6 +1,5 @@
 const authLink = document.getElementById("authLink");
 const authCtas = document.querySelectorAll("[data-auth-cta]");
-document.documentElement.classList.add("quest-motion-ready");
 
 async function checkLoginStatus() {
     try {
@@ -72,8 +71,7 @@ checkLoginStatus();
         });
     }, { threshold: 0.16 });
 
-    cards.forEach(function (card, index) {
-        card.style.transitionDelay = String((index % 4) * 70) + "ms";
+    cards.forEach(function (card) {
         observer.observe(card);
     });
 })();

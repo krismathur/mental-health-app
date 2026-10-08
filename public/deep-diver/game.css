@@ -132,14 +132,8 @@ body.game-body {
     background: var(--card);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
-    animation: card-in 0.28s ease-out;
-}
-
-@keyframes card-in {
-    from {
-        opacity: 0;
-        transform: translateY(14px) scale(0.98);
-    }
+    opacity: 1;
+    transform: none;
 }
 
 .screen-kicker {
@@ -743,7 +737,8 @@ body.game-body {
     line-height: 1.5;
     background: #e6f7ec;
     border-radius: var(--radius-sm);
-    animation: card-in 0.25s ease-out;
+    opacity: 1;
+    transform: none;
 }
 
 .setback-response.is-gentle {
@@ -877,4 +872,33 @@ body.game-body {
     * {
         animation-duration: 0.001s !important;
     }
+}
+.start-card {
+    max-width: 620px;
+}
+
+.start-card .screen-text {
+    max-width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.quick-start-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.quick-start-actions .game-btn {
+    min-width: 170px;
+}
+
+.start-card .start-stats,
+.start-card .start-badges {
+    display: none;
+}
+
+.start-card .screen-hint {
+    margin-top: 16px;
 }

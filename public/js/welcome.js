@@ -1,19 +1,74 @@
-// Keep Mood Check-in full-width under the plan and AI Coach cards.
+function simplifyMoodCheckin(section) {
+    if (!section) {
+        return;
+    }
+
+    section.innerHTML = `
+        <div class="checkin-heading checkin-heading-simple">
+            <div>
+                <p class="section-eyebrow">FIRST, CHECK IN</p>
+                <h2 class="tool-title">How do you feel right now?</h2>
+            </div>
+            <p>Tap one. There is no wrong answer.</p>
+        </div>
+        <div class="emotion-grid emotion-grid-simple">
+            <div class="emotion-cell" data-emotion="Happy" data-emoji="🙂"><button type="button" class="emotion-pick-btn"><span class="emotion-circle">🙂</span><span class="emotion-label">Great</span></button></div>
+            <div class="emotion-cell" data-emotion="Calm" data-emoji="😌"><button type="button" class="emotion-pick-btn"><span class="emotion-circle">😌</span><span class="emotion-label">Calm</span></button></div>
+            <div class="emotion-cell" data-emotion="Excited" data-emoji="🤩"><button type="button" class="emotion-pick-btn"><span class="emotion-circle">🤩</span><span class="emotion-label">Excited</span></button></div>
+            <div class="emotion-cell" data-emotion="Anxious" data-emoji="😟"><button type="button" class="emotion-pick-btn"><span class="emotion-circle">😟</span><span class="emotion-label">Nervous</span></button></div>
+            <div class="emotion-cell" data-emotion="Tired" data-emoji="😴"><button type="button" class="emotion-pick-btn"><span class="emotion-circle">😴</span><span class="emotion-label">Tired</span></button></div>
+        </div>
+        <button type="button" id="saveMoodBtn" class="emotion-save-btn emotion-save-btn--compact" disabled>Save check-in</button>
+    `;
+}
+
+function renderDailySessionStatus() {
+    const status = document.getElementById("dailySessionStatus");
+    const link = document.getElementById("startDailySessionLink");
+    if (!status || !link) {
+        return;
+    }
+
+    let history = [];
+    try {
+        const parsed = JSON.parse(window.MindZoneStorage.getItem("mindzone_daily_session_history") || "[]");
+        history = Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        history = [];
+    }
+
+    const today = window.AppTime && typeof window.AppTime.getToday === "function"
+        ? window.AppTime.getToday()
+        : new Date().toISOString().slice(0, 10);
+    const complete = history.some(function (entry) { return entry && entry.date === today; });
+
+    if (complete) {
+        status.textContent = "Done for today — nice work!";
+        link.textContent = "Practice again";
+        link.classList.add("is-complete");
+    }
+}
+
+// Put the quick check-in directly before the main practice choices.
 (function reflowWelcomeLayout() {
     const page = document.querySelector(".page");
     const topRow = document.querySelector(".top-row");
     const mood = document.getElementById("emotionCheckinSection");
+    const welcomeHeader = document.querySelector(".dashboard-welcome");
     const dashboardName = document.getElementById("dashboardName");
 
     if (dashboardName) {
-        const savedName = localStorage.getItem("mindzone_name");
+        const savedName = window.MindZoneStorage.getItem("mindzone_name");
         if (savedName) {
             dashboardName.textContent = savedName;
         }
     }
 
-    if (page && topRow && mood) {
-        topRow.insertAdjacentElement("afterend", mood);
+    simplifyMoodCheckin(mood);
+    renderDailySessionStatus();
+
+    if (page && topRow && mood && welcomeHeader) {
+        welcomeHeader.insertAdjacentElement("afterend", mood);
     }
 })();
 
@@ -28,6 +83,13 @@ const settingsBtn = document.getElementById("settingsBtn");
 const settingsOverlay = document.getElementById("settingsOverlay");
 const overlayBackdrop = document.getElementById("overlayBackdrop");
 const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+const settingsTabButtons = document.querySelectorAll("[data-settings-tab]");
+const settingsTabPanels = {
+    profile: document.getElementById("settingsPanelProfile"),
+    checkin: document.getElementById("settingsPanelCheckin"),
+    account: document.getElementById("settingsPanelAccount")
+};
+const settingsFormActions = document.querySelector(".settings-form-actions");
 const arcadeOverlay = document.getElementById("arcadeOverlay");
 const arcadeBackdrop = document.getElementById("arcadeBackdrop");
 const closeArcadeBtn = document.getElementById("closeArcadeBtn");
@@ -101,10 +163,38 @@ loadProfileFromServer()
 setTimeout(finishWelcomeInit, 6000);
 
 // Open settings and load saved profile data into the form
+function setSettingsTab(tabName) {
+    const nextTab = settingsTabPanels[tabName] ? tabName : "profile";
+
+    settingsTabButtons.forEach(function (button) {
+        const isActive = button.dataset.settingsTab === nextTab;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-selected", String(isActive));
+    });
+
+    Object.keys(settingsTabPanels).forEach(function (name) {
+        const panel = settingsTabPanels[name];
+        if (panel) {
+            panel.hidden = name !== nextTab;
+        }
+    });
+
+    if (settingsFormActions) {
+        settingsFormActions.hidden = nextTab === "account";
+    }
+}
+
+settingsTabButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+        setSettingsTab(button.dataset.settingsTab);
+    });
+});
+
 if (settingsBtn && settingsOverlay) {
     settingsBtn.addEventListener("click", function () {
         loadSettingsIntoForm();
         updateRegenerateButton();
+        setSettingsTab("profile");
         settingsOverlay.classList.remove("overlay-hidden");
     });
 }
@@ -307,7 +397,7 @@ function getTodayDateString() {
 }
 
 function getMoodHistory() {
-    const savedHistory = localStorage.getItem(MOOD_HISTORY_KEY);
+    const savedHistory = window.MindZoneStorage.getItem(MOOD_HISTORY_KEY);
     if (savedHistory) {
         try {
             const history = JSON.parse(savedHistory);
@@ -315,11 +405,11 @@ function getMoodHistory() {
                 return history;
             }
         } catch (error) {
-            localStorage.removeItem(MOOD_HISTORY_KEY);
+            window.MindZoneStorage.removeItem(MOOD_HISTORY_KEY);
         }
     }
 
-    const legacyMood = localStorage.getItem(MOOD_STORAGE_KEY);
+    const legacyMood = window.MindZoneStorage.getItem(MOOD_STORAGE_KEY);
     if (legacyMood) {
         try {
             const mood = JSON.parse(legacyMood);
@@ -327,7 +417,7 @@ function getMoodHistory() {
                 return [mood];
             }
         } catch (error) {
-            localStorage.removeItem(MOOD_STORAGE_KEY);
+            window.MindZoneStorage.removeItem(MOOD_STORAGE_KEY);
         }
     }
 
@@ -347,8 +437,8 @@ function saveMoodHistoryEntry(mood) {
         history.splice(0, history.length - 90);
     }
 
-    localStorage.setItem(MOOD_HISTORY_KEY, JSON.stringify(history));
-    localStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(mood));
+    window.MindZoneStorage.setItem(MOOD_HISTORY_KEY, JSON.stringify(history));
+    window.MindZoneStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(mood));
 }
 
 function getMoodForDate(dateString) {
@@ -375,7 +465,7 @@ function addDaysToDateString(dateString, days) {
 }
 
 function getReflectionSchedule() {
-    const saved = localStorage.getItem(WEEKLY_REFLECTION_SCHEDULE_KEY);
+    const saved = window.MindZoneStorage.getItem(WEEKLY_REFLECTION_SCHEDULE_KEY);
     if (!saved) {
         return {
             firstCheckinDate: "",
@@ -392,7 +482,7 @@ function getReflectionSchedule() {
             lastReflectionDate: parsed.lastReflectionDate || ""
         };
     } catch (error) {
-        localStorage.removeItem(WEEKLY_REFLECTION_SCHEDULE_KEY);
+        window.MindZoneStorage.removeItem(WEEKLY_REFLECTION_SCHEDULE_KEY);
         return {
             firstCheckinDate: "",
             nextDueDate: "",
@@ -402,7 +492,7 @@ function getReflectionSchedule() {
 }
 
 function saveReflectionSchedule(schedule) {
-    localStorage.setItem(WEEKLY_REFLECTION_SCHEDULE_KEY, JSON.stringify(schedule));
+    window.MindZoneStorage.setItem(WEEKLY_REFLECTION_SCHEDULE_KEY, JSON.stringify(schedule));
 }
 
 function scheduleWeeklyReflectionAfterCheckin() {
@@ -418,7 +508,7 @@ function scheduleWeeklyReflectionAfterCheckin() {
 }
 
 function getWeeklyReflectionEntry() {
-    const saved = localStorage.getItem(WEEKLY_REFLECTION_KEY);
+    const saved = window.MindZoneStorage.getItem(WEEKLY_REFLECTION_KEY);
     if (!saved) {
         return null;
     }
@@ -426,7 +516,7 @@ function getWeeklyReflectionEntry() {
     try {
         return JSON.parse(saved);
     } catch (error) {
-        localStorage.removeItem(WEEKLY_REFLECTION_KEY);
+        window.MindZoneStorage.removeItem(WEEKLY_REFLECTION_KEY);
         return null;
     }
 }
@@ -532,7 +622,7 @@ function saveWeeklyReflection() {
     }
 
     const today = getTodayDateString();
-    localStorage.setItem(WEEKLY_REFLECTION_KEY, JSON.stringify({
+    window.MindZoneStorage.setItem(WEEKLY_REFLECTION_KEY, JSON.stringify({
         text: text,
         savedOn: today
     }));
@@ -837,7 +927,7 @@ function saveMoodToday() {
         emoji: selectedCell.dataset.emoji || selectedCell.dataset.emotion || ""
     };
 
-    localStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(mood));
+    window.MindZoneStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(mood));
     saveMoodHistoryEntry(mood);
     scheduleWeeklyReflectionAfterCheckin();
     updateMoodCheckinUI();
@@ -935,35 +1025,35 @@ async function loadProfileFromServer() {
 }
 
 function saveProfileToLocalStorage(profile) {
-    localStorage.setItem("mindzone_name", profile.name || "");
-    localStorage.setItem("mindzone_age", profile.age || "");
-    localStorage.setItem("mindzone_sport", profile.sport || "");
-    localStorage.setItem("mindzone_goal", profile.goal || "");
-    localStorage.setItem("mindzone_challenge", profile.challenge || "");
-    localStorage.setItem("mindzone_days", profile.days != null ? String(profile.days) : "");
-    localStorage.setItem("mindzone_mental_skill", profile.mental_skill != null ? String(profile.mental_skill) : "");
-    localStorage.setItem("mindzone_goal_commitment", profile.goal_commitment != null ? String(profile.goal_commitment) : "");
-    localStorage.setItem("mindzone_confidence", profile.confidence != null ? String(profile.confidence) : "");
-    localStorage.setItem("mindzone_stress", profile.stress != null ? String(profile.stress) : "");
-    localStorage.setItem("mindzone_focus", profile.focus != null ? String(profile.focus) : "");
-    localStorage.setItem("mindzone_bounce", profile.bounce != null ? String(profile.bounce) : "");
+    window.MindZoneStorage.setItem("mindzone_name", profile.name || "");
+    window.MindZoneStorage.setItem("mindzone_age", profile.age || "");
+    window.MindZoneStorage.setItem("mindzone_sport", profile.sport || "");
+    window.MindZoneStorage.setItem("mindzone_goal", profile.goal || "");
+    window.MindZoneStorage.setItem("mindzone_challenge", profile.challenge || "");
+    window.MindZoneStorage.setItem("mindzone_days", profile.days != null ? String(profile.days) : "");
+    window.MindZoneStorage.setItem("mindzone_mental_skill", profile.mental_skill != null ? String(profile.mental_skill) : "");
+    window.MindZoneStorage.setItem("mindzone_goal_commitment", profile.goal_commitment != null ? String(profile.goal_commitment) : "");
+    window.MindZoneStorage.setItem("mindzone_confidence", profile.confidence != null ? String(profile.confidence) : "");
+    window.MindZoneStorage.setItem("mindzone_stress", profile.stress != null ? String(profile.stress) : "");
+    window.MindZoneStorage.setItem("mindzone_focus", profile.focus != null ? String(profile.focus) : "");
+    window.MindZoneStorage.setItem("mindzone_bounce", profile.bounce != null ? String(profile.bounce) : "");
 }
 
 // Load profile from localStorage into the settings form
 function loadSettingsIntoForm() {
-    document.getElementById("settingsName").value = localStorage.getItem("mindzone_name") || "";
-    document.getElementById("settingsAge").value = localStorage.getItem("mindzone_age") || "";
-    document.getElementById("settingsSport").value = localStorage.getItem("mindzone_sport") || "";
-    document.getElementById("settingsGoal").value = localStorage.getItem("mindzone_goal") || "";
-    document.getElementById("settingsChallenge").value = localStorage.getItem("mindzone_challenge") || "";
-    document.getElementById("settingsMentalSkill").value = localStorage.getItem("mindzone_mental_skill") || "";
-    document.getElementById("settingsGoalCommitment").value = localStorage.getItem("mindzone_goal_commitment") || "";
-    document.getElementById("settingsWeeks").value = daysToWeeks(localStorage.getItem("mindzone_days"));
+    document.getElementById("settingsName").value = window.MindZoneStorage.getItem("mindzone_name") || "";
+    document.getElementById("settingsAge").value = window.MindZoneStorage.getItem("mindzone_age") || "";
+    document.getElementById("settingsSport").value = window.MindZoneStorage.getItem("mindzone_sport") || "";
+    document.getElementById("settingsGoal").value = window.MindZoneStorage.getItem("mindzone_goal") || "";
+    document.getElementById("settingsChallenge").value = window.MindZoneStorage.getItem("mindzone_challenge") || "";
+    document.getElementById("settingsMentalSkill").value = window.MindZoneStorage.getItem("mindzone_mental_skill") || "";
+    document.getElementById("settingsGoalCommitment").value = window.MindZoneStorage.getItem("mindzone_goal_commitment") || "";
+    document.getElementById("settingsWeeks").value = daysToWeeks(window.MindZoneStorage.getItem("mindzone_days"));
 
-    setStarRating("confidence", localStorage.getItem("mindzone_confidence"));
-    setStarRating("stress", localStorage.getItem("mindzone_stress"));
-    setStarRating("focus", localStorage.getItem("mindzone_focus"));
-    setStarRating("bounce", localStorage.getItem("mindzone_bounce"));
+    setStarRating("confidence", window.MindZoneStorage.getItem("mindzone_confidence"));
+    setStarRating("stress", window.MindZoneStorage.getItem("mindzone_stress"));
+    setStarRating("focus", window.MindZoneStorage.getItem("mindzone_focus"));
+    setStarRating("bounce", window.MindZoneStorage.getItem("mindzone_bounce"));
 }
 
 // Check the right star radio button for a saved value
@@ -1014,18 +1104,18 @@ async function saveSettingsFromForm() {
 
     const days = weeksToDays(weeks);
 
-    localStorage.setItem("mindzone_name", name);
-    localStorage.setItem("mindzone_age", age);
-    localStorage.setItem("mindzone_sport", sport);
-    localStorage.setItem("mindzone_goal", goal);
-    localStorage.setItem("mindzone_challenge", challenge);
-    localStorage.setItem("mindzone_mental_skill", mentalSkill);
-    localStorage.setItem("mindzone_goal_commitment", goalCommitment);
-    localStorage.setItem("mindzone_days", days);
-    localStorage.setItem("mindzone_confidence", confidence.value);
-    localStorage.setItem("mindzone_stress", stress.value);
-    localStorage.setItem("mindzone_focus", focus.value);
-    localStorage.setItem("mindzone_bounce", bounce.value);
+    window.MindZoneStorage.setItem("mindzone_name", name);
+    window.MindZoneStorage.setItem("mindzone_age", age);
+    window.MindZoneStorage.setItem("mindzone_sport", sport);
+    window.MindZoneStorage.setItem("mindzone_goal", goal);
+    window.MindZoneStorage.setItem("mindzone_challenge", challenge);
+    window.MindZoneStorage.setItem("mindzone_mental_skill", mentalSkill);
+    window.MindZoneStorage.setItem("mindzone_goal_commitment", goalCommitment);
+    window.MindZoneStorage.setItem("mindzone_days", days);
+    window.MindZoneStorage.setItem("mindzone_confidence", confidence.value);
+    window.MindZoneStorage.setItem("mindzone_stress", stress.value);
+    window.MindZoneStorage.setItem("mindzone_focus", focus.value);
+    window.MindZoneStorage.setItem("mindzone_bounce", bounce.value);
 
     try {
         const response = await fetch("/api/profile", {
@@ -1111,10 +1201,10 @@ async function loadCurrentPlan(profileLoaded) {
             try {
                 renderPlan(data.plan, data.planId);
             } catch (error) {
-                showPlanMessage("We loaded your plan but could not show it. Tap below to generate a fresh one.", "none");
+                showPlanMessage("We loaded your plan but could not show it. Open Settings to regenerate it.", "none");
             }
         } else {
-            showPlanMessage("Guided Mental Rehearsal, Visualize Your Best, Resetting your mind, and Good mental choices are the four steps to great mental strength.", "none");
+            showPlanMessage("Picture it, breathe, and let it go. Your daily practice has three simple steps.", "none");
         }
     } catch (error) {
         showPlanMessage("Could not load your plan right now.", "none");
@@ -1167,7 +1257,7 @@ function updateRegenerateButton() {
         return;
     }
 
-    const canRegenerate = currentPlanStatus === "approved";
+    const canRegenerate = currentPlanStatus === "approved" || currentPlanId != null;
     regenerateBtn.hidden = !canRegenerate;
     regenerateBtn.disabled = !canRegenerate;
     regenerateBtn.textContent = "Regenerate Plan 🔄";
@@ -1175,18 +1265,18 @@ function updateRegenerateButton() {
 
 function getProfileFromStorage() {
     return {
-        name: localStorage.getItem("mindzone_name"),
-        age: localStorage.getItem("mindzone_age"),
-        sport: localStorage.getItem("mindzone_sport"),
-        goal: localStorage.getItem("mindzone_goal"),
-        challenge: localStorage.getItem("mindzone_challenge"),
-        days: parseInt(localStorage.getItem("mindzone_days"), 10) || 0,
-        confidence: localStorage.getItem("mindzone_confidence"),
-        stress: localStorage.getItem("mindzone_stress"),
-        focus: localStorage.getItem("mindzone_focus"),
-        bounce: localStorage.getItem("mindzone_bounce"),
-        mentalSkill: localStorage.getItem("mindzone_mental_skill"),
-        goalCommitment: localStorage.getItem("mindzone_goal_commitment")
+        name: window.MindZoneStorage.getItem("mindzone_name"),
+        age: window.MindZoneStorage.getItem("mindzone_age"),
+        sport: window.MindZoneStorage.getItem("mindzone_sport"),
+        goal: window.MindZoneStorage.getItem("mindzone_goal"),
+        challenge: window.MindZoneStorage.getItem("mindzone_challenge"),
+        days: parseInt(window.MindZoneStorage.getItem("mindzone_days"), 10) || 0,
+        confidence: window.MindZoneStorage.getItem("mindzone_confidence"),
+        stress: window.MindZoneStorage.getItem("mindzone_stress"),
+        focus: window.MindZoneStorage.getItem("mindzone_focus"),
+        bounce: window.MindZoneStorage.getItem("mindzone_bounce"),
+        mentalSkill: window.MindZoneStorage.getItem("mindzone_mental_skill"),
+        goalCommitment: window.MindZoneStorage.getItem("mindzone_goal_commitment")
     };
 }
 
@@ -1212,7 +1302,10 @@ function setGenerateButtonState(status, isLoading) {
         return;
     }
 
-    generateButton.hidden = false;
+    const hasExistingPlan = status === "approved" || currentPlanId != null;
+    generateButton.hidden = hasExistingPlan;
+    const dashboardActions = generateButton.closest(".plan-actions");
+    if (dashboardActions) { dashboardActions.hidden = hasExistingPlan; }
     generateButton.classList.toggle("is-loading", !!isLoading);
 
     if (isLoading) {
@@ -1223,10 +1316,7 @@ function setGenerateButtonState(status, isLoading) {
 
     generateButton.disabled = false;
 
-    if (status === "approved") {
-        generateButton.textContent = "Regenerate My Plan 🔄";
-        return;
-    }
+    if (hasExistingPlan) { return; }
 
     generateButton.textContent = "Generate My Plan 🚀";
 }
@@ -1310,7 +1400,7 @@ async function generatePlan(loadingMessage) {
             setGenerateButtonState(currentPlanStatus, false);
         }
         if (regenerateBtn) {
-            regenerateBtn.disabled = currentPlanStatus !== "approved";
+            regenerateBtn.disabled = currentPlanStatus !== "approved" && currentPlanId == null;
         }
     }
 }
@@ -1320,7 +1410,7 @@ function getTodayDateKey() {
 }
 
 function loadPlanProgress(planId) {
-    const raw = localStorage.getItem("mindzone_plan_progress");
+    const raw = window.MindZoneStorage.getItem("mindzone_plan_progress");
     if (!raw) {
         return { planId: planId, lastCompletedDay: 0, lastCompletedDate: null };
     }
@@ -1342,7 +1432,7 @@ function loadPlanProgress(planId) {
 }
 
 function savePlanProgress(progress) {
-    localStorage.setItem("mindzone_plan_progress", JSON.stringify(progress));
+    window.MindZoneStorage.setItem("mindzone_plan_progress", JSON.stringify(progress));
 }
 
 function getPlanViewState(progress, totalDays) {
@@ -1374,7 +1464,7 @@ function renderPlan(planText, planId) {
     currentPlanData = parsePlan(planText);
 
     if (!currentPlanData || currentPlanData.days.length === 0) {
-        showPlanMessage("We couldn't read your saved plan. Tap below to generate a fresh one.", "none");
+        showPlanMessage("We couldn't read your saved plan. Open Settings to regenerate it.", "none");
         return;
     }
 
@@ -1384,6 +1474,8 @@ function renderPlan(planText, planId) {
     planView.hidden = false;
     planView.innerHTML = "";
 
+    const primaryStart = document.getElementById("startDailySessionLink");
+    if (primaryStart) { primaryStart.href = "daily-session.html"; }
     const progress = loadPlanProgress(planId);
     const viewState = getPlanViewState(progress, currentPlanData.days.length);
 
@@ -1399,7 +1491,7 @@ function renderPlan(planText, planId) {
         }) || currentPlanData.days[viewState.day - 1];
 
         if (!dayEntry) {
-            showPlanMessage("We couldn't find today's plan step. Tap below to generate a fresh one.", "none");
+            showPlanMessage("We couldn't find today's plan step. Open Settings to regenerate it.", "none");
             return;
         }
 
@@ -1512,71 +1604,34 @@ function getDailyGame(dayEntry) {
 function appendMindZoneFeatures(card, dayEntry) {
     const titleTheme = String(dayEntry && dayEntry.title ? dayEntry.title : "today's focus").trim();
     const dailyGame = getDailyGame(dayEntry);
-    const features = [
-        {
-            name: "Guided Mental Rehearsal",
-            detail: "Listen to a guided audio session connected to " + titleTheme + ".",
-            href: "meditation.html?open=visualization",
-            tone: "viz"
-        },
-        {
-            name: "Visualize Your Best",
-            detail: "Choose one specific sport skill, watch it performed well, and picture yourself doing it.",
-            href: "meditation.html?open=fix",
-            tone: "fix"
-        },
-        {
-            name: "Resetting your mind",
-            detail: "Do one breathing exercise to calm your body and clear your head.",
-            href: "meditation.html?open=reset",
-            tone: "reset"
-        },
-        {
-            name: "Good mental choices",
-            detail: "Practice the good mental choice with your athlete avatar.",
-            href: "meditation.html?open=choices",
-            tone: "choices"
-        },
-        {
-            name: "Today's Game: " + dailyGame.name,
-            detail: dailyGame.detail,
-            href: dailyGame.href,
-            tone: "game",
-            cta: "Play today's game →"
-        }
-    ];
-
     const section = document.createElement("div");
     section.className = "plan-section plan-features-section";
 
     const heading = document.createElement("h3");
-    heading.textContent = "Today's 5 Activities";
+    heading.textContent = "Today's focus";
     section.appendChild(heading);
 
     const intro = document.createElement("p");
     intro.className = "plan-sentence plan-features-intro";
-    intro.textContent = "Complete all four MindZone tools and today's assigned game.";
+    intro.textContent = titleTheme + ". Your guided practice will help you picture a strong response, breathe, and reset.";
     section.appendChild(intro);
 
-    const list = document.createElement("div");
-    list.className = "plan-features-list";
+    const gameId = dailyGame.href.includes("deep-diver") ? "deep-diver" : "mountain";
+    window.MindZoneStorage.setItem("mindzone_practice_focus", JSON.stringify({planId: String(currentPlanId), day: Number(dayEntry.day), title: titleTheme, date: getTodayDateKey()}));
+    const start = document.createElement("a");
+    start.className = "plan-session-cta";
+    start.href = "daily-session.html?planId=" + encodeURIComponent(currentPlanId)
+        + "&day=" + encodeURIComponent(dayEntry.day)
+        + "&game=" + encodeURIComponent(gameId);
+    start.innerHTML = "<span><strong>Start the 5-minute practice</strong><small>Picture it · Breathe · Let it go</small></span><span aria-hidden=\"true\">→</span>";
+    section.appendChild(start);
+    const primaryStart = document.getElementById("startDailySessionLink");
+    if (primaryStart) { primaryStart.href = start.href; }
 
-    features.forEach(function (feature) {
-        const item = document.createElement("a");
-        item.className = "plan-feature-item plan-feature-" + feature.tone;
-        item.href = feature.href;
-        item.setAttribute("aria-label", "Open " + feature.name);
-        item.innerHTML =
-            "<span class=\"plan-feature-copy\">" +
-                "<strong>" + escapeHtml(feature.name) + "</strong>" +
-                "<span>" + escapeHtml(feature.detail) + "</span>" +
-                "<em class=\"plan-feature-cta\">" + escapeHtml(feature.cta || "Click to open →") + "</em>" +
-            "</span>" +
-            "<span class=\"plan-feature-arrow\" aria-hidden=\"true\">→</span>";
-        list.appendChild(item);
-    });
-
-    section.appendChild(list);
+    const optional = document.createElement("p");
+    optional.className = "plan-optional-game";
+    optional.innerHTML = "Bonus after practice: <a href=\"" + escapeHtml(dailyGame.href) + "\">" + escapeHtml(dailyGame.name) + "</a>";
+    section.appendChild(optional);
     card.appendChild(section);
 }
 
@@ -1594,12 +1649,11 @@ function appendPlanCoachingDetails(card, dayEntry) {
     const body = document.createElement("div");
     body.className = "plan-coaching-details-body";
     appendPlanParagraphs(body, "Today's Focus", dayEntry.daySummary);
-    appendPlanParagraphs(body, "Step-by-Step Help", dayEntry.whatToDo);
+    appendPlanParagraphs(body, "Step-by-Step Help", ["Picture yourself responding well to a hard sport moment.", "Follow eight slow reset breaths.", "Tap a thought to leave behind and choose your next-play phrase."]);
     appendPlanParagraphs(body, "Try It in Your Sport", dayEntry.sportTryIt);
     appendPlanParagraphs(body, "Think About It", dayEntry.thinkAboutIt);
 
-    const doneWhen = normalizePlanFieldList(dayEntry.youAreDoneWhen);
-    doneWhen.push("Finish today's assigned MindZone game before checking off your plan.");
+    const doneWhen = ["Finish today's three guided steps. The game is optional."];
     appendPlanParagraphs(body, "You Are Done When", doneWhen);
 
     details.appendChild(body);
@@ -1639,48 +1693,12 @@ function createDailyPlanCard(dayEntry, progress) {
             <p class="daily-plan-kicker">TODAY · DAY ${dayEntry.day}</p>
             <h2>${escapeHtml(dayEntry.title || "Mental Training")}</h2>
         </div>
-        <span class="daily-plan-duration">${escapeHtml(dayEntry.duration || "20–30 min")}</span>
+        <span class="daily-plan-duration">About 5 min</span>
     `;
     card.appendChild(header);
 
     appendMindZoneFeatures(card, dayEntry);
     appendPlanCoachingDetails(card, dayEntry);
-
-    const completeWrap = document.createElement("label");
-    completeWrap.className = "daily-complete-row";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.setAttribute("aria-label", "Mark day " + dayEntry.day + " complete");
-
-    const checkVisual = document.createElement("span");
-    checkVisual.className = "custom-check";
-
-    const completeText = document.createElement("span");
-    completeText.className = "daily-complete-text";
-    completeText.textContent = "I finished today's plan";
-
-    completeWrap.appendChild(checkbox);
-    completeWrap.appendChild(checkVisual);
-    completeWrap.appendChild(completeText);
-    card.appendChild(completeWrap);
-
-    checkbox.addEventListener("change", function () {
-        if (!checkbox.checked) {
-            return;
-        }
-
-        savePlanProgress({
-            planId: progress.planId,
-            lastCompletedDay: dayEntry.day,
-            lastCompletedDate: getTodayDateKey()
-        });
-
-        card.classList.add("daily-plan-card-complete");
-        setTimeout(function () {
-            renderPlan(currentPlanText, currentPlanId);
-        }, 500);
-    });
 
     return card;
 }
@@ -1709,7 +1727,7 @@ function parsePlan(raw) {
                 return {
                     day: day.day || index + 1,
                     title: day.title || "Day " + (index + 1),
-                    duration: day.duration || "20-30 minutes",
+                    duration: day.duration || "About 5 minutes",
                     daySummary: normalizePlanFieldList(day.daySummary || day.summary),
                     whatToDo: normalizePlanFieldList(day.whatToDo || day.mainWork),
                     sportTryIt: normalizePlanFieldList(day.sportTryIt || day.sportApplication),
@@ -1734,7 +1752,7 @@ function parsePlan(raw) {
             days.push({
                 day: parseInt(match[1], 10),
                 title: "Daily Training",
-                duration: "20-25 minutes",
+                duration: "About 5 minutes",
                 daySummary: [
                     "Today you will work on one mental skill that helps you in your sport.",
                     "Take your time and read each step before you start.",

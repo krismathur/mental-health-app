@@ -12,7 +12,14 @@ const meditationVoiceCircle = document.getElementById("meditationVoiceCircle");
 const meditationVoiceStatus = document.getElementById("meditationVoiceStatus");
 const meditationResumeBtn = document.getElementById("meditationResumeBtn");
 const meditationStopBtn = document.getElementById("meditationStopBtn");
+const meditationPauseBtn = document.getElementById("meditationPauseBtn");
+const meditationDoneBtn = document.getElementById("meditationDoneBtn");
+const meditationProgressFill = document.getElementById("meditationProgressFill");
+const meditationProgressText = document.getElementById("meditationProgressText");
+const meditationReadAlong = document.getElementById("meditationReadAlong");
 let meditationPendingResume = null;
+let meditationIsPaused = false;
+let meditationPausedBetweenSegments = false;
 
 let meditationSession = {
     active: false,
@@ -324,17 +331,28 @@ let breathingIntervalId = null;
 
 function renderBreathingExercises() {
     resetExerciseList.innerHTML = "";
+    const simpleIds = ["box", "belly", "equal"];
+    const today = window.AppTime && typeof window.AppTime.getNow === "function"
+        ? window.AppTime.getNow()
+        : new Date();
+    const chosenId = simpleIds[today.getDate() % simpleIds.length];
+    const exercise = breathingExercises.find(function (item) {
+        return item.id === chosenId;
+    }) || breathingExercises[0];
 
-    breathingExercises.forEach(function (exercise) {
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = "reset-exercise-card";
-        card.innerHTML = `<h4>${exercise.name}</h4><p>${exercise.summary}</p>`;
-        card.addEventListener("click", function () {
-            openBreathingExercise(exercise);
-        });
-        resetExerciseList.appendChild(card);
+    const label = document.createElement("p");
+    label.className = "reset-today-label";
+    label.textContent = "TRY THIS TODAY";
+    resetExerciseList.appendChild(label);
+
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "reset-exercise-card reset-exercise-card-today";
+    card.innerHTML = `<h4>${exercise.name}</h4><p>${exercise.summary}</p><span>Start this reset →</span>`;
+    card.addEventListener("click", function () {
+        openBreathingExercise(exercise);
     });
+    resetExerciseList.appendChild(card);
 }
 
 function openBreathingExercise(exercise) {
@@ -658,24 +676,32 @@ function renderMeditationPrograms() {
         return;
     }
 
-    meditationProgramList.innerHTML = MEDITATION_PROGRAM_SECTIONS.map(function (section) {
-        const cards = section.programs.map(function (program) {
-            return `
-                <button type="button" class="meditation-program-card" data-program-id="${program.id}">
-                    <h3>${program.name}</h3>
-                    <p>${program.subtitle}</p>
-                    <span class="meditation-program-duration">${program.duration}</span>
-                </button>
-            `;
-        }).join("");
+    const todayChoices = [
+        "calm-before-storm",
+        "lock-in-focus-flow",
+        "bounce-back-reset",
+        "peaceful-power-down"
+    ];
+    const today = window.AppTime && typeof window.AppTime.getNow === "function"
+        ? window.AppTime.getNow()
+        : new Date();
+    const programId = todayChoices[today.getDate() % todayChoices.length];
+    const program = MEDITATION_PROGRAMS.find(function (item) {
+        return item.id === programId;
+    }) || MEDITATION_PROGRAMS[0];
 
-        return `
-            <section class="meditation-program-section">
-                <h3 class="meditation-program-section-title">${section.label}</h3>
-                <div class="meditation-program-section-grid">${cards}</div>
-            </section>
-        `;
-    }).join("");
+    meditationProgramList.innerHTML = `
+        <section class="meditation-program-section meditation-today-program">
+            <h3 class="meditation-program-section-title">Try this today</h3>
+            <button type="button" class="meditation-program-card" data-program-id="${program.id}">
+                <h3>${program.name}</h3>
+                <p>${program.subtitle}</p>
+                <span class="meditation-program-duration">${program.duration}</span>
+                <span class="meditation-program-start">Start guided audio →</span>
+            </button>
+            <p class="meditation-today-note">One short session is enough for today.</p>
+        </section>
+    `;
 
     meditationProgramList.querySelectorAll(".meditation-program-card").forEach(function (card) {
         card.addEventListener("click", function () {
@@ -711,6 +737,32 @@ function showMeditationActiveView(program) {
     meditationProgramSubtitle.textContent = program.subtitle;
     setMeditationVoiceStatus("");
     setMeditationCircleState("speaking");
+    meditationIsPaused = false;
+    if (meditationPauseBtn) {
+        meditationPauseBtn.hidden = false;
+        meditationPauseBtn.textContent = "Pause Audio";
+    }
+    if (meditationDoneBtn) {
+        meditationDoneBtn.hidden = true;
+    }
+    updateMeditationPlayback(0, program.segments[0] && program.segments[0].text);
+}
+
+function updateMeditationPlayback(index, text) {
+    const program = meditationSession.program;
+    const total = program && Array.isArray(program.segments) ? program.segments.length : 0;
+    const completed = total ? Math.min(index, total) : 0;
+    const percent = total ? Math.round((completed / total) * 100) : 0;
+
+    if (meditationProgressFill) {
+        meditationProgressFill.style.width = percent + "%";
+    }
+    if (meditationProgressText) {
+        meditationProgressText.textContent = percent + "% complete";
+    }
+    if (meditationReadAlong && text) {
+        meditationReadAlong.textContent = text;
+    }
 }
 
 function setMeditationVoiceStatus(message) {
@@ -729,6 +781,7 @@ function showMeditationResumePrompt(retryFn) {
     meditationPendingResume = retryFn;
     if (meditationResumeBtn) {
         meditationResumeBtn.hidden = false;
+        meditationResumeBtn.textContent = "▶ Tap to Play Audio";
     }
     setMeditationVoiceStatus("Your browser paused this session's audio. Tap below to continue.");
 }
@@ -881,6 +934,8 @@ function softenMeditationText(text) {
 }
 
 function stopMeditationSession() {
+    meditationIsPaused = false;
+    meditationPausedBetweenSegments = false;
     meditationSession.active = false;
     meditationSession.program = null;
     meditationSession.segmentIndex = 0;
@@ -921,6 +976,7 @@ function handleMeditationSegmentEnd(segment) {
         setMeditationCircleState("breathing");
         prefetchNextMeditationSegment();
         meditationSession.pauseTimeout = setTimeout(function () {
+            meditationSession.pauseTimeout = null;
             meditationSession.segmentIndex += 1;
             speakMeditationSegment();
         }, MEDITATION_BREATH_PAUSE_MS);
@@ -931,22 +987,17 @@ function handleMeditationSegmentEnd(segment) {
     speakMeditationSegment();
 }
 
-function skipMeditationSegment(message) {
-    if (!meditationSession.active) {
-        return;
-    }
-
-    if (message) {
-        setMeditationVoiceStatus(message);
-    }
-
-    meditationSession.segmentIndex += 1;
-    speakMeditationSegment();
+function skipMeditationSegment() {
+    if (!meditationSession.active) { return; }
+    const segment = meditationSession.program.segments[meditationSession.segmentIndex];
+    showMeditationResumePrompt(function () { handleMeditationSegmentEnd(segment); });
+    setMeditationVoiceStatus("Audio could not play. Read this line, then continue.");
+    if (meditationResumeBtn) { meditationResumeBtn.textContent = "I read this line — Continue"; }
 }
 
 function speakMeditationSegmentWithBrowser(segment) {
     if (!window.speechSynthesis) {
-        setMeditationVoiceStatus("Voice playback is not supported in this browser.");
+        skipMeditationSegment();
         return;
     }
 
@@ -1062,7 +1113,7 @@ function prefetchNextMeditationSegment() {
 }
 
 async function playGeminiMeditationAudio(segment, data) {
-    if (!meditationSession.active) {
+    if (meditationIsPaused || !meditationSession.active) {
         return;
     }
 
@@ -1151,7 +1202,7 @@ async function speakMeditationSegmentWithGemini(segment, isRetry) {
 }
 
 function speakMeditationSegment() {
-    if (!meditationSession.active || !meditationSession.program) {
+    if (!meditationSession.active || !meditationSession.program || meditationIsPaused) {
         return;
     }
 
@@ -1160,6 +1211,8 @@ function speakMeditationSegment() {
         finishMeditationProgram();
         return;
     }
+
+    updateMeditationPlayback(meditationSession.segmentIndex, segment.text);
 
     if (meditationSession.engine === "gemini") {
         speakMeditationSegmentWithGemini(segment, false);
@@ -1207,9 +1260,18 @@ async function startMeditationProgram(program) {
 }
 
 function finishMeditationProgram() {
+    const finishedProgram = meditationSession.program;
+    const segmentCount = finishedProgram && finishedProgram.segments ? finishedProgram.segments.length : 1;
+    updateMeditationPlayback(segmentCount, "Session complete. Take your calm into the next play.");
     stopMeditationSession();
     setMeditationVoiceStatus("Session complete. Great mental training today.");
-    completeMeditationActivity();
+    if (meditationPauseBtn) {
+        meditationPauseBtn.hidden = true;
+    }
+    if (meditationDoneBtn) {
+        meditationDoneBtn.hidden = false;
+    }
+    completeMeditationActivity(true);
 }
 
 function resetMeditationView() {
@@ -1259,6 +1321,59 @@ if (meditationStopBtn) {
     meditationStopBtn.addEventListener("click", function () {
         stopMeditationSession();
         setMeditationVoiceStatus("Session stopped.");
+    });
+}
+
+if (meditationPauseBtn) {
+    meditationPauseBtn.addEventListener("click", function () {
+        if (!meditationSession.active) {
+            return;
+        }
+
+        if (meditationIsPaused) {
+            meditationIsPaused = false;
+            if (meditationPausedBetweenSegments) {
+                meditationPausedBetweenSegments = false;
+                meditationSession.segmentIndex += 1;
+                speakMeditationSegment();
+            } else if (meditationSession.engine === "gemini" && meditationAudio && meditationAudio.src && !meditationAudio.ended) {
+                meditationAudio.play().catch(function () {
+                    showMeditationResumePrompt(function () {
+                        meditationAudio.play();
+                    });
+                });
+            } else if (window.speechSynthesis) {
+                window.speechSynthesis.resume();
+                if (!window.speechSynthesis.speaking) { speakMeditationSegment(); }
+            } else {
+                speakMeditationSegment();
+            }
+            meditationIsPaused = false;
+            meditationPauseBtn.textContent = "Pause Audio";
+            setMeditationVoiceStatus("Playing");
+            return;
+        }
+
+        if (meditationSession.pauseTimeout) {
+            clearTimeout(meditationSession.pauseTimeout);
+            meditationSession.pauseTimeout = null;
+            meditationPausedBetweenSegments = true;
+        }
+        if (meditationAudio && !meditationAudio.paused) {
+            meditationAudio.pause();
+        }
+        if (window.speechSynthesis) {
+            window.speechSynthesis.pause();
+        }
+        meditationIsPaused = true;
+        meditationPauseBtn.textContent = "Resume Audio";
+        setMeditationVoiceStatus("Paused");
+    });
+}
+
+if (meditationDoneBtn) {
+    meditationDoneBtn.addEventListener("click", function () {
+        window.location.assign("welcome.html");
     });
 }
 
@@ -1351,11 +1466,11 @@ function selectAvatarCard(card) {
 
     card.classList.add("selected");
     card.setAttribute("aria-pressed", "true");
-    localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(getAvatarCardData(card)));
+    window.MindZoneStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(getAvatarCardData(card)));
 }
 
 function restoreAvatarSelection() {
-    const saved = JSON.parse(localStorage.getItem(AVATAR_STORAGE_KEY) || "null");
+    const saved = JSON.parse(window.MindZoneStorage.getItem(AVATAR_STORAGE_KEY) || "null");
     if (!saved) {
         return;
     }
@@ -1401,7 +1516,7 @@ avatarProceedBtn.addEventListener("click", function () {
     }
 
     selectAvatarCard(selectedCard);
-    closeOverlay(avatarOverlay);
+    window.location.assign("mental-training.html");
 });
 
 closeFixBtn.addEventListener("click", function () {
@@ -1504,15 +1619,22 @@ function syncBodyOverlayState() {
     document.body.classList.toggle("overlay-open", anyOpen);
 }
 
-function completeMeditationActivity() {
+function completeMeditationActivity(stayOnPage) {
+    const rewardKey = "mindzone_meditation_reward_" + (window.AppTime ? window.AppTime.getToday() : new Date().toISOString().slice(0, 10));
+    const alreadyRewarded = window.MindZoneStorage.getItem(rewardKey) === "1";
     if (typeof window.addRewardProgress === "function") {
-        window.addRewardProgress({
-            xp: 20,
-            stars: 1,
-            activityCompletions: 1
-        });
+        if (!alreadyRewarded) {
+            window.addRewardProgress({
+                xp: 20,
+                stars: 0,
+                activityCompletions: 1
+            });
+            window.MindZoneStorage.setItem(rewardKey, "1");
+        }
     }
-    window.location.assign("welcome.html");
+    if (!stayOnPage) {
+        window.location.assign("welcome.html");
+    }
 }
 
 (function openFeatureFromQuery() {

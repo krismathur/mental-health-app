@@ -497,6 +497,18 @@ function drawDiverSprite(ctx, sprite, tint, x, y, facing, rotation, wobble) {
 
     const height = 96;
 
+    // Add unmistakable dive gear around the reusable character art. The tank
+    // sits behind the body; mask, snorkel and fins sit on top so these read as
+    // divers rather than mountain climbers even at phone size.
+    ctx.fillStyle = "#d9f7ff";
+    ctx.strokeStyle = "#164e63";
+    ctx.lineWidth = 3;
+    roundedPath(ctx, 9, -21, 17, 46, 7);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#164e63";
+    ctx.fillRect(7, -8, 21, 5);
+
     if (sprite) {
         const width = height * (sprite.width / sprite.height);
         ctx.drawImage(sprite, -width / 2, -height / 2, width, height);
@@ -505,6 +517,34 @@ function drawDiverSprite(ctx, sprite, tint, x, y, facing, rotation, wobble) {
         roundedPath(ctx, -18, -height / 2, 36, height, 14);
         ctx.fill();
     }
+
+    // Dive mask and snorkel.
+    ctx.fillStyle = "rgba(186, 230, 253, 0.88)";
+    ctx.strokeStyle = "#083344";
+    ctx.lineWidth = 3;
+    roundedPath(ctx, -15, -40, 31, 14, 6);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(14, -33);
+    ctx.lineTo(25, -33);
+    ctx.lineTo(25, -49);
+    ctx.stroke();
+
+    // Two fins make the swimming silhouette clear during quick movement.
+    ctx.fillStyle = tint;
+    ctx.beginPath();
+    ctx.moveTo(-14, 34);
+    ctx.lineTo(-29, 49);
+    ctx.lineTo(-5, 46);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(8, 35);
+    ctx.lineTo(2, 51);
+    ctx.lineTo(24, 43);
+    ctx.closePath();
+    ctx.fill();
 
     ctx.restore();
 }

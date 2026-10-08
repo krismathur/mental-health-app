@@ -18,7 +18,7 @@
         { id: "pitch", label: "PITCH", sport: "soccer" },
         { id: "diamond", label: "DIAMOND", sport: "baseball" },
         { id: "gridiron", label: "GRIDIRON", sport: "football" },
-        { id: "court", label: "COURT", sport: "tennis" }
+        { id: "court", label: "TENNIS", sport: "tennis" }
     ];
 
     // `skin` is the tone the studio starts a character on; players can change

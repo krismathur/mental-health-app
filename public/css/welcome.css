@@ -2916,6 +2916,20 @@ body.welcome-page .arcade-panel .game-go {
     margin-top: 0;
 }
 
+.settings-account-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.settings-account-notice {
+    min-height: 1.25em;
+    margin: 0;
+    color: #c53030;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
 .settings-logout-btn {
     margin-top: 0;
     background: #fff5f5;
@@ -2927,6 +2941,19 @@ body.welcome-page .arcade-panel .game-go {
     opacity: 1;
     background: #fed7d7;
     border-color: #fc8181;
+}
+
+.settings-delete-btn {
+    margin-top: 0;
+    color: #fff;
+    background: #c53030;
+    border: 2px solid #c53030;
+}
+
+.settings-delete-btn:hover {
+    opacity: 1;
+    background: #9b2c2c;
+    border-color: #9b2c2c;
 }
 
 .settings-panel .star-section {
@@ -4243,3 +4270,756 @@ body.welcome-page #emotionCheckinSection .emotion-save-btn:not(:disabled) {
         font-size: 1rem;
     }
 }
+/* User-testing flow: one clear daily practice, with everything else secondary. */
+body.welcome-page .dashboard-welcome {
+    margin-bottom: 16px;
+}
+
+body.welcome-page .dashboard-welcome-copy > p:last-child {
+    max-width: 580px;
+}
+
+body.welcome-page .page > #emotionCheckinSection {
+    order: initial;
+    margin: 0 0 18px;
+    padding: 18px 22px;
+    border: 1px solid #d9e8f1;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.checkin-heading-simple {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.checkin-heading-simple .tool-title,
+.checkin-heading-simple p {
+    margin: 0;
+}
+
+.checkin-heading-simple > p {
+    color: #627d98;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.emotion-grid-simple {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(88px, 118px));
+    justify-content: center;
+    gap: 10px;
+}
+
+.emotion-grid-simple .emotion-cell,
+.emotion-grid-simple .emotion-pick-btn {
+    min-width: 0;
+}
+
+.emotion-grid-simple .emotion-pick-btn {
+    width: 100%;
+    min-height: 76px;
+    padding: 9px 6px;
+    background: #f4f9fc;
+    border: 2px solid transparent;
+    border-radius: 14px;
+}
+
+.emotion-grid-simple .emotion-circle {
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 0 0 3px;
+    font-size: 1.65rem;
+    background: none;
+    border: 0;
+}
+
+.emotion-grid-simple .emotion-label {
+    font-size: 0.86rem;
+    font-weight: 900;
+}
+
+.emotion-grid-simple .emotion-cell.is-selected .emotion-pick-btn {
+    color: #fff;
+    background: #2b6cb0;
+    border-color: #2b6cb0;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-save-btn {
+    display: block;
+    width: min(220px, 100%);
+    min-height: 42px;
+    margin: 13px auto 0;
+}
+
+.daily-start-card {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    color: #fff;
+    background: linear-gradient(145deg, #153e75, #2b6cb0 58%, #169aa0);
+    border: 0;
+    border-radius: 24px;
+    box-shadow: 0 20px 42px rgba(20, 68, 110, 0.24);
+}
+
+.daily-start-card::after {
+    position: absolute;
+    right: -58px;
+    bottom: -72px;
+    width: 210px;
+    height: 210px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    content: "";
+}
+
+.daily-start-card .section-eyebrow {
+    color: #c9fbef;
+}
+
+.daily-start-copy h2 {
+    margin: 4px 0 7px;
+    color: #fff;
+    font-size: clamp(1.55rem, 3vw, 2.15rem);
+}
+
+.daily-start-copy p:last-child {
+    margin: 0;
+    color: #e3f5ff;
+}
+
+.daily-start-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 22px 0;
+}
+
+.daily-start-steps span {
+    padding: 11px 8px;
+    color: #eaf7ff;
+    background: rgba(255, 255, 255, 0.11);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.daily-start-steps b {
+    display: block;
+    margin-top: 3px;
+    color: #fff;
+    font-size: 0.78rem;
+}
+
+.daily-start-btn {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 21px;
+    color: #17324d;
+    font-weight: 900;
+    background: #f6d365;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+}
+
+.daily-start-btn.is-complete {
+    background: #c6f6d5;
+}
+
+.daily-start-note {
+    margin: 10px 0 0;
+    color: #d9eff9;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.plan-details {
+    margin-top: 14px;
+    padding: 0;
+    background: #fff;
+    border: 1px solid #dbe8ef;
+    border-radius: 18px;
+}
+
+.plan-details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.plan-details > summary::-webkit-details-marker { display: none; }
+.plan-details > summary strong,
+.plan-details > summary small { display: block; }
+.plan-details > summary small { margin-top: 2px; color: #7892a8; }
+.plan-details[open] > summary { border-bottom: 1px solid #e3edf3; }
+.plan-details > :not(summary) { margin-right: 20px; margin-left: 20px; }
+.plan-details .plan-actions { margin-bottom: 20px; }
+
+.plan-session-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+    padding: 17px 19px;
+    color: #fff;
+    background: #2b6cb0;
+    border-radius: 15px;
+    text-decoration: none;
+}
+
+.plan-session-cta strong,
+.plan-session-cta small { display: block; }
+.plan-session-cta small { margin-top: 3px; color: #d9eff9; }
+.plan-optional-game { margin: 12px 0 0; color: #627d98; font-size: 0.84rem; }
+.plan-optional-game a { color: #2b6cb0; font-weight: 900; }
+
+@media (max-width: 720px) {
+    .checkin-heading-simple { display: block; }
+    .checkin-heading-simple > p { margin-top: 5px; }
+    .emotion-grid-simple { grid-template-columns: repeat(5, minmax(68px, 1fr)); overflow-x: auto; justify-content: start; }
+    .daily-start-card { padding: 24px 20px; }
+    .daily-start-steps { grid-template-columns: 1fr; }
+}
+
+/* Cohesive dark dashboard surfaces. These rules intentionally live last so
+   the user-testing layout cannot be pulled back to the older white cards. */
+body.welcome-page .daily-start-card {
+    display: flex;
+    flex: 0 0 auto;
+    min-height: 330px;
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 92% 14%, rgba(103, 232, 210, 0.2), transparent 30%),
+        linear-gradient(145deg, #12355d, #1e5f98 58%, #147d87);
+}
+
+body.welcome-page .daily-start-steps {
+    margin: 24px 0 20px;
+}
+
+body.welcome-page .daily-start-btn {
+    width: 100%;
+    margin-top: auto;
+    box-sizing: border-box;
+}
+
+body.welcome-page .plan-details-heading {
+    display: flex;
+    align-items: center;
+    min-height: 74px;
+    margin: 0;
+    padding: 18px 20px;
+    color: #f7fbff;
+    border-bottom: 1px solid rgba(190, 227, 248, 0.16);
+    box-sizing: border-box;
+}
+
+body.welcome-page .plan-details-heading strong,
+body.welcome-page .plan-details-heading small {
+    display: block;
+}
+
+body.welcome-page .plan-details-heading small {
+    margin-top: 3px;
+    color: #b9d2e6;
+}
+
+body.welcome-page .plan-details,
+body.welcome-page .page > #emotionCheckinSection {
+    color: #f4f9ff;
+    background:
+        radial-gradient(circle at 90% 8%, rgba(103, 232, 210, 0.12), transparent 28%),
+        linear-gradient(145deg, rgba(12, 39, 67, 0.98), rgba(8, 27, 49, 0.98));
+    border-color: rgba(103, 232, 210, 0.34);
+    box-shadow: 0 24px 56px rgba(2, 10, 24, 0.42);
+}
+
+body.welcome-page .plan-details {
+    min-height: 0;
+    height: auto;
+}
+
+body.welcome-page .plan-details > summary {
+    min-height: 74px;
+    color: #f7fbff;
+    box-sizing: border-box;
+}
+
+body.welcome-page .plan-details > summary:hover {
+    background: rgba(103, 232, 210, 0.06);
+}
+
+body.welcome-page .plan-details > summary small,
+body.welcome-page .plan-intro p:not(.plan-eyebrow),
+body.welcome-page .plan-optional-game,
+body.welcome-page #emotionCheckinSection .checkin-heading > p {
+    color: #abc6dc;
+}
+
+body.welcome-page .plan-details[open] > summary {
+    border-bottom-color: rgba(190, 227, 248, 0.16);
+}
+
+body.welcome-page .plan-details-toggle {
+    display: grid;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    color: #102a43;
+    background: #f8d76a;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    font-weight: 900;
+    transition: transform 0.18s ease;
+}
+
+body.welcome-page .plan-details:not([open]) .plan-details-toggle {
+    transform: rotate(-90deg);
+}
+
+body.welcome-page .plan-intro h1,
+body.welcome-page .plan-intro h2,
+body.welcome-page .plan-intro--in-card h1,
+body.welcome-page .tool-plan .card-title,
+body.welcome-page .tool-plan .daily-plan-header h2,
+body.welcome-page #emotionCheckinSection .tool-title,
+body.welcome-page #emotionCheckinSection .emotion-label {
+    color: #f7fbff;
+}
+
+body.welcome-page .tool-plan .card,
+body.welcome-page .tool-plan .plan-view .weekly-goal-card,
+body.welcome-page .tool-plan .plan-view .daily-plan-card,
+body.welcome-page .tool-plan .plan-view .plan-waiting-card,
+body.welcome-page .tool-plan .plan-view .plan-finished-card {
+    color: #eff8ff;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(99, 179, 237, 0.05)),
+        #0d2c4a;
+    border-color: rgba(190, 227, 248, 0.18);
+    box-shadow: 0 12px 28px rgba(1, 10, 24, 0.28);
+}
+
+body.welcome-page .tool-plan .subtitle,
+body.welcome-page .tool-plan .weekly-goal-text,
+body.welcome-page .tool-plan .plan-sentence,
+body.welcome-page .tool-plan .plan-view p,
+body.welcome-page .tool-plan .plan-view small {
+    color: #c2d8e9;
+}
+
+body.welcome-page .tool-plan .weekly-goal-card::after,
+body.welcome-page .tool-plan .daily-plan-card::after {
+    background: linear-gradient(145deg, rgba(8, 27, 49, 0.92), rgba(13, 58, 88, 0.88));
+}
+
+body.welcome-page .tool-plan .weekly-goal-label,
+body.welcome-page .tool-plan .daily-plan-kicker,
+body.welcome-page .tool-plan .plan-optional-game a {
+    color: #78ead5;
+}
+
+/* Keep every generated plan surface readable against the dark coach card. */
+body.welcome-page .tool-plan .daily-plan-header h2,
+body.welcome-page .tool-plan .plan-features-section > h3,
+body.welcome-page .tool-plan .plan-section h3 {
+    color: #f7fbff;
+}
+
+body.welcome-page .tool-plan .plan-features-section > h3,
+body.welcome-page .tool-plan .plan-section h3 {
+    border-bottom-color: rgba(190, 227, 248, 0.18);
+}
+
+body.welcome-page .tool-plan .daily-plan-kicker {
+    padding: 4px 9px;
+    color: #d9fbf5;
+    background: #174d67;
+    border: 1px solid rgba(120, 234, 213, 0.5);
+}
+
+body.welcome-page .tool-plan .daily-plan-duration {
+    color: #102a43;
+    background: #8cf0df;
+    border-color: #8cf0df;
+}
+
+body.welcome-page .tool-plan .plan-coaching-details {
+    background: rgba(3, 16, 34, 0.62);
+    border-color: rgba(103, 232, 210, 0.3);
+}
+
+body.welcome-page .tool-plan .plan-coaching-details > summary {
+    color: #f7fbff;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+body.welcome-page .tool-plan .plan-coaching-details > summary:hover {
+    background: rgba(103, 232, 210, 0.08);
+}
+
+body.welcome-page .tool-plan .plan-coaching-details summary small {
+    color: #b9d2e6;
+}
+
+body.welcome-page .tool-plan .coaching-details-icon {
+    color: #102a43;
+    background: #67e8d2;
+}
+
+body.welcome-page .tool-plan .plan-coaching-details-body {
+    background: linear-gradient(145deg, rgba(7, 27, 49, 0.95), rgba(10, 43, 69, 0.92));
+    border-top-color: rgba(190, 227, 248, 0.18);
+}
+
+body.welcome-page .tool-plan .plan-coaching-details-body .plan-section h3 {
+    color: #f8d76a;
+}
+
+body.welcome-page .tool-plan .plan-coaching-details-body .plan-sentence {
+    color: #d8e8f4;
+}
+
+body.welcome-page .tool-plan .daily-complete-row {
+    color: #e9f5ff;
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(190, 227, 248, 0.24);
+}
+
+body.welcome-page .tool-plan .daily-complete-text {
+    color: #e9f5ff;
+}
+
+body.welcome-page .tool-plan .custom-check {
+    background: #0a223b;
+    border-color: #78ead5;
+}
+
+body.welcome-page .tool-plan .daily-complete-row input:checked + .custom-check {
+    background: #168895;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-pick-btn,
+body.welcome-page #emotionCheckinSection .emotion-cell {
+    color: #f7fbff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(190, 227, 248, 0.18);
+    box-shadow: none;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-cell.is-selected .emotion-pick-btn {
+    background: linear-gradient(145deg, #236bac, #168895);
+    border-color: #67e8d2;
+}
+
+body.welcome-page #emotionCheckinSection .emotion-save-btn {
+    color: #102a43;
+    background: #f8d76a;
+}
+
+@media (min-width: 901px) {
+    body.welcome-page .top-left {
+        height: auto;
+    }
+
+    body.welcome-page .daily-start-card {
+        flex: 0 0 auto;
+        min-height: 340px;
+    }
+
+    body.welcome-page .plan-details.tool-plan {
+        flex: 0 0 auto;
+        height: auto;
+        min-height: 360px;
+    }
+}
+
+@media (max-width: 720px) {
+    body.welcome-page .daily-start-card {
+        min-height: 0;
+    }
+
+    body.welcome-page .daily-start-btn {
+        margin-top: 0;
+    }
+}
+
+/* Settings: one section at a time, with the same dark visual language as the
+   dashboard. The old markup already called these tab panels; this makes that
+   structure visible and removes the long, cluttered form stack. */
+body.welcome-page #settingsOverlay .overlay-backdrop {
+    background: rgba(2, 8, 23, 0.78);
+    backdrop-filter: blur(9px);
+}
+
+body.welcome-page .settings-panel {
+    width: min(780px, calc(100vw - 32px));
+    max-width: none;
+    max-height: calc(100vh - 32px);
+    padding: 28px;
+    color: #f7fbff;
+    background:
+        radial-gradient(circle at 90% 8%, rgba(103, 232, 210, 0.13), transparent 28%),
+        linear-gradient(145deg, #0b2a48, #081d34 72%);
+    border: 1px solid rgba(103, 232, 210, 0.32);
+    border-radius: 26px;
+    box-shadow: 0 28px 80px rgba(1, 8, 20, 0.55);
+}
+
+body.welcome-page .settings-header {
+    margin-bottom: 16px;
+}
+
+body.welcome-page .settings-kicker {
+    margin: 0 0 3px;
+    color: #f8d76a;
+    font-size: 0.67rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+}
+
+body.welcome-page .settings-header h2 {
+    color: #fff;
+    font-size: 1.85rem;
+}
+
+body.welcome-page .settings-panel .close-btn {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    padding: 0;
+    color: #d9eff9;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(190, 227, 248, 0.18);
+    border-radius: 50%;
+}
+
+body.welcome-page .settings-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 6px;
+    background: rgba(2, 12, 28, 0.34);
+    border: 1px solid rgba(190, 227, 248, 0.13);
+    border-radius: 16px;
+}
+
+body.welcome-page .settings-tab {
+    min-height: 42px;
+    padding: 9px 14px;
+    color: #a9c4d9;
+    background: transparent;
+    border: 0;
+    border-radius: 11px;
+    font-family: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+body.welcome-page .settings-tab:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+body.welcome-page .settings-tab.is-active {
+    color: #102a43;
+    background: #f8d76a;
+    box-shadow: 0 7px 18px rgba(248, 215, 106, 0.18);
+}
+
+body.welcome-page .settings-tab-panels {
+    min-height: 0;
+    padding-right: 3px;
+}
+
+body.welcome-page .settings-tab-panel + .settings-tab-panel {
+    margin-top: 0;
+}
+
+body.welcome-page .settings-onboarding-section {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.065);
+    border-color: rgba(190, 227, 248, 0.16);
+}
+
+body.welcome-page .settings-section-heading {
+    padding-bottom: 10px;
+    color: #fff;
+    border-bottom-color: rgba(190, 227, 248, 0.14);
+}
+
+body.welcome-page .settings-tab-lead,
+body.welcome-page .settings-save-note,
+body.welcome-page .settings-panel .star-hint,
+body.welcome-page .settings-panel .star-scale {
+    color: #abc6dc;
+}
+
+body.welcome-page .settings-panel label,
+body.welcome-page .settings-panel .star-question {
+    color: #d8e8f4;
+}
+
+body.welcome-page .settings-panel input[type="text"],
+body.welcome-page .settings-panel input[type="number"] {
+    color: #f7fbff;
+    background: rgba(3, 16, 34, 0.55);
+    border-color: rgba(190, 227, 248, 0.2);
+}
+
+body.welcome-page .settings-panel input::placeholder {
+    color: #7892a8;
+}
+
+body.welcome-page .settings-panel input[type="text"]:focus,
+body.welcome-page .settings-panel input[type="number"]:focus {
+    background: rgba(3, 16, 34, 0.8);
+    border-color: #67e8d2;
+    box-shadow: 0 0 0 4px rgba(103, 232, 210, 0.12);
+}
+
+body.welcome-page .settings-panel .star-section {
+    gap: 12px;
+}
+
+body.welcome-page .settings-panel .star-section h3 {
+    color: #fff;
+}
+
+body.welcome-page .settings-panel .star-row {
+    background: rgba(3, 16, 34, 0.42);
+    border: 1px solid rgba(190, 227, 248, 0.13);
+}
+
+body.welcome-page .settings-panel .stars label {
+    color: #d8e8f4;
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(190, 227, 248, 0.17);
+}
+
+body.welcome-page .settings-panel .stars label:has(input:checked) {
+    color: #102a43;
+    background: #67e8d2;
+    border-color: #67e8d2;
+}
+
+body.welcome-page .settings-regen-note {
+    color: #f4dfa0;
+    background: rgba(248, 215, 106, 0.09);
+    border-color: rgba(248, 215, 106, 0.28);
+}
+
+body.welcome-page .settings-form-actions {
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 14px;
+}
+
+body.welcome-page .settings-form-actions .settings-save-note {
+    margin: 0 auto 0 0;
+    text-align: left;
+}
+
+body.welcome-page .settings-form-actions .settings-action-btn {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 190px;
+    margin: 0;
+    color: #102a43;
+    background: #f8d76a;
+}
+
+body.welcome-page .settings-logout-btn {
+    color: #ffd4d4;
+    background: rgba(197, 48, 48, 0.16);
+    border-color: rgba(252, 129, 129, 0.46);
+}
+
+body.welcome-page .settings-delete-btn {
+    color: #fff;
+    background: #b83232;
+    border-color: #fc8181;
+}
+
+body.welcome-page .settings-delete-btn:hover {
+    background: #8f2424;
+    border-color: #feb2b2;
+}
+
+body.welcome-page .settings-account-notice {
+    color: #ffd4d4;
+}
+
+@media (max-width: 700px) {
+    body.welcome-page .settings-panel {
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 16px);
+        padding: 22px 16px;
+        border-radius: 22px;
+    }
+
+    body.welcome-page .settings-fields-grid,
+    body.welcome-page .settings-panel .star-section {
+        grid-template-columns: 1fr;
+    }
+
+    body.welcome-page .settings-form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    body.welcome-page .settings-account-actions {
+        grid-template-columns: 1fr;
+    }
+
+    body.welcome-page .settings-form-actions .settings-save-note {
+        margin: 0;
+        text-align: center;
+    }
+
+    body.welcome-page .settings-form-actions .settings-action-btn {
+        width: 100%;
+    }
+}
+
+/* Keep the one daily action reachable on small screens, even before check-in. */
+@media (max-width: 720px) {
+    body.welcome-page .page { padding-bottom: 180px; }
+    body.welcome-page #startDailySessionLink {
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+        width: auto;
+        z-index: 40;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    }
+    body.welcome-page.overlay-open #startDailySessionLink { visibility: hidden; }
+}
+
+/* Completion cards share the dark plan palette. */
+body.welcome-page .tool-plan .plan-waiting-card h2,
+body.welcome-page .tool-plan .plan-finished-card h2 { color: #f7fbff; }
+body.welcome-page .tool-plan .plan-intro { padding-top: 22px; }

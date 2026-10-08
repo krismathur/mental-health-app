@@ -56,3 +56,32 @@ test("unknown difficulty safely falls back to medium", async function () {
     assert.strictEqual(mountain.normalizeDifficulty("impossible"), "medium");
     assert.strictEqual(diver.normalizeDifficulty(null), "medium");
 });
+
+test("mountain routes remain finishable while hard requires more precise take-off timing", async function () {
+    const { run } = await loadModule("public/game/level-check.mjs");
+    const { LEVELS } = await loadModule("public/game/levels.js");
+    for (const difficulty of ["easy", "medium", "hard"]) {
+        assert.ok(run(LEVELS[0], 8, difficulty).ok, difficulty + " must have a finishable route");
+    }
+    assert.ok(run(LEVELS[0], 28, "easy").ok, "easy tolerates earlier jumps");
+    assert.ok(!run(LEVELS[0], 28, "hard").ok, "the same loose timing must not breeze through hard");
+});
+
+test("mountain difficulty changes actual jump height, checkpoint recovery, and mid-climb wind", async function () {
+    const { Game } = await loadModule("public/game/engine.js");
+    const { LEVELS } = await loadModule("public/game/levels.js");
+    const original = JSON.stringify(LEVELS[0]);
+    const games = ["easy", "medium", "hard"].map(id => new Game(LEVELS[0], id));
+    const rises = games.map(game => {
+        const p1 = game.level.platforms.find(p => p.id === "p1");
+        const p2 = game.level.platforms.find(p => p.id === "p2");
+        return p1.y - p2.y;
+    });
+    assert.ok(rises[0] < rises[1] && rises[1] < rises[2]);
+    assert.equal(games[0].level.checkpoints.length, 4);
+    assert.equal(games[2].level.checkpoints.length, 2);
+    assert.ok(games.every(game => game.level.zones.filter(z => z.kind === "wind").length === 2));
+    assert.ok(games[2].tuning.crumbleDelay < games[1].tuning.crumbleDelay);
+    assert.ok(games[1].tuning.crumbleDelay < games[0].tuning.crumbleDelay);
+    assert.equal(JSON.stringify(LEVELS[0]), original, "difficulty must not mutate shared level data");
+});

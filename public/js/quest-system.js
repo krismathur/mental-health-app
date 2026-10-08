@@ -1,11 +1,11 @@
 (function () {
     function readNumber(key) {
-        return Math.max(0, parseInt(localStorage.getItem(key), 10) || 0);
+        return Math.max(0, parseInt(window.MindZoneStorage.getItem(key), 10) || 0);
     }
 
     function readStreak() {
         try {
-            const data = JSON.parse(localStorage.getItem("mindzone_login_gemstones") || "{}");
+            const data = JSON.parse(window.MindZoneStorage.getItem("mindzone_login_gemstones") || "{}");
             const dates = Array.isArray(data.loginDates) ? data.loginDates : [];
             const dateSet = new Set(dates);
             const cursor = new Date();
@@ -79,7 +79,7 @@
         }
 
         const player = getPlayerProgress();
-        const name = localStorage.getItem("mindzone_name") || "Athlete";
+        const name = window.MindZoneStorage.getItem("mindzone_name") || "Athlete";
 
         hud.innerHTML = `
             <a class="mz-hud-player" href="welcome.html" aria-label="Open your Daily Training">

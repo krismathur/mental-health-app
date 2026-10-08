@@ -108,8 +108,7 @@ function renderDifficultyPicker() {
         button.setAttribute("aria-checked", String(button.dataset.difficulty === selected.id));
     });
 
-    el("difficultyDescription").textContent = selected.description
-        + (selected.xpBonus ? " Finish it for +" + selected.xpBonus + " bonus XP." : "");
+    el("difficultyDescription").textContent = selected.description;
 }
 
 // The Content-Security-Policy forbids inline style attributes, so dynamic
@@ -590,6 +589,12 @@ function wireUi() {
     });
 
     el("playBtn").addEventListener("click", function () {
+        unlockAudio();
+        playSound("click");
+        startLevel();
+    });
+
+    el("chooseCharacterBtn").addEventListener("click", function () {
         unlockAudio();
         playSound("click");
         renderCharacterCards();

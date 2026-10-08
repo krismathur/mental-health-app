@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Today's Practice - MindZone</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/theme.css">
+        <link rel="stylesheet" href="css/daily-session.css">
+    </head>
+    <body class="daily-session-page">
+        <header class="session-topbar">
+            <a class="session-brand" href="welcome.html">MindZone</a>
+            <a class="session-exit" href="welcome.html">Back to dashboard</a>
+        </header>
+
+        <main class="session-shell">
+            <div class="session-progress" aria-label="Practice progress">
+                <div class="session-progress-copy">
+                    <span id="sessionStepLabel">Ready</span>
+                    <span id="sessionTimeLabel">About 5 minutes</span>
+                </div>
+                <div class="session-progress-track"><span id="sessionProgressFill"></span></div>
+                <div class="session-step-dots" aria-hidden="true">
+                    <span data-step-dot="1">1</span>
+                    <span data-step-dot="2">2</span>
+                    <span data-step-dot="3">3</span>
+                </div>
+            </div>
+
+            <section id="introStep" class="session-card session-step is-active">
+                <p class="session-kicker">TODAY'S PRACTICE</p>
+                <p id="sessionFocus" class="session-lead" hidden></p>
+                <div class="session-hero-icon" aria-hidden="true">🧠</div>
+                <h1>Train your mind in three steps.</h1>
+                <p class="session-lead">Picture your best, calm your body, and drop one worry before your next play.</p>
+                <p id="dailyRoutineName" class="session-daily-theme"></p>
+
+                <div class="session-roadmap">
+                    <div><span>1</span><strong>Picture it</strong><small>See yourself respond well</small></div>
+                    <div><span>2</span><strong>Breathe</strong><small>Slow down your body</small></div>
+                    <div><span>3</span><strong>Let it go</strong><small>Choose your next-play thought</small></div>
+                </div>
+
+                <button type="button" id="beginSessionBtn" class="session-primary">Start today's practice</button>
+                <p id="alreadyCompleteNote" class="already-complete" hidden>You already finished today. You can practice again, but today's reward is already saved.</p>
+            </section>
+
+            <section id="visualizeStep" class="session-card session-step" hidden>
+                <p class="session-kicker">STEP 1 OF 3 · PICTURE IT</p>
+                <h1 id="visualizeTitle">See your next good play.</h1>
+                <p id="visualizeLead" class="session-lead">Press play, close your eyes if that feels comfortable, and follow the words.</p>
+
+                <div class="audio-player">
+                    <button type="button" id="visualizePlayBtn" class="audio-play-btn" aria-label="Play visualization">▶</button>
+                    <div class="audio-player-copy">
+                        <strong id="visualizeStatus">Ready to play</strong>
+                        <div class="audio-progress"><span id="visualizeProgressFill"></span></div>
+                        <span id="visualizeProgressText">0 / 10 lines</span>
+                    </div>
+                </div>
+
+                <div class="read-along" aria-live="polite">
+                    <p class="read-along-label">READ ALONG</p>
+                    <p id="visualizeReadAlong">Tap play when you are ready.</p>
+                </div>
+
+                <div class="session-actions">
+                    <button type="button" id="visualizeDoneBtn" class="session-primary" disabled>Next: Breathe</button>
+                    <button type="button" id="visualizeReadBtn" class="session-text-btn">No sound? Read instead</button>
+                </div>
+            </section>
+
+            <section id="breatheStep" class="session-card session-step" hidden>
+                <p class="session-kicker">STEP 2 OF 3 · BREATHE</p>
+                <h1 id="breatheTitle">Eight slow reset breaths.</h1>
+                <p id="breatheLead" class="session-lead">Follow the circle. Nothing to get perfect—just make your exhale slow.</p>
+
+                <div class="breath-stage">
+                    <div id="breathCircle" class="breath-circle"><span id="breathCount">Ready</span></div>
+                    <strong id="breathCue">Press start</strong>
+                    <p id="breathRound">8 breaths to go</p>
+                </div>
+
+                <div class="session-actions">
+                    <button type="button" id="breathStartBtn" class="session-primary">Start breathing</button>
+                    <button type="button" id="breathDoneBtn" class="session-primary" hidden>Next: Let it go</button>
+                </div>
+            </section>
+
+            <section id="releaseStep" class="session-card session-step" hidden>
+                <p class="session-kicker">STEP 3 OF 3 · LET IT GO</p>
+                <h1 id="releaseTitle">What can you leave behind?</h1>
+                <p id="releaseLead" class="session-lead">Tap one. You do not need to type or explain it.</p>
+
+                <div id="releaseChoices" class="tap-choices" role="group" aria-label="Choose a thought to release">
+                    <button type="button" data-release="A mistake">A mistake</button>
+                    <button type="button" data-release="Worry about losing">Worry about losing</button>
+                    <button type="button" data-release="What other people think">What people think</button>
+                    <button type="button" data-release="A tough feeling">A tough feeling</button>
+                </div>
+
+                <div id="resetPhraseArea" class="reset-phrase-area" hidden>
+                    <p id="resetChoiceLabel" class="read-along-label">PICK YOUR NEXT-PLAY THOUGHT</p>
+                    <div id="resetChoices" class="tap-choices reset-choices" role="group" aria-label="Choose a reset phrase">
+                        <button type="button" data-reset="Next play.">Next play.</button>
+                        <button type="button" data-reset="I can handle this.">I can handle this.</button>
+                        <button type="button" data-reset="Breathe and begin again.">Breathe and begin again.</button>
+                    </div>
+                </div>
+
+                <button type="button" id="finishSessionBtn" class="session-primary" disabled>Finish today's practice</button>
+            </section>
+
+            <section id="completeStep" class="session-card session-step session-complete" hidden>
+                <div class="celebration-check" aria-hidden="true">✓</div>
+                <p class="session-kicker">PRACTICE COMPLETE</p>
+                <h1>You trained your mind today.</h1>
+                <p id="completeMessage" class="session-lead">You pictured it, breathed, and chose your next-play thought.</p>
+
+                <div class="win-card">
+                    <span aria-hidden="true">🏅</span>
+                    <div><strong>Today's win</strong><p id="savedResetPhrase">Next play.</p></div>
+                </div>
+
+                <div class="complete-actions">
+                    <a id="todayGameLink" class="session-secondary" href="game/index.html">Play today's optional game</a>
+                    <a class="session-primary session-link" href="welcome.html">Back to my dashboard</a>
+                </div>
+                <p class="optional-note">The game is a bonus. Your daily practice is already complete.</p>
+            </section>
+        </main>
+
+        <script data-account-src="js/app-time.js"></script>
+        <script data-account-src="js/rewards.js"></script>
+        <script data-account-src="js/daily-session.js"></script>
+    <script src="/js/account-storage.js"></script>
+        <script src="/js/account-bootstrap.js"></script>
+    </body>
+</html>

@@ -79,11 +79,11 @@
                 </div>
 
                 <div id="meditationFeatureArea" class="meditation-feature-area meditation-view-list">
-                    <p class="meditation-intro">Choose a 5-minute guided program. Your AI coach will speak it to you.</p>
+                    <p class="meditation-intro">Here is one guided session for today. Press start and follow along.</p>
                     <div id="meditationProgramList" class="meditation-program-list"></div>
 
                     <div id="meditationProgramActive" class="meditation-program-active">
-                        <button type="button" id="meditationBackBtn" class="meditation-back-btn">← Back to Programs</button>
+                        <button type="button" id="meditationBackBtn" class="meditation-back-btn">← Back to today’s pick</button>
                         <h3 id="meditationProgramTitle" class="meditation-program-title"></h3>
                         <p id="meditationProgramSubtitle" class="meditation-program-subtitle"></p>
 
@@ -96,10 +96,22 @@
                                 <span class="voice-bar"></span>
                             </div>
                             <p id="meditationVoiceStatus" class="meditation-voice-status">Press play to begin</p>
+                            <div class="meditation-playback-progress" aria-label="Session progress">
+                                <span id="meditationProgressFill"></span>
+                            </div>
+                            <p id="meditationProgressText" class="meditation-progress-text">0% complete</p>
+                            <div class="meditation-read-along">
+                                <span>READ ALONG</span>
+                                <p id="meditationReadAlong">Choose a program to begin.</p>
+                            </div>
                             <button type="button" id="meditationResumeBtn" class="meditation-resume-btn" hidden>▶ Tap to Play Audio</button>
                         </div>
 
-                        <button type="button" id="meditationStopBtn" class="meditation-stop-btn">Stop Session</button>
+                        <div class="meditation-playback-actions">
+                            <button type="button" id="meditationPauseBtn" class="meditation-resume-btn" hidden>Pause Audio</button>
+                            <button type="button" id="meditationDoneBtn" class="meditation-resume-btn" hidden>Back to Daily Training</button>
+                            <button type="button" id="meditationStopBtn" class="meditation-stop-btn">Stop Session</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -222,10 +234,11 @@
             </div>
         </div>
 
-        <script src="js/roster.js"></script>
-        <script src="js/avatar-migration.js"></script>
-        <script src="js/meditation-programs.js"></script>
-        <script src="js/meditation.js"></script>
+        <script data-account-src="js/roster.js"></script>
+        <script data-account-src="js/avatar-migration.js"></script>
+        <script data-account-src="js/app-time.js"></script>
+        <script data-account-src="js/meditation-programs.js"></script>
+        <script data-account-src="js/meditation.js"></script>
     
 
 
@@ -239,7 +252,7 @@
                         <div class="video-brain-mark">🧠</div>
                         <div>
                             <p class="video-kicker">Mindset Film Room</p>
-                            <h2>Video Library</h2>
+                            <h2>Film Room</h2>
                         </div>
                     </div>
                     <button type="button" id="closeVideoLibraryBtn" class="video-close-btn">&times;</button>
@@ -428,9 +441,11 @@
             </div>
         </div>
 
-        <script src="js/video-library.js"></script>
-        <script src="js/nav.js"></script>
-        <script src="js/rewards.js"></script>
-        <script src="js/quest-system.js"></script>
+        <script data-account-src="js/video-library.js"></script>
+        <script data-account-src="js/nav.js"></script>
+        <script data-account-src="js/rewards.js"></script>
+        <script data-account-src="js/quest-system.js"></script>
+    <script src="/js/account-storage.js"></script>
+        <script src="/js/account-bootstrap.js"></script>
     </body>
 </html>

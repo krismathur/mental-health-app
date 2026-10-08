@@ -4,7 +4,7 @@
 
     function clearTodaysMood() {
         const today = window.AppTime.getToday();
-        const savedHistory = localStorage.getItem(MOOD_HISTORY_KEY);
+        const savedHistory = window.MindZoneStorage.getItem(MOOD_HISTORY_KEY);
 
         if (savedHistory) {
             try {
@@ -13,22 +13,22 @@
                     const filtered = history.filter(function (entry) {
                         return entry.date !== today;
                     });
-                    localStorage.setItem(MOOD_HISTORY_KEY, JSON.stringify(filtered));
+                    window.MindZoneStorage.setItem(MOOD_HISTORY_KEY, JSON.stringify(filtered));
                 }
             } catch (error) {
-                localStorage.removeItem(MOOD_HISTORY_KEY);
+                window.MindZoneStorage.removeItem(MOOD_HISTORY_KEY);
             }
         }
 
-        const legacyMood = localStorage.getItem(MOOD_STORAGE_KEY);
+        const legacyMood = window.MindZoneStorage.getItem(MOOD_STORAGE_KEY);
         if (legacyMood) {
             try {
                 const mood = JSON.parse(legacyMood);
                 if (mood && mood.date === today) {
-                    localStorage.removeItem(MOOD_STORAGE_KEY);
+                    window.MindZoneStorage.removeItem(MOOD_STORAGE_KEY);
                 }
             } catch (error) {
-                localStorage.removeItem(MOOD_STORAGE_KEY);
+                window.MindZoneStorage.removeItem(MOOD_STORAGE_KEY);
             }
         }
     }

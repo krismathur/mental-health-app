@@ -53,7 +53,7 @@ footer {
     max-width: 900px;
     margin: 0 auto;
     position: relative;
-    top: -170px;
+    top: -72px;
     padding: 46px 56px 42px;
     text-align: center;
     background: rgba(12, 16, 22, 0.3);
@@ -252,7 +252,7 @@ footer {
 /* How it works */
 .steps {
     max-width: 1120px;
-    margin: 100px auto;
+    margin: 64px auto 82px;
     padding: 0 20px;
 }
 
@@ -371,7 +371,7 @@ footer {
 /* Mind training quote cards — confidence / pressure / control */
 .mind-quotes {
     max-width: 1120px;
-    margin: 0 auto 96px;
+    margin: 0 auto 82px;
     padding: 0 20px;
 }
 
@@ -401,21 +401,43 @@ footer {
         border-color 0.35s ease;
 }
 
-/* Accent rail down the left edge carries the power colour. */
-.mind-quote-card::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: var(--power-accent, #63b3ed);
-}
-
 .mind-quote-card:hover {
     transform: translateY(-6px);
     border-color: rgba(255, 255, 255, 0.26);
     box-shadow: 0 22px 46px rgba(0, 0, 0, 0.44);
+}
+
+.power-athlete-photo {
+    width: calc(100% + 56px);
+    height: 210px;
+    margin: -30px -28px 20px;
+    object-fit: cover;
+    object-position: center 25%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.athlete-photo-credit {
+    display: inline-block;
+    margin-top: 12px;
+    color: rgba(219, 234, 254, 0.72);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.athlete-photo-credit:hover,
+.athlete-photo-credit:focus-visible {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.athlete-photo-note {
+    max-width: 760px;
+    margin: 18px auto 0;
+    color: rgba(219, 234, 254, 0.72);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 .mind-quote-confidence { --power-accent: #f6c344; }
@@ -551,7 +573,7 @@ footer {
     }
 
     .hero-text {
-        top: -90px;
+        top: -24px;
         padding: 34px 22px 32px;
         border-radius: 22px;
     }
@@ -757,7 +779,7 @@ footer {
 
 .reward-preview {
     max-width: 1180px;
-    margin: 0 auto 96px;
+    margin: 0 auto 82px;
     padding: 0 20px;
     text-align: center;
 }
@@ -775,7 +797,7 @@ footer {
 
 .reward-preview-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
     margin-top: 34px;
 }
@@ -962,14 +984,12 @@ footer {
     font-weight: 900;
 }
 
-.quest-motion-ready .reveal-card {
-    opacity: 0;
-    transform: translateY(24px);
+.reveal-card {
+    opacity: 1;
+    transform: none;
 }
 
-.quest-motion-ready .reveal-card.is-revealed {
-    opacity: 1;
-    transform: translateY(0);
+.reveal-card.is-revealed {
     transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1033,7 +1053,7 @@ footer {
         animation: none;
     }
 
-    .quest-motion-ready .reveal-card {
+    .reveal-card {
         opacity: 1;
         transform: none;
     }

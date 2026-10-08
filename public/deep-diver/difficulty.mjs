@@ -4,7 +4,7 @@ export const DIFFICULTIES = {
     easy: {
         id: "easy",
         label: "Easy",
-        description: "Plenty of air bubbles, gentle currents, and lighter stings.",
+        description: "More air, gentle currents, and slower jellyfish.",
         xpBonus: 0,
         oxygenIds: null,
         jellySpeedScale: 0.75,
@@ -25,7 +25,7 @@ export const DIFFICULTIES = {
     medium: {
         id: "medium",
         label: "Medium",
-        description: "Air matters: plan a route between fewer bubbles and active hazards.",
+        description: "Less air and quicker jellyfish. Plan your route.",
         xpBonus: 5,
         oxygenIds: ["o1", "o2", "o4", "o6", "o7", "o9", "o10", "o11", "o12", "o14", "o15", "o16"],
         jellySpeedScale: 1,
@@ -44,7 +44,7 @@ export const DIFFICULTIES = {
     hard: {
         id: "hard",
         label: "Hard",
-        description: "Sparse air, punishing stings, fast jellyfish, and strong currents.",
+        description: "Very little air, fast jellyfish, and strong currents.",
         xpBonus: 15,
         oxygenIds: ["o1", "o4", "o7", "o10", "o12", "o14", "o16"],
         jellySpeedScale: 1.55,

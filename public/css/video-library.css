@@ -177,11 +177,15 @@
 .video-library-content {
     position: relative;
     z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 18px 22px;
     counter-reset: videoNumber;
 }
 
 .video-category {
-    margin-top: 8px;
+    margin-top: 0;
     scroll-margin-top: 18px;
 }
 
@@ -202,7 +206,7 @@
 
 .video-list {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
 }
 
@@ -390,6 +394,10 @@
 }
 
 @media (max-width: 760px) {
+    .video-library-content {
+        grid-template-columns: 1fr;
+    }
+
     .video-panel {
         padding: 24px 20px;
     }
@@ -404,5 +412,82 @@
 
     .video-player-view {
         padding: 20px 18px 24px;
+    }
+}
+
+/* Use the available screen for browsing and for the embedded film itself. */
+.video-overlay {
+    padding: 14px;
+}
+
+.video-panel {
+    width: min(1440px, calc(100vw - 28px));
+    height: min(900px, calc(100vh - 28px));
+    max-height: calc(100vh - 28px);
+    padding: 32px 38px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 1120px) {
+    .video-library-content {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+    }
+}
+
+.video-player-view {
+    padding: 26px 34px 34px;
+}
+
+.video-player-header {
+    margin-bottom: 14px;
+}
+
+.video-player-copy {
+    margin-bottom: 14px;
+}
+
+.video-player-frame-wrap {
+    width: min(100%, 1280px);
+    max-height: calc(100vh - 190px);
+    margin: 0 auto;
+}
+
+@media (max-width: 760px) {
+    .video-overlay {
+        padding: 8px;
+    }
+
+    .video-panel {
+        width: calc(100vw - 16px);
+        height: calc(100vh - 16px);
+        max-height: calc(100vh - 16px);
+        padding: 24px 20px;
+    }
+
+    .video-player-view {
+        padding: 20px 14px 22px;
+    }
+}
+
+/* Keep the three user-testing choices visually equal even when one title or
+   description wraps onto an extra line. */
+@media (min-width: 1120px) {
+    .video-library-content {
+        align-items: stretch;
+    }
+
+    .video-category {
+        display: grid;
+        grid-template-rows: auto 1fr;
+    }
+
+    .video-list,
+    .video-item {
+        height: 100%;
+    }
+
+    .video-item {
+        min-height: 134px;
     }
 }

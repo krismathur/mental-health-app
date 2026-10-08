@@ -37,7 +37,7 @@ const SOUNDS = {
 };
 
 let context = null;
-let muted = localStorage.getItem(MUTE_KEY) === "1";
+let muted = window.MindZoneStorage.getItem(MUTE_KEY) === "1";
 
 function getContext() {
     if (!context) {
@@ -66,7 +66,7 @@ export function isMuted() {
 
 export function toggleMute() {
     muted = !muted;
-    localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
+    window.MindZoneStorage.setItem(MUTE_KEY, muted ? "1" : "0");
     return muted;
 }
 

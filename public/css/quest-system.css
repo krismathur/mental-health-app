@@ -322,11 +322,15 @@ body.quest-zones .open-now-btn {
 
 /* Choice challenge shell sizing */
 body.quest-challenge .avatar-page-shell {
-    padding-top: 18px;
+    min-height: 0;
+    padding: 0 24px 32px;
 }
 
 body.quest-challenge .avatar-page-panel {
     width: min(1120px, calc(100% - 40px));
+    min-height: 520px;
+    height: min(650px, calc(100vh - 280px));
+    max-height: none;
     border: 2px solid rgba(237, 100, 166, 0.62);
     border-radius: 28px;
     box-shadow: 0 24px 60px rgba(74, 4, 78, 0.42);
@@ -463,6 +467,18 @@ body.quest-entry .submit-btn {
     body.quest-app.has-site-nav {
         padding-top: 126px;
         padding-bottom: 78px;
+    }
+
+    /* Onboarding already has a clear, linear flow. The five-item desktop nav
+       cannot fit in a phone header and only competes with the form. Keep the
+       MindZone home pill and settings button as the two useful exits. */
+    body.quest-onboarding.has-site-nav {
+        padding-top: 82px;
+        padding-bottom: 32px;
+    }
+
+    body.quest-onboarding nav.site-nav {
+        display: none;
     }
 
     body.quest-app:not(.quest-no-hud) nav.site-nav {

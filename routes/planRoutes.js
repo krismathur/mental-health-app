@@ -104,7 +104,7 @@ function createPlanRoutes(db) {
                     return {
                         day: day.day || index + 1,
                         title: String(day.title || "Day " + (index + 1)).trim(),
-                        duration: String(day.duration || "20-30 minutes").trim(),
+                        duration: String(day.duration || "About 5 minutes").trim(),
                         daySummary: toSentenceList(day.daySummary || day.summary),
                         whatToDo: toSentenceList(day.whatToDo || day.mainWork),
                         sportTryIt: toSentenceList(day.sportTryIt || day.sportApplication),
@@ -192,25 +192,23 @@ Return ONLY valid JSON in this exact shape (no markdown, no extra text):
     {
       "day": 1,
       "title": "Short kid-friendly title",
-      "duration": "20-30 minutes",
+      "duration": "About 5 minutes",
       "daySummary": [
         "One short sentence explaining today's mental skill.",
         "One short sentence explaining how it helps in ${sport}."
       ],
       "whatToDo": [
-        "One short instruction for Visualisation for Athletes.",
-        "One short instruction for Reset Mind.",
-        "One short instruction for Visualize Your Best.",
-        "One short instruction for Your Mental Choices.",
-        "One short instruction reminding them to play the game assigned on their dashboard."
+        "One short instruction for picturing a strong next play.",
+        "One short instruction for taking slow reset breaths.",
+        "One short instruction for letting go of an unhelpful thought."
       ],
       "sportTryIt": [
         "Write 2 short sentences showing how to use today's skill in ${sport} at practice or in a game."
       ],
       "thinkAboutIt": [
-        "Write 1 short reflection question the athlete can answer after training."
+        "Write 1 short idea they can choose as their next-play thought."
       ],
-      "youAreDoneWhen": "Write 1 short sentence saying they finished after using all four MindZone tools, playing the assigned game, and trying the sport challenge."
+      "youAreDoneWhen": "Write 1 short sentence saying they finished after the three guided steps."
     }
   ]
 }
@@ -219,13 +217,12 @@ Writing rules (very important):
 - Include exactly ${days} day objects (day 1 through day ${days}).
 - Every string must be a complete sentence with a subject and verb. Never write fragments like "Breathe more" or "Stay focused."
 - daySummary must have exactly 2 short full sentences for each day.
-- whatToDo must have exactly 5 short full sentences, one for each required activity.
-- Every day MUST include these 4 MindZone features in whatToDo (tie each one to today's theme):
-  1) Visualisation for Athletes — open Activities and finish a guided visualisation session
-  2) Reset Mind — do a breathing exercise to calm down
-  3) Visualize Your Best — choose one sport skill, watch it performed well, and picture doing it yourself
-  4) Your Mental Choices — practice good vs bad mental choices with their athlete avatar
-- The dashboard assigns one MindZone game each day. Remind the athlete that playing that assigned game is a required part of finishing the daily plan.
+- whatToDo must have exactly 3 short full sentences, one for each guided step.
+- Every day MUST use this same simple 5-minute flow, tied to today's theme:
+  1) Picture it — imagine one hard sport moment and a strong next response
+  2) Breathe — use slow breathing to calm the body
+  3) Let it go — drop one unhelpful thought and choose a next-play phrase
+- The dashboard may suggest one MindZone game after practice, but the game is always optional.
 - Use words a ${age}-year-old can easily understand.
 - Be specific and useful, but keep every sentence short, friendly, and encouraging.
 - Tie each day to their challenge: "${challenge}" and their goal: "${goal}".
@@ -234,8 +231,8 @@ Writing rules (very important):
 - Keep the whole coaching guide short enough for a young athlete to scan in about one minute.
 - Do NOT use generic lines like "believe in yourself" or "stay positive."
 
-Bad example: "Do breathing exercises."
-Good example: "Sit on your bed, set a timer for 3 minutes, and breathe in for 4 counts and out for 6 counts until the timer beeps."`;
+Bad example: "Regulate your nervous system."
+Good example: "Breathe in slowly, then make your breath out longer."`;
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${process.env.GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
@@ -299,7 +296,7 @@ Good example: "Sit on your bed, set a timer for 3 minutes, and breathe in for 4 
         const ttsModel = process.env.GEMINI_TTS_MODEL || "gemini-2.5-flash-preview-tts";
         const voiceName = process.env.GEMINI_TTS_VOICE || "Achernar";
         const prompt = `# AUDIO PROFILE: Calm MindZone Coach
-Warm, supportive meditation guide for young athletes ages 10-18.
+Warm, supportive meditation guide for young athletes ages 6-12.
 
 ### DIRECTOR'S NOTES
 Speak at a natural, confident coaching pace — slightly brisk, not slow.
@@ -509,7 +506,7 @@ ${text}`;
                 return (turn.role === "coach" ? "Coach" : "Athlete") + ": " + turn.message;
             }).join("\n");
 
-            const prompt = `You are the MindZone Coach, a supportive mental-performance coach for a young athlete (ages 10-18).
+            const prompt = `You are the MindZone Coach, a supportive mental-performance coach for a young athlete (ages 6-12).
 You are texting with them in a chat window.
 
 How to write:

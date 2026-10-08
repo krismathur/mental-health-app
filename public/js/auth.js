@@ -92,6 +92,7 @@ signupForm.addEventListener("submit", async function (event) {
     const result = await response.json();
 
     if (response.ok) {
+        window.MindZoneSession.end();
         window.location.href = "onboarding.html";
     } else {
         showMessage(result.message);
@@ -115,6 +116,7 @@ loginForm.addEventListener("submit", async function (event) {
     const result = await response.json();
 
     if (response.ok) {
+        window.MindZoneSession.end();
         sessionStorage.setItem("mindzone_record_login_gem", "1");
         sessionStorage.setItem("mindzone_after_login", "1");
         await sendUserToNextPage();

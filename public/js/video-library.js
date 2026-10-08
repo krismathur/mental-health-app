@@ -25,6 +25,60 @@ function addFilmRoomMission() {
     intro.insertAdjacentElement("afterend", mission);
 }
 
+function addTennisFeature() {
+    if (!videoLibraryOverlay || videoLibraryOverlay.querySelector("#video-tennis")) {
+        return;
+    }
+
+    const content = videoLibraryOverlay.querySelector(".video-library-content");
+    if (!content) {
+        return;
+    }
+
+    const section = document.createElement("section");
+    section.className = "video-category video-category-featured";
+    section.id = "video-tennis";
+    section.innerHTML = `
+        <h3 class="video-category-title">Tennis</h3>
+        <div class="video-list">
+            <a class="video-item" href="https://www.youtube.com/watch?v=RmqkooV1Kh8" rel="noopener noreferrer">
+                <span class="video-play">▶</span>
+                <span class="video-item-copy">
+                    <span class="video-category-label">Tennis · Mental strength</span>
+                    <h3>Novak Djokovic on Training the Mind</h3>
+                    <p>Listen for one way a tennis champion practices mental strength.</p>
+                </span>
+            </a>
+        </div>
+    `;
+    content.insertBefore(section, content.firstChild);
+}
+
+function trimFilmRoomForTesting() {
+    if (!videoLibraryOverlay) {
+        return;
+    }
+
+    const keep = new Set(["video-tennis", "video-focus", "video-reset"]);
+    videoLibraryOverlay.querySelectorAll(".video-category").forEach(function (category) {
+        if (!keep.has(category.id)) {
+            category.remove();
+            return;
+        }
+        category.querySelectorAll(".video-item").forEach(function (item, index) {
+            if (index > 0) {
+                item.remove();
+            }
+        });
+    });
+
+    videoLibraryOverlay.querySelectorAll(".mental-tags a").forEach(function (tab) {
+        if (!keep.has(String(tab.getAttribute("href") || "").replace("#", ""))) {
+            tab.remove();
+        }
+    });
+}
+
 function getYouTubeVideoId(url) {
     try {
         const parsedUrl = new URL(url, window.location.href);
@@ -78,6 +132,14 @@ function buildVideoPlayer() {
 }
 
 addFilmRoomMission();
+addTennisFeature();
+trimFilmRoomForTesting();
+
+const tennisVideoItem = videoLibraryOverlay && videoLibraryOverlay.querySelector("#video-tennis .video-item");
+if (tennisVideoItem) {
+    tennisVideoItem.dataset.playerWired = "true";
+    tennisVideoItem.addEventListener("click", openVideoPlayer);
+}
 
 function openVideoPlayer(event) {
     event.preventDefault();
@@ -140,7 +202,10 @@ document.addEventListener("click", function (event) {
 });
 
 for (const videoItem of videoItems) {
-    videoItem.addEventListener("click", openVideoPlayer);
+    if (!videoItem.dataset.playerWired) {
+        videoItem.dataset.playerWired = "true";
+        videoItem.addEventListener("click", openVideoPlayer);
+    }
 }
 
 if (closeVideoLibraryBtn) {

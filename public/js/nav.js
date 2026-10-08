@@ -67,8 +67,39 @@
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", async function () {
-            await fetch("/api/logout", { method: "POST" });
+            const response = await fetch("/api/logout", { method: "POST" });
+            if (!response.ok) { return; }
+            window.MindZoneSession.end();
             window.location.href = "index.html";
+        });
+    }
+
+    const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+    const accountActionNotice = document.getElementById("accountActionNotice");
+    if (deleteAccountBtn) {
+        deleteAccountBtn.addEventListener("click", async function () {
+            const confirmed = window.confirm("Delete your account and all saved MindZone data? This cannot be undone.");
+            if (!confirmed) { return; }
+
+            deleteAccountBtn.disabled = true;
+            deleteAccountBtn.textContent = "Deleting…";
+            if (accountActionNotice) { accountActionNotice.textContent = "Deleting your account…"; }
+
+            try {
+                const response = await fetch("/api/account", { method: "DELETE" });
+                if (!response.ok) { throw new Error("Account deletion failed"); }
+                if (window.MindZoneStorage && typeof window.MindZoneStorage.clearAccount === "function") {
+                    window.MindZoneStorage.clearAccount();
+                }
+                window.MindZoneSession.end();
+                window.location.href = "index.html";
+            } catch (error) {
+                deleteAccountBtn.disabled = false;
+                deleteAccountBtn.textContent = "Delete Account";
+                if (accountActionNotice) {
+                    accountActionNotice.textContent = "We could not delete the account. Please try again.";
+                }
+            }
         });
     }
 

@@ -372,6 +372,31 @@ body::before {
     font-weight: 900;
 }
 
+.meditation-today-program {
+    width: min(680px, 100%);
+    margin: 8px auto 0;
+}
+
+.meditation-today-program .meditation-program-card {
+    padding: 24px;
+}
+
+.meditation-program-start {
+    display: block;
+    margin-top: 16px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 900;
+}
+
+.meditation-today-note {
+    margin: 4px 0 0;
+    color: #bee3f8;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
 .meditation-view-list .meditation-program-active {
     display: none;
 }
@@ -919,7 +944,7 @@ body::before {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 12px 24px 8px;
+    padding: 8px 24px;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -1183,8 +1208,8 @@ body::before {
     visibility: visible;
     margin-top: auto;
     width: 100%;
-    padding: 18px 16px 14px;
-    min-height: 118px;
+    padding: 12px 14px 10px;
+    min-height: 92px;
     background: rgba(45, 27, 61, 0.92);
     border: 2px solid rgba(251, 182, 206, 0.55);
     border-radius: 14px;
@@ -1193,7 +1218,7 @@ body::before {
 
 .mental-training-progress-bar {
     width: 100%;
-    padding: 28px 56px 20px 12px;
+    padding: 16px 48px 12px 8px;
     display: grid;
     grid-template-columns: 72px 1fr;
     gap: 12px;
@@ -2416,5 +2441,164 @@ body.fix-video-open {
 
     .fix-video-reason {
         font-size: 1rem;
+    }
+}
+.meditation-playback-progress {
+    overflow: hidden;
+    width: min(440px, 100%);
+    height: 9px;
+    margin: 13px auto 0;
+    background: #dceaf2;
+    border-radius: 999px;
+}
+
+.meditation-playback-progress > span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #38b2ac, #3182ce);
+    border-radius: inherit;
+    transition: width 300ms ease;
+}
+
+.meditation-progress-text {
+    margin: 7px 0 13px;
+    color: #627d98;
+    font-size: 0.76rem;
+    font-weight: 900;
+}
+
+.meditation-read-along {
+    width: min(520px, 100%);
+    min-height: 112px;
+    margin: 0 auto 14px;
+    padding: 16px 18px;
+    color: #243b53;
+    background: #fffaf0;
+    border: 1px solid #f2dc9b;
+    border-radius: 14px;
+    text-align: left;
+}
+
+.meditation-read-along > span {
+    color: #986b13;
+    font-size: 0.67rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+}
+
+.meditation-read-along p {
+    margin: 7px 0 0;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.55;
+}
+
+.meditation-playback-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 9px;
+}
+.reset-today-label {
+    margin: 0 0 10px;
+    color: #2b6cb0;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+}
+
+.reset-exercise-card-today {
+    width: min(520px, 100%);
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.reset-exercise-card-today > span {
+    display: inline-block;
+    margin-top: 10px;
+    color: #2b6cb0;
+    font-weight: 900;
+}
+
+/* Reset Mind is one short exercise, so it should feel like a focused dialog
+   rather than inheriting the full-screen canvas used by the larger tools. */
+.overlay:has(.reset-panel) {
+    padding: 24px;
+}
+
+.med-panel.reset-panel {
+    width: min(900px, calc(100vw - 48px));
+    height: auto;
+    max-height: calc(100vh - 48px);
+    padding: 26px 28px 28px;
+    overflow: hidden;
+    border-radius: 26px;
+}
+
+.reset-panel .med-header {
+    margin-bottom: 18px;
+}
+
+.reset-feature-area {
+    flex: 0 1 auto;
+    padding: 28px;
+}
+
+.reset-feature-area.reset-view-list {
+    overflow: visible;
+}
+
+.reset-exercise-list {
+    grid-template-columns: 1fr;
+    width: min(620px, 100%);
+    margin: 0 auto;
+}
+
+.reset-today-label {
+    margin-bottom: 2px;
+    color: #8dd8ff;
+    text-align: center;
+}
+
+.reset-exercise-card-today {
+    width: 100%;
+    padding: 24px 26px;
+    background: linear-gradient(145deg, rgba(7, 27, 49, 0.92), rgba(21, 73, 112, 0.86));
+    border-color: rgba(103, 232, 210, 0.42);
+    border-radius: 18px;
+}
+
+.reset-exercise-card-today > span {
+    color: #67e8d2;
+}
+
+.reset-feature-area.reset-view-active {
+    max-height: calc(100vh - 160px);
+}
+
+.reset-exercise-active {
+    width: min(700px, 100%);
+    margin: 0 auto;
+}
+
+.reset-exercise-actions {
+    justify-content: center;
+}
+
+@media (max-width: 640px) {
+    .overlay:has(.reset-panel) {
+        padding: 10px;
+    }
+
+    .med-panel.reset-panel {
+        width: calc(100vw - 20px);
+        max-height: calc(100vh - 20px);
+        padding: 22px 18px;
+        border-radius: 22px;
+    }
+
+    .reset-feature-area {
+        padding: 20px 16px;
     }
 }

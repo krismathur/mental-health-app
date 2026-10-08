@@ -13,7 +13,7 @@ const closeMentalTrainingBtn = document.getElementById("closeMentalTrainingBtn")
 
 if (closeMentalTrainingBtn) {
     closeMentalTrainingBtn.addEventListener("click", function () {
-        window.location.href = "meditation.html";
+        window.location.href = "welcome.html";
     });
 }
 
@@ -338,37 +338,37 @@ let sessionRewardsGiven = false;
 function getSessionLevel() {
     return Math.min(
         QUESTION_TIERS.length - 1,
-        Math.max(0, parseInt(localStorage.getItem(TRAINING_SESSION_LEVEL_KEY), 10) || 0)
+        Math.max(0, parseInt(window.MindZoneStorage.getItem(TRAINING_SESSION_LEVEL_KEY), 10) || 0)
     );
 }
 
 function getTrainingProgress() {
-    return Math.min(100, Math.max(0, parseInt(localStorage.getItem(TRAINING_PROGRESS_KEY), 10) || 0));
+    return Math.min(100, Math.max(0, parseInt(window.MindZoneStorage.getItem(TRAINING_PROGRESS_KEY), 10) || 0));
 }
 
 function getQuestionIndex() {
-    return Math.max(0, parseInt(localStorage.getItem(TRAINING_QUESTION_KEY), 10) || 0);
+    return Math.max(0, parseInt(window.MindZoneStorage.getItem(TRAINING_QUESTION_KEY), 10) || 0);
 }
 
 function getSessionCorrectCount() {
-    return Math.max(0, parseInt(localStorage.getItem(TRAINING_SESSION_CORRECT_KEY), 10) || 0);
+    return Math.max(0, parseInt(window.MindZoneStorage.getItem(TRAINING_SESSION_CORRECT_KEY), 10) || 0);
 }
 
 function saveQuestionIndex(index) {
-    localStorage.setItem(TRAINING_QUESTION_KEY, String(index));
+    window.MindZoneStorage.setItem(TRAINING_QUESTION_KEY, String(index));
 }
 
 function saveTrainingProgress(progress) {
     barProgress = Math.min(100, Math.max(0, progress));
-    localStorage.setItem(TRAINING_PROGRESS_KEY, String(barProgress));
+    window.MindZoneStorage.setItem(TRAINING_PROGRESS_KEY, String(barProgress));
 }
 
 function saveSessionCorrectCount(count) {
-    localStorage.setItem(TRAINING_SESSION_CORRECT_KEY, String(count));
+    window.MindZoneStorage.setItem(TRAINING_SESSION_CORRECT_KEY, String(count));
 }
 
 function saveSessionLevel(level) {
-    localStorage.setItem(TRAINING_SESSION_LEVEL_KEY, String(level));
+    window.MindZoneStorage.setItem(TRAINING_SESSION_LEVEL_KEY, String(level));
 }
 
 function shuffleArray(items) {
@@ -385,14 +385,14 @@ function shuffleArray(items) {
 }
 
 function saveQuestionOrder(level, order) {
-    localStorage.setItem(TRAINING_QUESTION_ORDER_KEY, JSON.stringify({
+    window.MindZoneStorage.setItem(TRAINING_QUESTION_ORDER_KEY, JSON.stringify({
         level: level,
         order: order
     }));
 }
 
 function getSavedQuestionOrder(level) {
-    const raw = localStorage.getItem(TRAINING_QUESTION_ORDER_KEY);
+    const raw = window.MindZoneStorage.getItem(TRAINING_QUESTION_ORDER_KEY);
     if (!raw) {
         return null;
     }
@@ -863,7 +863,7 @@ function handleReviewChoice(choiceBtn) {
 }
 
 function loadMentalTrainingPage() {
-    savedAvatar = JSON.parse(localStorage.getItem(AVATAR_STORAGE_KEY) || "null");
+    savedAvatar = JSON.parse(window.MindZoneStorage.getItem(AVATAR_STORAGE_KEY) || "null");
     if (!savedAvatar || !savedAvatar.name) {
         window.location.href = "meditation.html";
         return;
@@ -882,8 +882,10 @@ function loadMentalTrainingPage() {
         setActiveQuestionsForLevel(sessionLevel, false);
     }
 
-    renderProgressBar();
-    setTimeout(hideIntroMessage, 4500);
+    if (mentalTrainingIntro) {
+        mentalTrainingIntro.remove();
+    }
+    showTrainingContent();
 }
 
 loadMentalTrainingPage();

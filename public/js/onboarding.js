@@ -80,8 +80,8 @@ function problemWithStep(step) {
             return "Please enter your age.";
         }
 
-        if (age < 10 || age > 18) {
-            return "MindZone is built for athletes aged 10 to 18.";
+        if (age < 6 || age > 12) {
+            return "MindZone is built for athletes aged 6 to 12.";
         }
 
         if (!value("sport")) {
@@ -253,19 +253,19 @@ form.addEventListener("submit", async function (event) {
         extra = "Stay confident, and calm at the plate.";
     }
 
-    localStorage.setItem("mindzone_name", name);
-    localStorage.setItem("mindzone_age", age);
-    localStorage.setItem("mindzone_sport", sport);
-    localStorage.setItem("mindzone_goal", goal);
-    localStorage.setItem("mindzone_challenge", challenge);
-    localStorage.setItem("mindzone_days", days);
-    localStorage.setItem("mindzone_mental_skill", mentalSkill.value);
-    localStorage.setItem("mindzone_goal_commitment", goalCommitment.value);
-    localStorage.setItem("mindzone_confidence", confidence.value);
-    localStorage.setItem("mindzone_stress", stress.value);
-    localStorage.setItem("mindzone_focus", focus.value);
-    localStorage.setItem("mindzone_bounce", bounce.value);
-    localStorage.setItem("mindzone_motivation", extra);
+    window.MindZoneStorage.setItem("mindzone_name", name);
+    window.MindZoneStorage.setItem("mindzone_age", age);
+    window.MindZoneStorage.setItem("mindzone_sport", sport);
+    window.MindZoneStorage.setItem("mindzone_goal", goal);
+    window.MindZoneStorage.setItem("mindzone_challenge", challenge);
+    window.MindZoneStorage.setItem("mindzone_days", days);
+    window.MindZoneStorage.setItem("mindzone_mental_skill", mentalSkill.value);
+    window.MindZoneStorage.setItem("mindzone_goal_commitment", goalCommitment.value);
+    window.MindZoneStorage.setItem("mindzone_confidence", confidence.value);
+    window.MindZoneStorage.setItem("mindzone_stress", stress.value);
+    window.MindZoneStorage.setItem("mindzone_focus", focus.value);
+    window.MindZoneStorage.setItem("mindzone_bounce", bounce.value);
+    window.MindZoneStorage.setItem("mindzone_motivation", extra);
 
     const profile = {
         name,

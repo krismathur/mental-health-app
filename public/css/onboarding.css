@@ -50,14 +50,14 @@ body::before {
     z-index: 1;
     max-width: 640px;
     margin: 0 auto;
-    padding: 40px 20px 72px;
+    padding: 22px 20px 56px;
 }
 
 /* ---------- Header ---------- */
 
 .page-header {
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
 }
 
 .header-text {
@@ -100,7 +100,7 @@ body.quest-onboarding .entry-krish {
 .progress-bar {
     display: flex;
     align-items: center;
-    margin-bottom: 22px;
+    margin-bottom: 16px;
 }
 
 .progress-step {
@@ -167,7 +167,7 @@ body.quest-onboarding .entry-krish {
     background: var(--stock);
     border: 1px solid var(--edge);
     border-radius: 18px;
-    padding: 26px 28px 28px;
+    padding: 22px 26px 24px;
     box-shadow: 0 26px 60px rgba(4, 9, 20, 0.55);
 }
 
@@ -583,7 +583,7 @@ body.plan-is-loading {
 
 @media (max-width: 620px) {
     .page {
-        padding: 28px 14px 56px;
+        padding: 18px 14px 44px;
     }
 
     body.quest-onboarding .entry-krish {

@@ -485,6 +485,7 @@ app.post("/api/reset-password", limits.authLimiter, function (req, res) {
 });
 
 app.get("/api/me", function (req, res) {
+    res.setHeader("Cache-Control", "no-store");
     if (!req.session.userId) {
         return res.status(401).json({ message: "Not logged in." });
     }
@@ -551,8 +552,8 @@ app.post("/api/profile", function (req, res) {
 
     const ageNumber = parseInt(age, 10);
 
-    if (!Number.isInteger(ageNumber) || ageNumber < 10 || ageNumber > 18) {
-        return res.status(400).json({ message: "MindZone is for athletes aged 10 to 18." });
+    if (!Number.isInteger(ageNumber) || ageNumber < 6 || ageNumber > 12) {
+        return res.status(400).json({ message: "MindZone is for athletes aged 6 to 12." });
     }
 
     db.get(

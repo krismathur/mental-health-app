@@ -86,7 +86,7 @@ function makeClient() {
 
 const validProfile = {
     name: "Test Athlete",
-    age: "14",
+    age: "9",
     sport: "Soccer",
     goal: "stay calm in games",
     challenge: "nerves before kickoff",
@@ -265,11 +265,11 @@ test("consent survives a later profile edit that does not resend it", async func
     assert.ok(profile.body.profile.parent_consent_at, "consent time must be recorded");
 });
 
-test("ages outside 10-18 are refused", async function () {
+test("ages outside 6-12 are refused", async function () {
     const client = makeClient();
     await client("POST", "/api/signup", { email: freshEmail(), password: "StrongPass2026" });
 
-    for (const age of ["9", "19", "25", "abc"]) {
+    for (const age of ["5", "13", "19", "abc"]) {
         const result = await client("POST", "/api/profile", { ...validProfile, age: age });
         assert.strictEqual(result.status, 400, "age " + age + " should be refused");
     }
@@ -369,6 +369,22 @@ test("forgot-password does not reveal whether an email has an account", async fu
 
     assert.strictEqual(unknown.status, 200);
     assert.match(unknown.body.message, /if that email has an account/i);
+});
+
+ test("session identity is uncached and isolated between accounts", async function () {
+    const first = makeClient();
+    const second = makeClient();
+    assert.strictEqual((await first("POST", "/api/signup", { email: freshEmail(), password: "Isolated-fixture-729!" })).status, 200);
+    assert.strictEqual((await second("POST", "/api/signup", { email: freshEmail(), password: "Isolated-fixture-729!" })).status, 200);
+    const one = await first("GET", "/api/me");
+    const two = await second("GET", "/api/me");
+    assert.strictEqual(one.status, 200);
+    assert.notStrictEqual(one.body.id, two.body.id);
+    await first("POST", "/api/logout");
+    assert.strictEqual((await first("GET", "/api/me")).status, 401);
+    assert.strictEqual((await second("GET", "/api/me")).body.id, two.body.id);
+    const anonymous = await fetch(BASE + "/api/me");
+    assert.strictEqual(anonymous.headers.get("cache-control"), "no-store");
 });
 
 test("repeated failed logins are rate limited", async function () {

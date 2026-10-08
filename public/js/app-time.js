@@ -14,14 +14,14 @@
     }
 
     function getOffsetDays() {
-        const stored = global.localStorage.getItem(OFFSET_KEY);
+        const stored = global.MindZoneStorage.getItem(OFFSET_KEY);
         const parsed = parseInt(stored, 10);
         return Number.isFinite(parsed) ? parsed : 0;
     }
 
     function setOffsetDays(days) {
         const normalized = Number.isFinite(days) ? Math.max(0, Math.floor(days)) : 0;
-        global.localStorage.setItem(OFFSET_KEY, String(normalized));
+        global.MindZoneStorage.setItem(OFFSET_KEY, String(normalized));
     }
 
     function getNow() {

@@ -23,13 +23,11 @@
             <!-- Start -->
             <section id="startScreen" class="game-screen is-active">
                 <div class="screen-card start-card">
-                    <p class="screen-kicker">Pace yourself. Breathe. Come back up.</p>
+                    <p class="screen-kicker">Stay calm under pressure.</p>
                     <h1 class="screen-title">Deep Diver</h1>
                     <p class="screen-text">
-                        Sunken treasure is scattered below your ship — the deeper it sits,
-                        the more it's worth. Swim down, grab one piece at a time, and get
-                        it back to the ship before your air runs out. Knowing when to turn
-                        back is the real skill.
+                        Grab treasure and return it to the ship before your air runs out.
+                        The deeper you go, the sooner you need to turn back.
                     </p>
 
                     <div class="difficulty-picker" aria-labelledby="difficultyTitle">
@@ -42,15 +40,16 @@
                         <p id="difficultyDescription" class="difficulty-description"></p>
                     </div>
 
-                    <button type="button" id="playBtn" class="game-btn game-btn-primary">Start Diving</button>
+                    <div class="quick-start-actions">
+                        <button type="button" id="playBtn" class="game-btn game-btn-primary">Start Diving</button>
+                        <button type="button" id="chooseCharacterBtn" class="game-btn game-btn-ghost">Choose Diver</button>
+                    </div>
 
                     <div class="start-stats" id="startStats"></div>
                     <div class="start-badges" id="startBadges"></div>
 
                     <p class="screen-hint">
-                        Swim with the arrow keys or WASD. Grab air bubbles to refill your
-                        tank, and surface any time to top it up. On a phone or tablet, use
-                        the pad at the bottom.
+                        Move: arrow keys or WASD · Refill: bubbles or the surface
                     </p>
                 </div>
             </section>
@@ -157,7 +156,9 @@
         </div>
 
         <!-- Shared MindZone rewards, so game XP feeds the same meters as the rest of the app -->
-        <script src="/js/rewards.js"></script>
-        <script type="module" src="main.js"></script>
+        <script data-account-src="/js/rewards.js"></script>
+        <script type="module" data-account-src="main.js"></script>
+    <script src="/js/account-storage.js"></script>
+        <script src="/js/account-bootstrap.js"></script>
     </body>
 </html>

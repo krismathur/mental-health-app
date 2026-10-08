@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Build Your Player Card - MindZone</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,25 +76,20 @@
                         <input id="name" type="text" placeholder="What should we call you?" required>
 
                         <label for="age">Your Age <span class="req">*</span></label>
-                        <input id="age" type="number" min="10" max="18" placeholder="10–18" required>
+                        <input id="age" type="number" min="6" max="12" placeholder="6–12" required>
 
                         <label for="sport">Your Sport <span class="req">*</span></label>
                         <input id="sport" type="text" placeholder="🏀 Basketball, ⚽ Soccer, 🏊 Swimming..." required>
 
                         <div class="scale-row">
-                            <p class="scale-question">How much time do you spend trying to be mentally prepared? <span class="req">*</span></p>
-                            <p class="scale-hint">1 = hardly any · 10 = a lot</p>
-                            <div class="stars scale-10">
-                                <label><input type="radio" name="mentalSkill" value="1" required> 1</label>
-                                <label><input type="radio" name="mentalSkill" value="2"> 2</label>
-                                <label><input type="radio" name="mentalSkill" value="3"> 3</label>
-                                <label><input type="radio" name="mentalSkill" value="4"> 4</label>
-                                <label><input type="radio" name="mentalSkill" value="5"> 5</label>
-                                <label><input type="radio" name="mentalSkill" value="6"> 6</label>
-                                <label><input type="radio" name="mentalSkill" value="7"> 7</label>
-                                <label><input type="radio" name="mentalSkill" value="8"> 8</label>
-                                <label><input type="radio" name="mentalSkill" value="9"> 9</label>
-                                <label><input type="radio" name="mentalSkill" value="10"> 10</label>
+                            <p class="scale-question">How often do you practice skills for your mind? <span class="req">*</span></p>
+                            <p class="scale-hint">Pick the answer that feels closest.</p>
+                            <div class="stars scale-choices-5">
+                                <label><input type="radio" name="mentalSkill" value="2" required><span>Not yet</span></label>
+                                <label><input type="radio" name="mentalSkill" value="4"><span>A little</span></label>
+                                <label><input type="radio" name="mentalSkill" value="6"><span>Sometimes</span></label>
+                                <label><input type="radio" name="mentalSkill" value="8"><span>Often</span></label>
+                                <label><input type="radio" name="mentalSkill" value="10"><span>Every day</span></label>
                             </div>
                         </div>
                     </section>
@@ -107,19 +104,14 @@
                         <input id="challenge" type="text" placeholder="Nerves, losing focus, bouncing back..." required>
 
                         <div class="scale-row">
-                            <p class="scale-question">How much are you willing to work on your goal? <span class="req">*</span></p>
-                            <p class="scale-hint">1 = not much · 10 = all the way</p>
-                            <div class="stars scale-10">
-                                <label><input type="radio" name="goalCommitment" value="1" required> 1</label>
-                                <label><input type="radio" name="goalCommitment" value="2"> 2</label>
-                                <label><input type="radio" name="goalCommitment" value="3"> 3</label>
-                                <label><input type="radio" name="goalCommitment" value="4"> 4</label>
-                                <label><input type="radio" name="goalCommitment" value="5"> 5</label>
-                                <label><input type="radio" name="goalCommitment" value="6"> 6</label>
-                                <label><input type="radio" name="goalCommitment" value="7"> 7</label>
-                                <label><input type="radio" name="goalCommitment" value="8"> 8</label>
-                                <label><input type="radio" name="goalCommitment" value="9"> 9</label>
-                                <label><input type="radio" name="goalCommitment" value="10"> 10</label>
+                            <p class="scale-question">How ready are you to work on this goal? <span class="req">*</span></p>
+                            <p class="scale-hint">Pick the answer that feels closest.</p>
+                            <div class="stars scale-choices-5">
+                                <label><input type="radio" name="goalCommitment" value="2" required><span>Not sure</span></label>
+                                <label><input type="radio" name="goalCommitment" value="4"><span>A little</span></label>
+                                <label><input type="radio" name="goalCommitment" value="6"><span>Ready</span></label>
+                                <label><input type="radio" name="goalCommitment" value="8"><span>Very ready</span></label>
+                                <label><input type="radio" name="goalCommitment" value="10"><span>All in</span></label>
                             </div>
                         </div>
 
@@ -180,7 +172,7 @@
                             <h3 class="section-label">Before you start</h3>
 
                             <p class="consent-intro">
-                                MindZone is for athletes aged 10&ndash;18, so a parent or guardian
+                                MindZone is for athletes aged 6&ndash;12, so a parent or guardian
                                 needs to know you're using it.
                             </p>
 
@@ -216,7 +208,7 @@
 
         </div>
 
-        <script src="js/onboarding.js"></script>
+        <script data-account-src="js/onboarding.js"></script>
     
 
 
@@ -428,8 +420,10 @@
             <p class="plan-loading-label">Your Plan Is Loading</p>
         </div>
 
-        <script src="js/video-library.js"></script>
-        <script src="js/nav.js"></script>
-        <script src="js/rewards.js"></script>
+        <script data-account-src="js/video-library.js"></script>
+        <script data-account-src="js/nav.js"></script>
+        <script data-account-src="js/rewards.js"></script>
+    <script src="/js/account-storage.js"></script>
+        <script src="/js/account-bootstrap.js"></script>
     </body>
 </html>

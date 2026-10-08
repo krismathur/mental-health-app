@@ -40,7 +40,7 @@ function emptyProgress() {
 }
 
 export function loadProgress() {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = window.MindZoneStorage.getItem(STORAGE_KEY);
     const progress = emptyProgress();
 
     if (!saved) {
@@ -73,14 +73,14 @@ export function loadProgress() {
             progress.bestMetersByDifficulty[difficulty] = Number.isFinite(best) ? best : 0;
         }
     } catch (error) {
-        localStorage.removeItem(STORAGE_KEY);
+        window.MindZoneStorage.removeItem(STORAGE_KEY);
     }
 
     return progress;
 }
 
 export function saveProgress(progress) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    window.MindZoneStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
 /** Stats grow forever; the level number is just a friendly way to show it. */

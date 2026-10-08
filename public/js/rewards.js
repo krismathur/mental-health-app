@@ -111,7 +111,7 @@ function getAppToday() {
 }
 
 function getGemstoneData() {
-    const saved = localStorage.getItem(GEMSTONE_STORAGE_KEY);
+    const saved = window.MindZoneStorage.getItem(GEMSTONE_STORAGE_KEY);
     if (!saved) {
         return { loginDates: [] };
     }
@@ -122,14 +122,14 @@ function getGemstoneData() {
             return parsed;
         }
     } catch (error) {
-        localStorage.removeItem(GEMSTONE_STORAGE_KEY);
+        window.MindZoneStorage.removeItem(GEMSTONE_STORAGE_KEY);
     }
 
     return { loginDates: [] };
 }
 
 function saveGemstoneData(data) {
-    localStorage.setItem(GEMSTONE_STORAGE_KEY, JSON.stringify(data));
+    window.MindZoneStorage.setItem(GEMSTONE_STORAGE_KEY, JSON.stringify(data));
 }
 
 function awardLoginGemstone() {
@@ -158,7 +158,7 @@ function getLoginStreak(loginDates) {
 
     const dateSet = new Set(loginDates);
     let streak = 0;
-    const cursor = new Date();
+    const cursor = new Date(getAppToday() + "T12:00:00");
 
     cursor.setHours(0, 0, 0, 0);
 
@@ -185,26 +185,115 @@ function initLoginGemstones() {
         awardLoginGemstone();
     }
 
-    if (rewardDetails) {
-        showRewardDetails("streak");
-    }
+    renderSimpleRewards();
 }
 
 function getRewards() {
     return {
-        xp: parseInt(localStorage.getItem("mindzone_xp"), 10) || 0,
-        stars: parseInt(localStorage.getItem("mindzone_stars"), 10) || 0,
-        activityCompletions: parseInt(localStorage.getItem("mindzone_activity_completions"), 10) || 0
+        xp: parseInt(window.MindZoneStorage.getItem("mindzone_xp"), 10) || 0,
+        stars: parseInt(window.MindZoneStorage.getItem("mindzone_stars"), 10) || 0,
+        activityCompletions: parseInt(window.MindZoneStorage.getItem("mindzone_activity_completions"), 10) || 0
     };
 }
 
 function saveRewards(rewards) {
-    localStorage.setItem("mindzone_xp", rewards.xp);
-    localStorage.setItem("mindzone_stars", rewards.stars);
-    localStorage.setItem("mindzone_activity_completions", rewards.activityCompletions);
+    window.MindZoneStorage.setItem("mindzone_xp", rewards.xp);
+    window.MindZoneStorage.setItem("mindzone_stars", rewards.stars);
+    window.MindZoneStorage.setItem("mindzone_activity_completions", rewards.activityCompletions);
     document.dispatchEvent(new CustomEvent("mindzone:rewards-updated", {
         detail: rewards
     }));
+}
+
+function getDailyPracticeDates() {
+    try {
+        const history = JSON.parse(window.MindZoneStorage.getItem("mindzone_daily_session_history") || "[]");
+        if (Array.isArray(history)) {
+            return Array.from(new Set(history.map(function (entry) {
+                return entry && entry.date;
+            }).filter(Boolean))).sort();
+        }
+    } catch (error) {
+        return [];
+    }
+    return [];
+}
+
+function renderSimpleRewards() {
+    if (!rewardsOverlay) {
+        return;
+    }
+
+    const panel = rewardsOverlay.querySelector(".rewards-panel");
+    const grid = rewardsOverlay.querySelector(".rewards-grid");
+    const intro = rewardsOverlay.querySelector(".rewards-intro");
+    const heading = rewardsOverlay.querySelector(".rewards-header h2");
+    if (!panel || !grid) {
+        return;
+    }
+
+    const dates = getDailyPracticeDates();
+    const today = getAppToday();
+    const practicedToday = dates.includes(today);
+    const streak = getLoginStreak(dates);
+    const rewards = getRewards();
+    const level = Math.floor(rewards.xp / 100) + 1;
+    const levelProgress = rewards.xp % 100;
+    const xpUntilNextLevel = 100 - levelProgress;
+
+    panel.classList.add("rewards-panel-simple");
+    if (heading) {
+        heading.textContent = "Your Practice Progress";
+    }
+    if (intro) {
+        intro.textContent = "See today's win, your streak, and what you are building toward.";
+    }
+
+    grid.innerHTML = `
+        <section class="simple-reward-level" aria-label="Level progress">
+            <div class="simple-reward-level-number"><span>LEVEL</span><strong>${level}</strong></div>
+            <div class="simple-reward-level-progress">
+                <div><strong>${levelProgress} / 100 XP</strong><small>${xpUntilNextLevel} XP to Level ${level + 1}</small></div>
+                <div class="simple-reward-progress-track" role="progressbar" aria-label="${levelProgress} of 100 XP toward Level ${level + 1}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${levelProgress}">
+                    <span class="simple-reward-progress-fill"></span>
+                </div>
+            </div>
+        </section>
+        <div class="simple-reward-cards">
+            <article class="simple-reward-card simple-reward-today">
+                <span aria-hidden="true">${practicedToday ? "✅" : "○"}</span>
+                <div><strong>${practicedToday ? "Done today" : "Ready for today"}</strong><small>${practicedToday ? "Your practice is saved." : "Finish the 5-minute practice."}</small></div>
+            </article>
+            <article class="simple-reward-card">
+                <span aria-hidden="true">🔥</span>
+                <div><strong>${streak} day streak</strong><small>${streak ? "Come back tomorrow to keep it going." : "Finish today to start your streak."}</small></div>
+            </article>
+            <article class="simple-reward-card">
+                <span aria-hidden="true">🧠</span>
+                <div><strong>${dates.length} practice${dates.length === 1 ? "" : "s"}</strong><small>Five focused minutes at a time.</small></div>
+            </article>
+            <article class="simple-reward-card">
+                <span aria-hidden="true">🏅</span>
+                <div><strong>${rewards.activityCompletions} total win${rewards.activityCompletions === 1 ? "" : "s"}</strong><small>Practices and skill activities completed.</small></div>
+            </article>
+        </div>
+        <section class="simple-reward-next">
+            <div><span>NEXT WIN</span><strong>${practicedToday ? "You showed up today." : "Complete today's guided practice."}</strong></div>
+            <a href="daily-session.html">${practicedToday ? "Practice again" : "Start 5-minute practice"}</a>
+        </section>
+    `;
+
+    // Inline style attributes are blocked by the app's CSP. Set the earned
+    // width through the CSSOM so the bar reflects the actual XP percentage.
+    const levelProgressFill = grid.querySelector(".simple-reward-progress-fill");
+    if (levelProgressFill) {
+        levelProgressFill.style.width = Math.max(0, Math.min(100, levelProgress)) + "%";
+    }
+
+    if (rewardDetails) {
+        rewardDetails.hidden = true;
+        rewardDetails.innerHTML = "";
+    }
 }
 
 function resetRewards() {
@@ -221,7 +310,7 @@ function resetRewards() {
 }
 
 function resetSavedTips() {
-    localStorage.setItem("savedFixTips", "[]");
+    window.MindZoneStorage.setItem("savedFixTips", "[]");
 }
 
 function resetAllUserProgress() {
@@ -233,7 +322,7 @@ function openRewards(event) {
     event.preventDefault();
 
     if (rewardsOverlay) {
-        showRewardDetails("streak");
+        renderSimpleRewards();
         rewardsOverlay.classList.remove("rewards-hidden");
         return;
     }
@@ -397,7 +486,7 @@ function escapeHtmlForRewards(value) {
 }
 
 function getMoodHistoryEntries() {
-    const saved = localStorage.getItem(MOOD_HISTORY_STORAGE_KEY);
+    const saved = window.MindZoneStorage.getItem(MOOD_HISTORY_STORAGE_KEY);
     if (!saved) {
         return [];
     }
@@ -557,6 +646,7 @@ function addRewardProgress(progress) {
     rewards.stars += starsEarned;
     rewards.activityCompletions += completionsEarned;
     saveRewards(rewards);
+    renderSimpleRewards();
 
     flashRewardsScreen(`+${xpEarned} XP`);
 
@@ -573,9 +663,9 @@ window.resetAllUserProgress = resetAllUserProgress;
 window.awardLoginGemstone = awardLoginGemstone;
 
 const PROGRESS_RESET_FLAG = "mindzone_tips_rewards_cleared_2026_07_04_pm";
-if (!localStorage.getItem(PROGRESS_RESET_FLAG)) {
+if (!window.MindZoneStorage.getItem(PROGRESS_RESET_FLAG)) {
     resetAllUserProgress();
-    localStorage.setItem(PROGRESS_RESET_FLAG, "1");
+    window.MindZoneStorage.setItem(PROGRESS_RESET_FLAG, "1");
 }
 
 initLoginGemstones();

@@ -23,11 +23,10 @@
             <!-- Start -->
             <section id="startScreen" class="game-screen is-active">
                 <div class="screen-card start-card">
-                    <p class="screen-kicker">Climb. Fall. Climb again.</p>
+                    <p class="screen-kicker">Reset after mistakes.</p>
                     <h1 class="screen-title">The Impossible Mountain</h1>
                     <p class="screen-text">
-                        Nobody reaches the top on the first try. Every time you slip, you get
-                        to choose what happens next — and that choice makes you stronger.
+                        Climb to the top. When you slip, choose a helpful thought and try again.
                     </p>
 
                     <div class="difficulty-picker" aria-labelledby="difficultyTitle">
@@ -40,14 +39,16 @@
                         <p id="difficultyDescription" class="difficulty-description"></p>
                     </div>
 
-                    <button type="button" id="playBtn" class="game-btn game-btn-primary">Start Climbing</button>
+                    <div class="quick-start-actions">
+                        <button type="button" id="playBtn" class="game-btn game-btn-primary">Start Climbing</button>
+                        <button type="button" id="chooseCharacterBtn" class="game-btn game-btn-ghost">Choose Climber</button>
+                    </div>
 
                     <div class="start-stats" id="startStats"></div>
                     <div class="start-badges" id="startBadges"></div>
 
                     <p class="screen-hint">
-                        Move with the arrow keys or A and D. Jump with space or the up arrow.
-                        On a phone or tablet, use the buttons at the bottom.
+                        Move: arrows or A/D · Jump: space or up arrow
                     </p>
                 </div>
             </section>
@@ -146,7 +147,9 @@
         </div>
 
         <!-- Shared MindZone rewards, so game XP feeds the same meters as the rest of the app -->
-        <script src="/js/rewards.js"></script>
-        <script type="module" src="main.js"></script>
+        <script data-account-src="/js/rewards.js"></script>
+        <script type="module" data-account-src="main.js"></script>
+    <script src="/js/account-storage.js"></script>
+        <script src="/js/account-bootstrap.js"></script>
     </body>
 </html>
