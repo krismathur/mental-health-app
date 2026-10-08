@@ -283,7 +283,9 @@ function cancelVisualization() {
     clearTimeout(visualizationWatchdog);
     clearTimeout(visualizationNextTimer);
     visualizationGeneration += 1;
-    if (window.speechSynthesis) {
+    if (window.MeditationSpeech) {
+        window.MeditationSpeech.cancel();
+    } else if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
     }
     visualizationPlaying = false;
@@ -323,18 +325,36 @@ function speakVisualizationLine() {
     visualizeStatus.textContent = "Playing line " + (visualizationIndex + 1) + " of " + VISUALIZATION_LINES.length;
     updateVisualizationProgress();
 
-    if (!("speechSynthesis" in window)) {
+    if (!window.MeditationSpeech && !("speechSynthesis" in window)) {
         cancelVisualization();
         visualizeStatus.textContent = "Audio is not available. Tap Read instead.";
         visualizeReadBtn.hidden = false;
         return;
     }
 
-    visualizationUtterance = new SpeechSynthesisUtterance(text);
-    visualizationUtterance.rate = 0.88;
-    visualizationUtterance.pitch = 0.96;
-    visualizationUtterance.lang = "en-US";
     let started = false;
+    const callbacks = {
+        onStart: function () {
+            started = true;
+            clearTimeout(visualizationWatchdog);
+        },
+        onEnd: function () {
+            clearTimeout(visualizationWatchdog);
+            if (!visualizationPlaying || generation !== visualizationGeneration) {
+                return;
+            }
+            visualizationIndex += 1;
+            updateVisualizationProgress();
+            visualizationNextTimer = setTimeout(speakVisualizationLine, 900);
+        },
+        onError: function () {
+            clearTimeout(visualizationWatchdog);
+            if (generation !== visualizationGeneration) { return; }
+            cancelVisualization();
+            visualizeStatus.textContent = "Audio stopped. Tap Read instead to finish the words.";
+            visualizeReadBtn.hidden = false;
+        }
+    };
 
     visualizationWatchdog = setTimeout(function () {
         if (!started && visualizationPlaying) {
@@ -342,28 +362,20 @@ function speakVisualizationLine() {
             visualizeStatus.textContent = "Audio did not start. You can read the words instead.";
             visualizeReadBtn.hidden = false;
         }
-    }, 3000);
+    }, window.MeditationSpeech ? 12000 : 3000);
 
-    visualizationUtterance.onstart = function () {
-        started = true;
-        clearTimeout(visualizationWatchdog);
-    };
-    visualizationUtterance.onend = function () {
-        clearTimeout(visualizationWatchdog);
-        if (!visualizationPlaying || generation !== visualizationGeneration) {
-            return;
-        }
-        visualizationIndex += 1;
-        updateVisualizationProgress();
-        visualizationNextTimer = setTimeout(speakVisualizationLine, 900);
-    };
-    visualizationUtterance.onerror = function () {
-        clearTimeout(visualizationWatchdog);
-        if (generation !== visualizationGeneration) { return; }
-        cancelVisualization();
-        visualizeStatus.textContent = "Audio stopped. Tap Read instead to finish the words.";
-        visualizeReadBtn.hidden = false;
-    };
+    if (window.MeditationSpeech) {
+        window.MeditationSpeech.speak(text, callbacks);
+        return;
+    }
+
+    visualizationUtterance = new SpeechSynthesisUtterance(text);
+    visualizationUtterance.rate = 0.88;
+    visualizationUtterance.pitch = 0.96;
+    visualizationUtterance.lang = "en-US";
+    visualizationUtterance.onstart = callbacks.onStart;
+    visualizationUtterance.onend = callbacks.onEnd;
+    visualizationUtterance.onerror = callbacks.onError;
     window.speechSynthesis.speak(visualizationUtterance);
 }
 
@@ -385,19 +397,56 @@ function toggleVisualization() {
     }
     if (visualizationPaused) {
         visualizationPaused = false;
-        if (window.speechSynthesis) { window.speechSynthesis.resume(); }
-        if (!window.speechSynthesis || !window.speechSynthesis.speaking) { speakVisualizationLine(); }
+        let resumed = false;
+        if (window.MeditationSpeech) {
+            resumed = window.MeditationSpeech.resume();
+        } else if (window.speechSynthesis) {
+            resumed = window.speechSynthesis.speaking || window.speechSynthesis.paused;
+            window.speechSynthesis.resume();
+        }
+        if (!resumed) { speakVisualizationLine(); }
         visualizePlayBtn.textContent = "Ⅱ";
         visualizeStatus.textContent = "Playing";
         visualizePlayBtn.setAttribute("aria-label", "Pause visualization");
     } else {
         visualizationPaused = true;
         clearTimeout(visualizationNextTimer);
-        if (window.speechSynthesis) { window.speechSynthesis.pause(); }
+        if (window.MeditationSpeech) {
+            window.MeditationSpeech.pause();
+        } else if (window.speechSynthesis) {
+            window.speechSynthesis.pause();
+        }
         visualizePlayBtn.textContent = "▶";
         visualizeStatus.textContent = "Paused";
         visualizePlayBtn.setAttribute("aria-label", "Resume visualization");
     }
+}
+
+function speakPracticeCue(text) {
+    if (window.MeditationSpeech) {
+        window.MeditationSpeech.speak(text);
+        return;
+    }
+    if (!window.speechSynthesis) {
+        return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.92;
+    utterance.pitch = 0.96;
+    utterance.lang = "en-US";
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+}
+
+function primePracticeBreathingVoice() {
+    if (!window.MeditationSpeech || typeof window.MeditationSpeech.prime !== "function") {
+        return;
+    }
+    const cues = ACTIVE_DAILY_ROUTINE.breathing.phases.map(function (phase) {
+        return phase.cue;
+    });
+    cues.push("Your body is ready");
+    window.MeditationSpeech.prime(cues);
 }
 
 function runBreathPhase(round, phaseIndex) {
@@ -407,6 +456,7 @@ function runBreathPhase(round, phaseIndex) {
     breathCircle.className = "breath-circle " + phase.className;
     breathCue.textContent = phase.cue;
     breathCount.textContent = String(remaining);
+    speakPracticeCue(phase.cue);
     const remainingRounds = BREATH_ROUNDS - round;
     breathRound.textContent = remainingRounds + " breath" + (remainingRounds === 1 ? "" : "s") + " to go";
 
@@ -433,6 +483,7 @@ function runBreathPhase(round, phaseIndex) {
         breathCue.textContent = "Your body is ready";
         breathRound.textContent = ACTIVE_DAILY_ROUTINE.breathing.complete;
         breathDoneBtn.hidden = false;
+        speakPracticeCue("Your body is ready");
     }, 1000);
 }
 
@@ -495,6 +546,7 @@ visualizeReadBtn.addEventListener("click", function () {
 visualizeDoneBtn.addEventListener("click", function () {
     if (visualizeDoneBtn.disabled) { return; }
     cancelVisualization();
+    primePracticeBreathingVoice();
     showStep("breathe", 2);
 });
 breathStartBtn.addEventListener("click", function () {

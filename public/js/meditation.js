@@ -377,6 +377,12 @@ function openBreathingExercise(exercise) {
     startBreathingBtn.hidden = false;
     finishBreathingBtn.hidden = true;
 
+    if (window.MeditationSpeech && typeof window.MeditationSpeech.prime === "function") {
+        const cues = exercise.phases.map(getBreathingCue);
+        cues.push("Nice work");
+        window.MeditationSpeech.prime(cues);
+    }
+
     resetFeatureArea.classList.remove("reset-view-list");
     resetFeatureArea.classList.add("reset-view-active");
 }
@@ -431,6 +437,10 @@ function getBreathingCue(phase) {
 }
 
 function stopBreathingVoice() {
+    if (window.MeditationSpeech) {
+        window.MeditationSpeech.cancel();
+        return;
+    }
     if (!window.speechSynthesis) {
         return;
     }
@@ -439,7 +449,16 @@ function stopBreathingVoice() {
 }
 
 function speakBreathingCue(text) {
-    if (!window.speechSynthesis || !text) {
+    if (!text) {
+        return;
+    }
+
+    if (window.MeditationSpeech) {
+        window.MeditationSpeech.speak(text);
+        return;
+    }
+
+    if (!window.speechSynthesis) {
         return;
     }
 

@@ -77,3 +77,19 @@ test("optional skill zones still present only one clear daily choice", function 
     assert.match(meditationCss, /\.med-panel\.reset-panel \{[\s\S]*width: min\(900px/);
     assert.match(filmRoomCss, /\.video-item \{[\s\S]*min-height: 134px/);
 });
+
+test("every spoken exercise tries Gemini before the browser voice fallback", function () {
+    const dailyHtml = read("public/daily-session.html");
+    const dailyScript = read("public/js/daily-session.js");
+    const meditationHtml = read("public/meditation.html");
+    const meditationScript = read("public/js/meditation.js");
+    const sharedSpeech = read("public/js/meditation-speech.js");
+
+    assert.ok(dailyHtml.indexOf("js/meditation-speech.js") < dailyHtml.indexOf("js/daily-session.js"));
+    assert.ok(meditationHtml.indexOf("js/meditation-speech.js") < meditationHtml.indexOf("js/meditation.js"));
+    assert.match(dailyScript, /window\.MeditationSpeech\.speak\(text/);
+    assert.match(meditationScript, /window\.MeditationSpeech\.speak\(text/);
+    assert.match(sharedSpeech, /fetch\("\/api\/meditation-speech"/);
+    assert.match(sharedSpeech, /speakWithBrowser\(trimmedText, callbacks, generation\)/);
+    assert.match(sharedSpeech, /primeMeditationSpeech/);
+});
